@@ -88,11 +88,13 @@ public final class NeutronContract {
 		 public static final int father = 3;
 		 public static final int wife = 4;
 		 public static final int husband = 5;
-		 public static final int son = 6;
-		 public static final int daughter = 7;
+		 public static final int daughter = 6;
+		 public static final int son = 7;
 		 public static final int grandma = 8;
 		 public static final int grandpa = 9;
-		 public static final int friends = 10;
+		 public static final int sister = 10;
+		 public static final int brother = 11;
+		 public static final int friends = 12;	
 		 
 		 public static final int registered = 1;
 		 public static final int subregister = 2;
