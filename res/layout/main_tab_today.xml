@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#fcfcfc"
+    android:orientation="vertical" >
+        
+	<RelativeLayout 
+  		android:layout_width="fill_parent"
+		android:layout_height="45dp"
+		android:id="@+id/title" 
+		android:background="@drawable/title_bar"
+		android:gravity="center_vertical"  >  
+    
+   		<TextView
+     		android:layout_width="wrap_content" 
+     		android:layout_height="wrap_content" 
+     		android:text="@string/main_tab_today_title"
+     		android:layout_centerInParent="true"
+     		android:textSize="20sp"		
+			android:textColor="#ffffff" /> 
+	</RelativeLayout>
+
+	
+   	<RelativeLayout 
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="left"
+		android:background="@drawable/mm_listitem" >
+		
+   	    <ImageView
+			android:id="@+id/head_background"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:layout_alignParentTop="true"
+			android:src="@drawable/img_title_backgound" 
+			android:scaleType="fitXY"
+		/>          
+
+	    <ImageView
+			android:id="@+id/head"
+			android:layout_width="80dp"
+			android:layout_height="80dp"
+			android:layout_alignParentLeft="true"
+			android:layout_centerVertical="true"
+			android:layout_marginLeft="15dp"
+			android:paddingLeft="3dp"
+			android:paddingRight="3dp"
+			android:src="@drawable/img_head" 
+		/>    
+		
+	    <TextView
+	        android:id="@+id/man_tab_today_name"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBottom="@+id/head_background"
+	        android:layout_toRightOf="@+id/head"
+	        android:layout_marginLeft="15dp"
+	        android:text="郭成"
+	        android:textColor="#000"
+	        android:textSize="21sp" />
+	    
+	    <ImageView
+			android:id="@+id/man_tab_today_gender"
+			android:layout_width="20dp"
+			android:layout_height="20dp"
+			android:layout_alignBottom="@+id/head_background"
+	        android:layout_toRightOf="@+id/man_tab_today_name"
+			android:layout_marginLeft="15dp"
+			android:paddingRight="3dp"
+			android:src="@drawable/sex_male" 
+		/>
+       
+    	<RelativeLayout
+    	    android:id="@+id/man_tab_today_layout_weight"
+	        android:layout_width="wrap_content"
+	        android:layout_height="40dp"
+	        android:layout_gravity="bottom"
+	        android:layout_toRightOf="@+id/head"
+	        android:layout_alignBottom="@+id/head"
+	        android:background="@drawable/preference_single_item_little"
+	        android:layout_marginLeft="7dp"
+	        android:clickable="true"
+	        android:gravity="right"
+	        android:onClick="btn_weight_add" >
+	
+	        <LinearLayout 
+	            android:layout_width="wrap_content"
+	           	android:layout_height="wrap_content"
+	           	android:gravity="left">	
+	           	
+			    <TextView
+			        android:id="@+id/man_tab_today_weight"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="74.5"
+			        android:textColor="#000"
+			        android:textSize="21sp" />
+			    <TextView
+			        android:id="@+id/man_tab_today_weightDimension"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="kg"
+					android:textColor="#666"
+					android:textSize="9sp" /> 
+					
+			</LinearLayout>
+	
+			<TextView
+				android:id="@+id/man_tab_today_weightText"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:layout_centerHorizontal="true"
+				android:text="@string/man_tab_today_weightText_text"
+				android:textColor="#666"
+				android:textSize="9sp" />
+			    
+		</RelativeLayout>
+		
+	    <RelativeLayout
+	        android:id="@+id/man_tab_today_layout_height"
+	        android:layout_width="wrap_content"
+	        android:layout_height="40dp"
+	        android:layout_gravity="bottom"
+	        android:layout_toRightOf="@+id/man_tab_today_layout_weight"
+	        android:layout_alignBottom="@+id/man_tab_today_layout_weight"
+	        android:background="@drawable/preference_single_item_little"
+	        android:layout_marginLeft="7dp"
+	        android:clickable="true"
+	        android:gravity="right" 
+	        android:onClick="btn_height_add">
+	
+	        <LinearLayout 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:gravity="left">
+	           	
+			    <TextView
+			        android:id="@+id/man_tab_today_height"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="175"
+			        android:textColor="#000"
+			        android:textSize="21sp" />
+			    <TextView
+			        android:id="@+id/man_tab_today_heightDimension"
+			         android:layout_width="wrap_content"
+			         android:layout_height="wrap_content"
+			         android:text="cm"
+			         android:textColor="#666"
+			         android:textSize="9sp" /> 
+			</LinearLayout>
+	
+			<TextView
+				android:id="@+id/man_tab_today_heightText"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:layout_centerHorizontal="true"
+				android:text="@string/man_tab_today_heightText_text"
+				android:textColor="#666"
+				android:textSize="9sp" />	
+							    
+		</RelativeLayout>	
+		
+	    <RelativeLayout
+	        android:layout_width="wrap_content"
+	        android:layout_height="40dp"
+	        android:layout_gravity="bottom"
+	        android:layout_toRightOf="@+id/man_tab_today_layout_height"
+	        android:layout_alignBottom="@+id/man_tab_today_layout_weight"
+	        android:background="@drawable/preference_single_item_little"
+	        android:layout_marginLeft="7dp"
+	        android:clickable="false"
+	        android:gravity="right" >
+	
+	        <LinearLayout 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:gravity="left">
+	           	
+			    <TextView
+			        android:id="@+id/man_tab_today_bmiTitle"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="BMI"
+			        android:textColor="#666"
+			        android:textSize="9sp" />
+			    <TextView
+			        android:id="@+id/man_tab_today_bmi"
+			         android:layout_width="wrap_content"
+			         android:layout_height="wrap_content"
+			         android:text="23"
+			         android:textColor="#000"
+			         android:textSize="17sp" /> 
+			</LinearLayout>
+	
+			<TextView
+				android:id="@+id/man_tab_today_bmiMeasure"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:layout_centerHorizontal="true"
+				android:text="@string/man_tab_today_bmiMeasure_text"
+				android:textColor="#666"
+				android:textSize="9sp" />	
+							    
+		</RelativeLayout>	
+	</RelativeLayout>
+	
+   	
+	
+	<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="200dp"
+	    android:layout_marginTop="3dp"
+	    android:layout_gravity="center_horizontal"
+	    android:background="@drawable/preference_single_item"
+	    android:clickable="false" >
+	    
+	    <TextView
+	        android:id="@+id/man_tab_today_metabolismTitle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentTop="true"
+			android:paddingTop="3dp"
+			android:text="@string/man_tab_today_metabolismTitle_text"
+			android:textColor="#666"
+			android:textSize="15sp" /> 
+	    
+        <LinearLayout
+            android:id="@+id/man_tab_today_LayoutMetabolismRate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/man_tab_today_metabolismTitle"
+            android:gravity="left" >
+           	
+		    <TextView
+		        android:id="@+id/man_tab_today_metabolismRateTitle"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/man_tab_today_metabolismRateTitle_text"
+		        android:textColor="#666"
+		        android:textSize="15sp" 
+		     />
+		    <TextView
+		        android:id="@+id/man_tab_today_metabolismRate"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="47.1"
+				android:textColor="#000"
+				android:textSize="21sp" 
+			/> 
+			<TextView
+		        android:id="@+id/man_tab_today_metabolismRateDimesion"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/man_tab_today_metabolismRateDimesion_text"
+				android:textColor="#666"
+				android:textSize="9sp"
+			/> 	         
+		</LinearLayout>
+		
+		<LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/man_tab_today_LayoutMetabolismRate"
+            android:layout_alignBottom="@+id/man_tab_today_LayoutMetabolismRate"
+            android:layout_marginLeft="10dp"
+            android:gravity="left" >
+           	
+		    <TextView
+		        android:id="@+id/man_tab_today_metabolismTotalTitle"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/man_tab_today_metabolismTotalTitle_text"
+		        android:textColor="#666"
+		        android:textSize="15sp" />
+		    <TextView
+		        android:id="@+id/man_tab_today_metabolismTotal"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="456.7"
+				android:textColor="#000"
+				android:textSize="21sp" /> 
+			<TextView
+		        android:id="@+id/man_tab_today_metabolismTotalDimesion"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/man_tab_today_metabolismTotalDimesion_text"
+				android:textColor="#666"
+				android:textSize="9sp" /> 
+		         
+		</LinearLayout>
+		
+		<WebView  
+            android:id="@+id/wv"  
+            android:layout_below="@+id/man_tab_today_LayoutMetabolismRate"
+            android:layout_width="fill_parent"  
+            android:layout_height="fill_parent"  
+            android:layout_above="@+id/man_tab_today_LayoutMetabolismAcceleration"
+        />
+		
+		<LinearLayout
+            android:id="@+id/man_tab_today_LayoutMetabolismAcceleration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:gravity="left" >
+           	
+		    <TextView
+		        android:id="@+id/man_tab_today_metabolismAccelerationTitle"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/man_tab_today_metabolismAccelerationTitle_text"
+		        android:textColor="#666"
+		        android:textSize="9sp" 
+		     />
+		    <TextView
+		        android:id="@+id/man_tab_today_metabolismAcceleration"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="0.0045"
+				android:textColor="#000"
+				android:textSize="11sp" 
+			/> 
+			<TextView
+		        android:id="@+id/man_tab_today_metabolismAccelerationDimesion"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/man_tab_today_metabolismAccelerationDimesion_text"
+				android:textColor="#666"
+				android:textSize="9sp"
+			/> 	
+			<TextView
+		        android:id="@+id/man_tab_today_metabolismRMRRateTitle"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="15dp"
+				android:text="@string/man_tab_today_metabolismRMRRateTitle_text"
+				android:textColor="#666"
+				android:textSize="9sp" 
+			/> 
+			<TextView
+		        android:id="@+id/man_tab_today_metabolismRMRRateValue"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="75.5"
+				android:textColor="#000"
+				android:textSize="11sp"
+			/> 
+			<TextView
+		        android:id="@+id/man_tab_today_metabolismRMRRateDimesion"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/man_tab_today_metabolismRateDimesion_text"
+				android:textColor="#666"
+				android:textSize="9sp"   
+			/>              
+		</LinearLayout>     				    
+	</RelativeLayout>
+	
+	<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:layout_marginTop="3dp"
+	    android:layout_marginBottom="3dp"
+	    android:layout_gravity="center_horizontal"
+	    android:background="@drawable/preference_single_item"
+	    android:clickable="false" >
+		
+	    <TextView
+	        android:id="@+id/man_tab_today_physicalTitle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentTop="true"
+			android:paddingTop="3dp"
+			android:text="@string/man_tab_today_physicalTitle_text"
+			android:textColor="#666"
+			android:textSize="15sp" /> 
+			
+	    <LinearLayout
+                android:id="@+id/man_tab_today_layout_bloodTest"
+            	android:layout_width="50dp"
+            	android:layout_height="60dp"
+            	android:layout_below="@+id/man_tab_today_physicalTitle"
+            	android:layout_marginTop="5dp"
+              	android:gravity="center_horizontal"
+              	android:orientation="vertical"
+              	android:layout_weight="1"
+              	android:background="@drawable/mm_listitem"
+              	android:clickable="true"
+              	android:onClick="btn_bloodTestHistory">               	
+                <ImageView
+            		android:id="@+id/man_tab_today_img_bloodTest"
+        			android:layout_width="40dp"
+        			android:layout_height="40dp"       	     	
+        			android:scaleType="fitXY"
+        			android:clickable="true"
+        			android:background="@drawable/img_blood_testing"
+        			 />
+                <TextView
+            		android:layout_width="wrap_content"
+            		android:layout_height="wrap_content"
+            		android:text="血液检查"
+            		android:textColor="#666"
+            		android:textSize="12sp" />                
+         </LinearLayout>
+         
+	     <LinearLayout
+                android:id="@+id/man_tab_today_layout_urineTest"
+            	android:layout_width="50dp"
+            	android:layout_height="60dp"
+            	android:layout_toRightOf="@+id/man_tab_today_layout_bloodTest"
+            	android:layout_alignBottom="@+id/man_tab_today_layout_bloodTest"
+            	android:layout_marginLeft="10dp"
+              	android:gravity="center_horizontal"
+              	android:orientation="vertical"
+              	android:layout_weight="1"
+              	android:background="@drawable/mm_listitem"
+              	android:clickable="true"
+              	android:onClick="btn_urineTestHistory">              	
+                <ImageView
+            		android:id="@+id/man_tab_today_img_urineTest"
+        			android:layout_width="40dp"
+        			android:layout_height="40dp"       	     	
+        			android:scaleType="fitXY"
+        			android:clickable="true"
+        			android:background="@drawable/img_urine_testing"
+        			 />
+                <TextView
+            		android:layout_width="wrap_content"
+            		android:layout_height="wrap_content"
+            		android:text="尿液检查"
+            		android:textColor="#666"
+            		android:textSize="12sp" />                
+         </LinearLayout>
+         
+	     <LinearLayout
+                android:id="@+id/man_tab_today_layout_bloodPressure"
+            	android:layout_width="50dp"
+            	android:layout_height="60dp"
+            	android:layout_toRightOf="@+id/man_tab_today_layout_urineTest"
+            	android:layout_alignBottom="@+id/man_tab_today_layout_bloodTest"
+            	android:layout_marginLeft="10dp"
+              	android:gravity="center_horizontal"
+              	android:orientation="vertical"
+              	android:layout_weight="1"
+              	android:background="@drawable/mm_listitem"
+              	android:clickable="true"
+              	android:onClick="btn_bloodPressureHistory">                	
+                <ImageView
+            		android:id="@+id/man_tab_today_img_bloodPressure"
+        			android:layout_width="40dp"
+        			android:layout_height="40dp"        	     	
+        			android:scaleType="fitXY"
+        			android:clickable="true"
+        			android:src="@drawable/img_blood_pressure"
+        			 />
+                <TextView
+            		android:layout_width="wrap_content"
+            		android:layout_height="wrap_content"
+            		android:text="血压脉搏"
+            		android:textColor="#666"
+            		android:textSize="12sp" />                
+         </LinearLayout>
+         
+	     <LinearLayout
+                android:id="@+id/man_tab_today_layout_bodyEx"
+            	android:layout_width="50dp"
+            	android:layout_height="60dp"
+            	android:layout_toRightOf="@+id/man_tab_today_layout_bloodPressure"
+            	android:layout_alignBottom="@+id/man_tab_today_layout_bloodTest"
+            	android:layout_marginLeft="10dp"
+              	android:gravity="center_horizontal"
+              	android:orientation="vertical"
+              	android:layout_weight="1">               	
+                <ImageView
+            		android:id="@+id/man_tab_today_img_bodyEx"
+        			android:layout_width="40dp"
+        			android:layout_height="40dp"       	     	
+        			android:scaleType="fitXY"
+        			android:clickable="true"
+        			android:src="@drawable/img_body_exam"
+        			 />
+                <TextView
+            		android:layout_width="wrap_content"
+            		android:layout_height="wrap_content"
+            		android:text="体质"
+            		android:textColor="#666"
+            		android:textSize="12sp" />                
+         </LinearLayout>
+         
+	     <LinearLayout
+                android:id="@+id/man_tab_today_layout_eyeEx"
+            	android:layout_width="50dp"
+            	android:layout_height="60dp"
+            	android:layout_toRightOf="@+id/man_tab_today_layout_bodyEx"
+            	android:layout_alignBottom="@+id/man_tab_today_layout_bloodTest"
+            	android:layout_marginLeft="10dp"
+              	android:gravity="center_horizontal"
+              	android:orientation="vertical"
+              	android:layout_weight="1">               	
+                <ImageView
+            		android:id="@+id/man_tab_today_img_eyeEx"
+        			android:layout_width="40dp"
+        			android:layout_height="40dp"        	     	
+        			android:scaleType="fitXY"
+        			android:clickable="true"
+        			android:src="@drawable/img_eye_ex"
+        			 />
+                <TextView
+            		android:layout_width="wrap_content"
+            		android:layout_height="wrap_content"
+            		android:text="眼睛检查"
+            		android:textColor="#666"
+            		android:textSize="12sp" />                
+         </LinearLayout>
+         
+	    
+         
+	     <LinearLayout
+                android:id="@+id/man_tab_today_layout_boneDen"
+            	android:layout_width="50dp"
+            	android:layout_height="60dp"
+            	android:layout_below="@+id/man_tab_today_layout_bloodTest"
+            	android:layout_alignLeft="@+id/man_tab_today_layout_bloodTest"
+              	android:gravity="center_horizontal"
+              	android:orientation="vertical"
+              	android:layout_weight="1">               	
+                <ImageView
+            		android:id="@+id/man_tab_today_img_boneDen"
+        			android:layout_width="40dp"
+        			android:layout_height="40dp"       	     	
+        			android:scaleType="fitXY"
+        			android:clickable="true"
+        			android:src="@drawable/img_bone_density"
+        			 />
+                <TextView
+            		android:layout_width="wrap_content"
+            		android:layout_height="wrap_content"
+            		android:text="骨密度"
+            		android:textColor="#666"
+            		android:textSize="12sp" />                
+         </LinearLayout>
+         
+	     <LinearLayout
+                android:id="@+id/man_tab_today_layout_electrocardiograms"
+            	android:layout_width="50dp"
+            	android:layout_height="60dp"
+            	android:layout_toRightOf="@+id/man_tab_today_layout_boneDen"
+            	android:layout_alignBottom="@+id/man_tab_today_layout_boneDen"
+              	android:gravity="center_horizontal"
+              	android:orientation="vertical"
+              	android:layout_marginLeft="10dp"
+              	android:layout_weight="1">               	
+                <ImageView
+            		android:id="@+id/man_tab_today_img_electrocardiograms"
+        			android:layout_width="40dp"
+        			android:layout_height="40dp"       	     	
+        			android:scaleType="fitXY"
+        			android:clickable="true"
+        			android:src="@drawable/img_electrocardiograms"
+        			 />
+                <TextView
+            		android:layout_width="wrap_content"
+            		android:layout_height="wrap_content"
+            		android:text="心电图"
+            		android:textColor="#666"
+            		android:textSize="12sp" />                
+         </LinearLayout>
+
+	     <LinearLayout
+                android:id="@+id/man_tab_today_layout_chestXrays"
+            	android:layout_width="50dp"
+            	android:layout_height="60dp"
+            	android:layout_toRightOf="@+id/man_tab_today_layout_electrocardiograms"
+            	android:layout_alignBottom="@+id/man_tab_today_layout_boneDen"
+              	android:gravity="center_horizontal"
+              	android:orientation="vertical"
+              	android:layout_marginLeft="10dp"
+              	android:layout_weight="1">               	
+                <ImageView
+            		android:id="@+id/man_tab_today_img_chestXrays"
+        			android:layout_width="40dp"
+        			android:layout_height="40dp"       	     	
+        			android:scaleType="fitXY"
+        			android:clickable="true"
+        			android:src="@drawable/img_chest_xrays"
+        			 />
+                <TextView
+            		android:layout_width="wrap_content"
+            		android:layout_height="wrap_content"
+            		android:text="胸部X片"
+            		android:textColor="#666"
+            		android:textSize="12sp" />                
+         </LinearLayout>
+         
+	     <LinearLayout
+                android:id="@+id/man_tab_today_layout_abdomenColorUltrasound"
+            	android:layout_width="50dp"
+            	android:layout_height="60dp"
+            	android:layout_toRightOf="@+id/man_tab_today_layout_chestXrays"
+            	android:layout_alignBottom="@+id/man_tab_today_layout_boneDen"
+              	android:gravity="center_horizontal"
+              	android:orientation="vertical"
+              	android:layout_marginLeft="10dp"
+              	android:layout_weight="1">               	
+                <ImageView
+            		android:id="@+id/man_tab_today_img_abdomenColorUltrasound"
+        			android:layout_width="40dp"
+        			android:layout_height="40dp"       	     	
+        			android:scaleType="fitXY"
+        			android:clickable="true"
+        			android:src="@drawable/img_abdomen_color_ultrasound"
+        			 />
+                <TextView
+            		android:layout_width="wrap_content"
+            		android:layout_height="wrap_content"
+            		android:text="腹部彩超"
+            		android:textColor="#666"
+            		android:textSize="12sp" />                
+         </LinearLayout>
+
+	</RelativeLayout>	
+</LinearLayout>

@@ -1,0 +1,170 @@
+    <html>  
+        <head>  
+            <meta http-equiv="Content-type" content="text/html; charset=gb2312" /> 
+            <script type="text/javascript" src="ichart.1.2.min.js"></script>  
+            <script type="text/javascript">  
+            	var baseAreaData;
+		var todayData;
+            	var chart;
+		var lineToday;
+		var testData;
+		
+		$(function() {
+            		var base=[],	
+				today=[],
+				labels = [],
+				BLANK_0 = true; //设置为false，则利用parsePoint显示期间线段。 
+					
+			for(var i=0;i<24;i++){
+				if((i<6||i>21))
+					base.push(69.11);
+				else
+					base.push(69.11*1.3);
+				labels.push((i<9?"0":"")+(i+1));
+				today.push(85);
+			} 
+			//创建数据
+			baseAreaData = [
+				{
+					name : '基线',
+					value:base,
+					color:'#01acb6',
+					line_width:2
+				}
+			];
+			
+			todayData = [
+				{
+					name : '今天的情况',
+					value:today,
+					color:'#ec4646',
+					line_width:5
+				}
+			];
+			
+			chart = new iChart.Area2D(
+			{
+				render : 'canvasDiv',
+				data: baseAreaData,
+				subtitle:{
+					text:'千卡/小时（kcal/hour）',//利用副标题设置单位信息
+					fontsize:14,
+					color:'#01acb6',
+					textAlign:'left',
+					padding:'0 40',
+					height:20
+				},
+				
+				padding:'5 1',//设置padding,以便title能占满x轴
+				sub_option:{
+					smooth:true,
+					label:false,
+					hollow_inside:false,//设置一个点的亮色在外环的效果
+					point_size:1
+				},
+				tip:{
+					enable:true,
+					listeners:{
+						//tip:提示框对象、name:数据名称、value:数据值、text:当前文本、i:数据点的索引
+						parseText:function(tip,name,value,text,i){
+							return labels[i]+"点时的代谢率:<span style='color:red'>"+value+"</span>大卡/小时";
+						}
+					}
+				},
+				width : 1000,
+				height : 400,
+				background_color:'#173a4e',
+				gradient:true,
+				shadow:true,
+				shadow_blur:2,
+				shadow_color:'#4e8bae',
+				shadow_offsetx:0,
+				shadow_offsety:0,
+				gradient_mode:'LinearGradientDownUp',//设置一个从下到上的渐变背景
+				border:{
+					radius:5
+				},
+				coordinate:{
+//					width : 700,
+//					height : 240,
+					grid_color:'#506e7d',
+//					gridlinesVisible:false,
+					background_color:null,//设置坐标系为透明背景
+					scale:[{
+						position:'left',
+						label:{
+							color:'#01acb6',
+//							fontsize:14,
+							fontweight:600
+						},
+						start_scale:0,
+						end_scale:180,
+						scale_space:20
+					},{
+						position:'bottom',
+						label:{
+							color:'#01acb6',
+							fontweight:600
+						},
+						labels:labels
+					}]
+				}
+			});
+			
+			lineToday = new iChart.LineBasic2D({
+				z_index:1000,
+				data: todayData,
+				label:{
+					color:'#4c4f48'
+				},
+				point_space:chart.get('column_width')+chart.get('column_space'),
+				scaleAlign : 'right',
+				brushsize:1,
+				sub_option : {
+					smooth:true,
+					label:false,
+					point_size:2
+				}, 
+				listeners:{
+					parsePoint:function(d,v,x,y,j){
+						if(v==0)
+						return {ignored:true}
+					}
+				}, 
+				coordinate:chart.getCoordinate()//共用坐标系
+			}); 
+			chart.plugin(lineToday);
+			chart.plugin(new iChart.Custom({
+				drawFn:function(){
+					//计算位置
+					var coo = chart.getCoordinate(),
+					x = coo.get('originx'),
+					y = coo.get('originy');
+				}
+			})); 
+			
+			chart.draw();
+
+//			testData = [{"value":[85.88427847354781,87.32517481622884,86.74881627915642,86.94093579151388,87.35719473495509,87.7734536783963,86.94093579151388,88.70213549821409,103.48661370848227,89.27254673771166,101.82020988130725,96.75381908661313,100.66856180482398,105.54759020020536,90.26839545792188,88.63950462898242,89.06722993242668,89.78999236162785,88.62795427362201,20.231398803377072,0,0,0,0],"color":"#1f7e92","name":"代谢率"}];
+			testFunc(Android.getHourData('123333'));
+			function testFunc(data)  {    
+				var jsonObjects = eval(data);   //通过eval方法处理得到json对象数组    
+				todayData = [
+				{
+					name : '今天的情况',
+					value:jsonObjects,
+					color:'#ec4646',
+					line_width:5
+				}
+				];
+				lineToday.load(todayData);    
+				chart.draw();				
+			} 
+            	});
+    
+            </script>  
+        </head>  
+        <body>  
+            <div id='canvasDiv'></div>  
+    	</body>  
+    </html>  

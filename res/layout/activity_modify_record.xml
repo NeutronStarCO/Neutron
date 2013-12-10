@@ -1,0 +1,80 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent"  
+            android:gravity="center_horizontal"
+             >
+        
+       <LinearLayout
+           android:id="@+id/modify_record_layout"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:gravity="center_horizontal"
+        	android:layout_gravity="center_vertical"
+        	android:orientation="vertical"
+        	android:background="@drawable/exit_dialog_bg" >
+
+        <TextView
+            android:id="@+id/modify_record_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:textSize="16sp"
+            android:text="Modify record history" />           
+            
+            <Button
+              android:id="@+id/modify_record_modify"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:text="修改"
+              android:textSize="18sp"
+              android:textColor="#fff"
+              android:layout_marginTop="15dp"
+              android:layout_marginLeft="10dp"
+              android:layout_marginRight="10dp"
+              android:background="@drawable/btn_style_alert_dialog_special"
+              android:gravity="center"
+			  android:onClick="modifyButton"
+              />
+            
+            <Button
+              android:id="@+id/modify_record_delete"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="15dp"
+              android:layout_marginLeft="10dp"
+              android:layout_marginRight="10dp"
+              android:layout_marginBottom="10dp"
+              android:text="删除"
+              android:textSize="18sp"
+              android:textColor="#fff"
+              android:background="@drawable/btn_style_alert_dialog_cancel"
+              android:gravity="center"
+			  android:onClick="deleteButton"
+              />
+            
+            <Button
+              android:id="@+id/modify_record_cancel"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="15dp"
+              android:layout_marginLeft="10dp"
+              android:layout_marginRight="10dp"
+              android:layout_marginBottom="10dp"
+              android:text="取消"
+              android:textSize="18sp"
+              android:textColor="#fff"
+              android:background="@drawable/btn_style_alert_dialog_cancel"
+              android:gravity="center"
+			  android:onClick="cancelButton"
+              />
+           
+       </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

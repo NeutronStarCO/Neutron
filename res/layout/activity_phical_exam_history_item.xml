@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="6dp">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/preference_item"
+        android:focusable="false">
+        
+			<TextView 
+	            android:id="@+id/pehi_date" 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content" 
+	            android:textSize="15sp"
+	            android:text="1111111"
+	            android:textColor="#000"
+	            android:layout_alignParentLeft="true"
+	          	/>   
+                                   
+            <TextView 
+	            android:id="@+id/pehi_testingInstitution" 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textSize="15sp"
+	            android:textColor="#000"
+	            android:layout_alignParentRight="true"
+	            />
+            
+    </RelativeLayout>
+	    
+</RelativeLayout>

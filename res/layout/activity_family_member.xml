@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+     <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/mm_listitem"
+            android:clickable="true"
+             >
+            
+            <ImageView
+                android:id="@+id/family_member_head"
+                android:layout_width="55dp"
+		        android:layout_height="55dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:paddingLeft="5dp"
+                android:src="@drawable/xiaohei" />
+
+            <TextView
+                android:id="@+id/family_member_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/family_member_head"
+                android:padding="7dp"
+                android:text="郭成"
+                android:textColor="#000" />
+            <TextView
+                android:id="@+id/family_member_gender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:padding="7dp"
+                android:text="男"
+                android:textColor="#666" />
+             <TextView
+                android:id="@+id/family_member_birthday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/family_member_head"
+                android:layout_alignParentBottom="true"
+                android:padding="7dp"
+                android:text="1980年4月20日"
+                android:textColor="#666" />
+
+                <TextView
+                    android:id="@+id/family_member_relation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/family_member_birthday"
+                    android:layout_alignParentRight="true"
+                    android:padding="7dp"
+                    android:text="我"
+                    android:textColor="#666" />
+            
+        </RelativeLayout>
+
+</LinearLayout>

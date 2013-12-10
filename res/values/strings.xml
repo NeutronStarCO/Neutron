@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">中子星</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">中子星</string>
+    <string name="main_tab_today_title">今天</string>
+    <string name="man_tab_today_heightText_text">身高</string>
+    <string name="man_tab_today_weightText_text">体重</string>
+    <string name="man_tab_today_metabolismTitle_text">新陈代谢情况</string>
+    <string name="man_tab_today_metabolismRateTitle_text">代谢率：</string>
+    <string name="man_tab_today_metabolismRateDimesion_text">大卡/小时</string>
+    <string name="man_tab_today_metabolismTotalTitle_text">总计：</string>
+    <string name="man_tab_today_metabolismTotalDimesion_text">大卡</string>
+    <string name="man_tab_today_metabolismRMRRateTitle_text">静息代谢率</string>
+    <string name="man_tab_today_metabolismAccelerationDimesion_text">米/秒平方</string>
+    <string name="unknown">未知</string>
+    <string name="man_tab_today_metabolismAccelerationTitle_text">当前加速度：</string>
+    <string name="man_tab_today_bmiMeasure_text">体型</string>
+    <string name="man_tab_today_physicalTitle_text">身体检查记录</string>
+    <string name="title_activity_new_record">NewRecordActivity</string>
+    <string name="action_settings">Settings</string>
+
+    <string-array name="new_record_weight">
+        <item>量量体重</item>
+        <item>体重</item>
+        <item>千克</item>
+        <item>测量日期</item>
+        <item>年-月-日 时:分</item>
+    </string-array>
+
+    <string name="save">保存</string>
+    <string name="back">返回</string>
+    <string name="cancel">取消</string>
+
+    <string-array name="new_record_height">
+        <item>量身高</item>
+        <item>身高</item>
+        <item>厘米</item>
+        <item>测量日期</item>
+        <item>年-月-日 时:分</item>
+    </string-array>
+    <string-array name="new_record_g_blood_test">
+        <item>血常规检测记录</item>
+        <item>检测单位</item>
+        <item>某医院</item>
+        <item>测量日期</item>
+        <item>年-月-日 时:分</item>
+    </string-array>
+    <string-array name="new_record_rbc">
+        <item>红血球</item>
+        <item>红血球数</item>
+        <item>M/ul</item>
+        <item>测量日期</item>
+        <item>年-月-日 时:分</item>
+    </string-array>
+    <string-array name="new_record_g_blood_pressure">
+        <item>血压测量记录</item>
+        <item>测量单位</item>
+        <item>某医院</item>
+        <item>测量日期</item>
+        <item>年-月-日 时:分</item>
+    </string-array>
+    <string-array name="bmi_measure">
+        <item>偏瘦</item>
+        <item>正常</item>
+        <item>最佳体型</item>
+        <item>超重</item>
+        <item>肥胖</item>
+        <item>病态</item>
+    </string-array>
+
+    <string name="title_activity_pehistory">PEHistoryActivity</string>
+    <string name="newone">添加</string>
+    <string name="title_activity_pehistory_item">PEHistoryItemActivity</string>
+
+    <string-array name="peh_history_title">
+        <item>血常规检查记录</item>
+        <item>尿液检查记录</item>
+        <item>血压测量记录</item>
+    </string-array>
+
+    <string name="title_activity_group_testing">GroupTestingActivity</string>
+
+    <string-array name="group_testing_title">
+        <item>血液</item>
+        <item>尿液</item>
+        <item>血压、脉搏</item>
+    </string-array>
+    <string-array name="blood_testing_name_list">
+        <item>红细胞 / RBC（10.0-12.0）</item>
+        <item>白细胞 / WBC（4.0-10.0）</item>
+        <item>血红蛋白 / HGB（110-170）</item>
+        <item>血细胞压积 / HCT（34.0-48.0）</item>
+        <item>血小板 / HCT（100-300）</item>
+        <item>血小板压积 / HCT（0.08-1.00）</item>
+    </string-array>
+    <string-array name="blood_testing_dimension_list">
+        <item>M/ul</item>
+        <item>K/ul</item>
+        <item>g/l</item>
+        <item>%</item>
+        <item>K/ul</item>
+        <item>%</item>
+    </string-array>
+    <string-array name="urine_testing_name_list">
+        <item>尿比重</item>
+        <item>尿酸碱度</item>
+    </string-array>
+    <string-array name="urine_testing_dimension_list">
+        <item>g/ml</item>
+        <item>mol/l</item>
+    </string-array>
+    <string-array name="blood_pressure_name_list">
+        <item>收缩压</item>
+        <item>舒张压</item>
+        <item>心率</item>
+    </string-array>
+    <string-array name="blood_pressure_dimension_list">
+        <item>mmHg</item>
+        <item>mmHg</item>
+        <item>次/分钟</item>
+    </string-array>
+
+    <string name="title_activity_modify_pehistory">ModifyPEHistoryActivity</string>
+    <string name="title_activity_add_choose">AddChooseActivity</string>
+    <string name="title_activity_modify_record">ModifyRecordActivity</string>
+    <string name="file_root_dir">neutron</string>
+    <string-array name="relations">
+        <item>关系</item>
+        <item>我</item>
+        <item>母亲</item>
+        <item>父亲</item>
+        <item>妻子</item>
+        <item>丈夫</item>
+        <item>女儿</item>
+        <item>儿子</item>
+        <item>奶奶</item>
+        <item>爷爷</item>
+        <item>朋友</item>
+    </string-array>
+
+</resources>
