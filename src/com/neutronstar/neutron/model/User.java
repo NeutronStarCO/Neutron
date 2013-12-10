@@ -8,6 +8,8 @@ import java.util.Date;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.neutronstar.neutron.NeutronContract.CONSTANT;
 import com.neutronstar.neutron.NeutronContract.NeutronUser;
@@ -22,6 +24,7 @@ public class User {
 	private String gender;
 	private boolean hasUser = false;
 	private int relation;
+	private Bitmap avatar;
 	private int type;
 	
 	public User(Context context, int userid) {
@@ -37,6 +40,7 @@ public class User {
 			    NeutronUser.COLUMN_NAME_GENDER,
 			    NeutronUser.COLUMN_NAME_BIRTHDAY,
 			    NeutronUser.COLUMN_NAME_RELATION,
+			    NeutronUser.COLUMN_NAME_AVATAR,
 			    NeutronUser.COLUMN_NAME_TYPE
 			    };
 		String selection = "" + NeutronUser.COLUMN_NAME_ID + "=" + userid
@@ -59,6 +63,8 @@ public class User {
 					gender = cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_GENDER));
 					timestamp = cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_BIRTHDAY));
 					relation = cur.getInt(cur.getColumnIndex(NeutronUser.COLUMN_NAME_RELATION));
+					byte[] in = cur.getBlob(cur.getColumnIndex(NeutronUser.COLUMN_NAME_AVATAR));
+					avatar = BitmapFactory.decodeByteArray(in, 0, in.length);
 					type = cur.getInt(cur.getColumnIndex(NeutronUser.COLUMN_NAME_TYPE));
 				} while (cur.moveToNext());
 				try {
@@ -93,6 +99,7 @@ public class User {
 	}
 
 	public int getRelation(){return relation;}
+	public Bitmap getAvatar() { return avatar; }
 	public int getType(){return type;}
 
 }

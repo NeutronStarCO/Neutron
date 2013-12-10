@@ -60,10 +60,9 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 		// init WebView
 		user = new User(this, USER.me);
 		bmiModel = new BMIModel(this, user);
-		Log.d("after rmr", "");
 		rmrModel = new RMRModel(this, user);
 		
-		
+		((ImageView) findViewById(R.id.man_tab_today_avatar)).setImageBitmap(user.getAvatar());
 		wv = (WebView) findViewById(R.id.wv);
 		wv.getSettings().setJavaScriptEnabled(true); // 设置WebView支持javascript
 		wv.getSettings().setUseWideViewPort(true); // 设置是当前html界面自适应屏幕

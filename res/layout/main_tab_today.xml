@@ -38,7 +38,7 @@
 		/>          
 
 	    <ImageView
-			android:id="@+id/head"
+			android:id="@+id/man_tab_today_avatar"
 			android:layout_width="80dp"
 			android:layout_height="80dp"
 			android:layout_alignParentLeft="true"
@@ -54,7 +54,7 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_alignBottom="@+id/head_background"
-	        android:layout_toRightOf="@+id/head"
+	        android:layout_toRightOf="@+id/man_tab_today_avatar"
 	        android:layout_marginLeft="15dp"
 	        android:text="郭成"
 	        android:textColor="#000"
@@ -76,8 +76,8 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="40dp"
 	        android:layout_gravity="bottom"
-	        android:layout_toRightOf="@+id/head"
-	        android:layout_alignBottom="@+id/head"
+	        android:layout_toRightOf="@+id/man_tab_today_avatar"
+	        android:layout_alignBottom="@+id/man_tab_today_avatar"
 	        android:background="@drawable/preference_single_item_little"
 	        android:layout_marginLeft="7dp"
 	        android:clickable="true"

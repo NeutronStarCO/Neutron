@@ -100,11 +100,11 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
 		
 		// 添加一个初始化的用户
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Bitmap bitmap = ((BitmapDrawable) MainNeutron.instance.getResources().getDrawable(R.drawable.icon)).getBitmap();
+		Bitmap bitmap = ((BitmapDrawable) MainNeutron.instance.getResources().getDrawable(R.drawable.mini_avatar_shadow)).getBitmap();
 		bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos); 
 		ContentValues cv = new ContentValues(); 
 		cv.put(NeutronUser.COLUMN_NAME_ID, 1);
-		cv.put(NeutronUser.COLUMN_NAME_NAME, "我的名字");
+		cv.put(NeutronUser.COLUMN_NAME_NAME, "阿凡达");
 		cv.put(NeutronUser.COLUMN_NAME_GENDER, "male");
 		cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, "1980-04-20");
 		cv.put(NeutronUser.COLUMN_NAME_RELATION, USER.me);
