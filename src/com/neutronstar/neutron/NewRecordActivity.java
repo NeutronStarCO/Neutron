@@ -184,7 +184,7 @@ public class NewRecordActivity extends Activity {
 		dateTitle.setText(titleList[3]);
 		dateValue.setHint(titleList[4]);
 		
-	}
+	} 
 	
 	public void save(View v){
 		SQLiteDatabase db = ndb.getWritableDatabase();
