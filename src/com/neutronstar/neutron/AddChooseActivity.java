@@ -18,8 +18,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 public class AddChooseActivity extends Activity {
 	private static final int REQ_CODE_MANUAL_INPUT = 1;
@@ -81,7 +79,7 @@ public class AddChooseActivity extends Activity {
 				} 
 			else{
 				Bundle bundle = data.getExtras(); 
-				// »ñÈ¡Ïà»ú·µ»ØµÄÊý¾Ý£¬²¢×ª»»ÎªBitmapÍ¼Æ¬¸ñÊ½ 
+				// ï¿½ï¿½È¡ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½Ý£ï¿½ï¿½ï¿½×ªï¿½ï¿½ÎªBitmapÍ¼Æ¬ï¿½ï¿½Ê½ 
 				Bitmap bitmap = (Bitmap) bundle.get("data");
 				FileOutputStream b = null; 
 				String str = null; 
@@ -108,7 +106,7 @@ public class AddChooseActivity extends Activity {
 				try 
 				{ 
 					b = new FileOutputStream(fileName); 
-					bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// °ÑÊý¾ÝÐ´ÈëÎÄ¼þ 
+					bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½Ä¼ï¿½ 
 				} catch (FileNotFoundException e) 
 				{ 
 					e.printStackTrace(); 
