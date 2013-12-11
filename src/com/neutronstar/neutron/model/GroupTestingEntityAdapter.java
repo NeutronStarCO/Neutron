@@ -3,7 +3,6 @@ package com.neutronstar.neutron.model;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +41,6 @@ public class GroupTestingEntityAdapter extends BaseAdapter {
 		return position;
 	}
 
-	@SuppressLint("NewApi")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		GroupTestingEntity entity = coll.get(position);

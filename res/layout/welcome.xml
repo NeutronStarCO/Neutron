@@ -7,7 +7,19 @@
         android:orientation="vertical"
         android:background="#eee" >
 
-        
+     <Button
+         android:id="@+id/Button01"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="15dp"
+         android:background="@drawable/btn_style_green"
+         android:gravity="center"
+         android:onClick="welcome_login_weibo"
+         android:paddingLeft="130dp"
+         android:paddingRight="130dp"
+         android:text="微博SSO"
+         android:textColor="#ffffff"
+         android:textSize="18sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
