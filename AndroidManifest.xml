@@ -11,13 +11,13 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-	
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+
     <!-- for weibo SSO by yy -->
     <uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:icon="@drawable/icon"
@@ -48,10 +48,9 @@
         <activity
             android:name="com.neutronstar.neutron.Login"
             android:theme="@android:style/Theme.NoTitleBar" />
-        
+
         <!-- by yy -->
         <activity android:name="com.neutronstar.neutron.weibosso.WBAuthActivity" />
-        
         <activity
             android:name="com.neutronstar.neutron.Welcome"
             android:theme="@style/Anim_style2" />
@@ -122,6 +121,10 @@
         <activity
             android:name="com.neutronstar.neutron.ModifyRecordActivity"
             android:theme="@style/MyDialogStyleBottom" >
+        </activity>
+        <activity
+            android:name="com.neutronstar.neutron.UserInfoActivity"
+            android:label="@string/title_activity_user_info" >
         </activity>
     </application>
 

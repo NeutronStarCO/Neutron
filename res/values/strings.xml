@@ -19,7 +19,7 @@
     <string name="man_tab_today_bmiMeasure_text">体型</string>
     <string name="man_tab_today_physicalTitle_text">身体检查记录</string>
     <string name="action_settings">Settings</string>
-    
+
     <!-- for weiboSSO by yy -->
     <!-- 获取 Token -->
     <string name="weibosdk_demo_obtain_token_via_signature">通过应用签名信息获取 Token</string>
@@ -42,8 +42,7 @@
     <string name="weibosdk_demo_toast_obtain_code_success">获取 Code 成功</string>
     <string name="weibosdk_demo_toast_obtain_code_failed">获取 Code 失败</string>
     <string name="weibosdk_demo_toast_obtain_token_success">获取 Token 成功</string>
-    <string name="weibosdk_demo_toast_obtain_token_failed">获取 Token 失败</string>  
-    
+    <string name="weibosdk_demo_toast_obtain_token_failed">获取 Token 失败</string>
 
     <string-array name="new_record_weight">
         <item>量量体重</item>
@@ -153,6 +152,7 @@
     <string name="title_activity_add_choose">AddChooseActivity</string>
     <string name="title_activity_modify_record">ModifyRecordActivity</string>
     <string name="file_root_dir">neutron</string>
+
     <string-array name="relations">
         <item>关系</item>
         <item>我</item>
@@ -168,5 +168,7 @@
         <item>兄弟</item>
         <item>朋友</item>
     </string-array>
+
+    <string name="title_activity_user_info">UserInfoActivity</string>
 
 </resources>
