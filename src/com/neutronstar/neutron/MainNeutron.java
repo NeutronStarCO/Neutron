@@ -141,7 +141,7 @@ public class MainNeutron extends Activity  {
 
 		mTabPager.setAdapter(mPagerAdapter);
 		mTabPager.setCurrentItem(0);
-		manager.startActivity("MainTabToday", new Intent(this, MainTabToday.class));
+		manager.startActivity("MainTabToday", new Intent(this, MainTabToday.class)); 
 	}
 
 	
