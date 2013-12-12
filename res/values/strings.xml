@@ -15,11 +15,9 @@
     <string name="man_tab_today_metabolismTotalDimesion_text">大卡</string>
     <string name="man_tab_today_metabolismRMRRateTitle_text">静息代谢率</string>
     <string name="man_tab_today_metabolismAccelerationDimesion_text">米/秒平方</string>
-    <string name="unknown">未知</string>
     <string name="man_tab_today_metabolismAccelerationTitle_text">当前加速度：</string>
     <string name="man_tab_today_bmiMeasure_text">体型</string>
     <string name="man_tab_today_physicalTitle_text">身体检查记录</string>
-    <string name="title_activity_new_record">NewRecordActivity</string>
     <string name="action_settings">Settings</string>
     
     <!-- for weiboSSO by yy -->
@@ -58,6 +56,8 @@
     <string name="save">保存</string>
     <string name="back">返回</string>
     <string name="cancel">取消</string>
+    <string name="unknown">未知</string>
+    <string name="add">添加</string>
 
     <string-array name="new_record_height">
         <item>量身高</item>
