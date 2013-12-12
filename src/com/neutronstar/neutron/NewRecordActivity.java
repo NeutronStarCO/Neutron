@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.widget.DatePicker;
@@ -213,9 +214,11 @@ public class NewRecordActivity extends Activity {
 			cv.put(NeutronRecord.COLUMN_NAME_VALUE, Double.parseDouble(itemValue.getText().toString()));
 			cv.put(NeutronRecord.COLUMN_NAME_DATETIME, dateValue.getText().toString()+":00.000");
 			cv.put(NeutronRecord.COLUMN_NAME_TIMESTAMP, timestamp);
+			cv.put(NeutronRecord.COLUMN_NAME_GROUPTESTID, rowid);
 			cv.put(NeutronRecord.COLUMN_NAME_TAG, TAG.normal);
 			db.insert(NeutronRecord.TABLE_NAME, null, cv);
 			NewRecordActivity.this.setResult(RESULT_OK, intent);
+			Log.d("result 0k","result 0k");
 			NewRecordActivity.this.finish();
 		}
 		else if((item == ITEM.g_bloodPressure)

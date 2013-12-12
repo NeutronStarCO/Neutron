@@ -20,6 +20,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ListView;
 
@@ -89,7 +90,7 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-		
+		Log.d("tab family","tab family");
 	}
 
 	@Override
@@ -97,5 +98,6 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 	{
 		onActivityResult(requestCode, resultCode, data);
 	}
+	
 
 }

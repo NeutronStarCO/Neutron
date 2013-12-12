@@ -144,6 +144,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 			Bundle bl = new Bundle();
 			bl.putInt("userid", user.getID());
 			bl.putInt("item", ITEM.weight);
+			bl.putInt("rowid", -1);
 			bl.putDouble("value", bmiModel.getWeight());
 			//将Bundle放入Intent传入下一个Activity
 			intent.putExtras(bl);
@@ -159,6 +160,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 			bl.putInt("userid", user.getID());
 			bl.putInt("item", ITEM.height);
 			bl.putDouble("value", bmiModel.getHeight());
+			bl.putInt("rowid", -1);
 			intent.putExtras(bl);
 			getParent().startActivityForResult(intent,ITEM.height);
 		}
@@ -308,11 +310,11 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 		case RESULT_OK:
 			//获取Bundle的数据
 			Bundle bl= data.getExtras();
-			String value=bl.getString("value");
+			String value=bl.getString("value");Log.d("res",value);
 			switch(requestCode){
 			case ITEM.weight:
 				TextView textView_weight = (TextView) findViewById(R.id.man_tab_today_weight);
-				textView_weight.setText(value);
+				textView_weight.setText(value);Log.d("weight",value);
 				break;
 			case ITEM.height:
 				TextView textView_height = (TextView) findViewById(R.id.man_tab_today_height);
@@ -328,7 +330,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 
 	@Override
 	public void onTabActivityResult(int requestCode, int resultCode, Intent data) {
-		onActivityResult(requestCode, resultCode, data);		
+		Log.d("listener","listener");onActivityResult(requestCode, resultCode, data);		
 	}
 
 }

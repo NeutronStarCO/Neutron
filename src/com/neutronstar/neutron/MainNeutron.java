@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -95,8 +96,8 @@ public class MainNeutron extends Activity  {
 		// InitImageView();//使用动画
 		// 将要分页显示的View装入数组中
 		LayoutInflater mLi = LayoutInflater.from(this);
-//		view_tab_today = mLi.inflate(R.layout.main_tab_today, null);
-//		View view2 = mLi.inflate(R.layout.main_tab_family, null);
+//		View view_tab_today = mLi.inflate(R.layout.main_tab_today, null);
+		View view2 = mLi.inflate(R.layout.main_tab_family, null);
 		View view3 = mLi.inflate(R.layout.main_tab_friends, null);
 		View view4 = mLi.inflate(R.layout.main_tab_settings, null);
 
@@ -140,6 +141,7 @@ public class MainNeutron extends Activity  {
 
 		mTabPager.setAdapter(mPagerAdapter);
 		mTabPager.setCurrentItem(0);
+		manager.startActivity("MainTabToday", new Intent(this, MainTabToday.class));
 	}
 
 	
@@ -180,6 +182,16 @@ public class MainNeutron extends Activity  {
 		@Override
 		public void onClick(View v) {
 			mTabPager.setCurrentItem(index);
+			switch(index)
+			{
+			case 0:
+				manager.startActivity("MainTabToday", new Intent(instance, MainTabToday.class)).getDecorView();
+				break;
+			case 1:
+				manager.startActivity("MainTabFamily", new Intent(instance, MainTabFamily.class)).getDecorView();
+				break;
+				
+			}
 		}
 	};
 
@@ -371,8 +383,7 @@ public class MainNeutron extends Activity  {
 	    if (subActivity instanceof OnTabActivityResultListener)
 	    {
 	        OnTabActivityResultListener listener = (OnTabActivityResultListener) subActivity;
-	        listener.onTabActivityResult(requestCode, resultCode, data);	       
+	        listener.onTabActivityResult(requestCode, resultCode, data);  
 	    }
-	    super.onActivityResult(requestCode, resultCode, data);
 	}
 }
