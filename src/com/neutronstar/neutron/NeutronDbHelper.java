@@ -17,7 +17,6 @@ import com.neutronstar.neutron.NeutronContract.NeutronRecord;
 import com.neutronstar.neutron.NeutronContract.NeutronUser;
 import com.neutronstar.neutron.NeutronContract.TAG;
 import com.neutronstar.neutron.NeutronContract.USER;
-import com.neutronstar.neutron.model.User;
 
 public class NeutronDbHelper extends SQLiteOpenHelper {
 	public static NeutronDbHelper mInstance = null;
@@ -100,11 +99,11 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
 		
 		// 添加一个初始化的用户
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Bitmap bitmap = ((BitmapDrawable) MainNeutron.instance.getResources().getDrawable(R.drawable.mini_avatar_shadow)).getBitmap();
+		Bitmap bitmap = ((BitmapDrawable) MainNeutron.instance.getResources().getDrawable(R.drawable.avatar_male)).getBitmap();
 		bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos); 
 		ContentValues cv = new ContentValues(); 
 		cv.put(NeutronUser.COLUMN_NAME_ID, 1);
-		cv.put(NeutronUser.COLUMN_NAME_NAME, "阿凡达");
+		cv.put(NeutronUser.COLUMN_NAME_NAME, "杰克·萨利");
 		cv.put(NeutronUser.COLUMN_NAME_GENDER, "male");
 		cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, "1980-04-20");
 		cv.put(NeutronUser.COLUMN_NAME_RELATION, USER.me);
@@ -115,14 +114,14 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
 		
 		// 添加另一个初始化用户用于测试家庭成员功能
 		baos = new ByteArrayOutputStream();
-		bitmap = ((BitmapDrawable) MainNeutron.instance.getResources().getDrawable(R.drawable.xiaohei)).getBitmap();
+		bitmap = ((BitmapDrawable) MainNeutron.instance.getResources().getDrawable(R.drawable.avatar_female)).getBitmap();
 		bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos); 
 		cv = new ContentValues(); 
 		cv.put(NeutronUser.COLUMN_NAME_ID, 2);
-		cv.put(NeutronUser.COLUMN_NAME_NAME, "小白");
+		cv.put(NeutronUser.COLUMN_NAME_NAME, "奈蒂莉");
 		cv.put(NeutronUser.COLUMN_NAME_GENDER, "male");
 		cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, "1983-01-15");
-		cv.put(NeutronUser.COLUMN_NAME_RELATION, USER.brother);
+		cv.put(NeutronUser.COLUMN_NAME_RELATION, USER.wife);
 		cv.put(NeutronUser.COLUMN_NAME_TYPE, USER.subregister);
 		cv.put(NeutronUser.COLUMN_NAME_AVATAR, baos.toByteArray());
 		cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.normal);

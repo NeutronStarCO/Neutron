@@ -5,14 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.neutronstar.neutron.NeutronContract.NeutronGroupTesting;
-import com.neutronstar.neutron.NeutronContract.NeutronUser;
-import com.neutronstar.neutron.NeutronContract.TAG;
-import com.neutronstar.neutron.model.FamilyMemberEntity;
-import com.neutronstar.neutron.model.FamilyMemberEntityAdapter;
-import com.neutronstar.neutron.model.HistoryEntity;
-import com.neutronstar.neutron.model.HistoryEntityAdapter;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -21,11 +13,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ListView;
 
+import com.neutronstar.neutron.NeutronContract.NeutronUser;
+import com.neutronstar.neutron.NeutronContract.TAG;
+import com.neutronstar.neutron.model.FamilyMemberEntity;
+import com.neutronstar.neutron.model.FamilyMemberEntityAdapter;
+
 public class MainTabFamily extends Activity implements OnTabActivityResultListener {
 	public static MainTabFamily instance = null;
+	public static final int TAG_ADD = 1;
 	private NeutronDbHelper ndb;
 	private ListView fmListView;
 	private FamilyMemberEntityAdapter fmAdapter;
@@ -86,6 +85,15 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 		}
 		fmAdapter = new FamilyMemberEntityAdapter(this, fmDataArrays);
 		fmListView.setAdapter(fmAdapter);
+	}
+	
+	public void addFamilyMember(View view)
+	{
+		Intent intent = new Intent(MainTabFamily.this, UserInfoActivity.class);
+		Bundle bl = new Bundle();
+		bl.putInt("usage", MainTabFamily.TAG_ADD);
+		intent.putExtras(bl);
+		getParent().startActivityForResult(intent,MainTabFamily.TAG_ADD);
 	}
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)

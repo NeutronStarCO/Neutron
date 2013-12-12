@@ -38,9 +38,19 @@
        					android:layout_height="wrap_content"
        					android:padding="8dp" 
        					android:text="头像"
+       					android:layout_centerVertical="true"
        					android:textSize="17sp"		
 						android:textColor="#000" />
+           			<ImageView 
+           			    android:id="@+id/user_info_avatar_content" 
+           			    android:layout_width="55dp" 
+           			    android:layout_height="55dp" 
+           			    android:layout_toLeftOf="@+id/user_info_avatar_tag"
+           			    android:layout_centerVertical="true" 
+           			    android:paddingLeft="5dp" 
+           			    android:src="@drawable/james_cameron" />
            			<ImageView
+           			    android:id="@+id/user_info_avatar_tag"
            				android:layout_width="wrap_content"
        					android:layout_height="wrap_content"        	     	
        					android:scaleType="matrix"
@@ -62,7 +72,18 @@
 	       				android:text="名字"
 	       				android:textSize="17sp"		
 						android:textColor="#000" />      
+					<TextView
+					    android:id="@+id/user_info_name_content" 
+	       				android:layout_width="wrap_content" 
+	       				android:layout_height="wrap_content"
+	       				android:layout_toLeftOf="@+id/user_info_name_tag"
+	       				android:layout_centerVertical="true"
+	       				android:padding="8dp" 
+	       				android:text="詹姆斯·卡梅隆"
+	       				android:textSize="13sp"		
+						android:textColor="#666" />
 					<ImageView
+					    android:id="@+id/user_info_name_tag" 
 	           			android:layout_width="wrap_content"
 	       				android:layout_height="wrap_content"        	     	
 	       				android:scaleType="matrix"
@@ -83,7 +104,18 @@
        					android:text="性别"
        					android:textSize="17sp"		
 						android:textColor="#000" />      
+					<TextView
+					    android:id="@+id/user_info_gender_content" 
+	       				android:layout_width="wrap_content" 
+	       				android:layout_height="wrap_content"
+	       				android:layout_toLeftOf="@+id/user_info_gender_tag"
+	       				android:layout_centerVertical="true"
+	       				android:padding="8dp" 
+	       				android:text="男"
+	       				android:textSize="13sp"		
+						android:textColor="#666" />
 					<ImageView
+					    android:id="@+id/user_info_gender_tag" 
            				android:layout_width="wrap_content"
        					android:layout_height="wrap_content"        	     	
        					android:scaleType="matrix"
@@ -104,7 +136,18 @@
 	       				android:text="出生年月"
 	       				android:textSize="17sp"		
 						android:textColor="#000" />      
+					<TextView
+					    android:id="@+id/user_info_birthday_content" 
+	       				android:layout_width="wrap_content" 
+	       				android:layout_height="wrap_content"
+	       				android:layout_toLeftOf="@+id/user_info_birthday_tag"
+	       				android:layout_centerVertical="true"
+	       				android:padding="8dp" 
+	       				android:text="1954年8月16日"
+	       				android:textSize="13sp"		
+						android:textColor="#666" />
 					<ImageView
+					    android:id="@+id/user_info_birthday_tag"
 	           			android:layout_width="wrap_content"
 	       				android:layout_height="wrap_content"        	     	
 	       				android:scaleType="matrix"
@@ -125,7 +168,18 @@
        					android:text="与我的关系"
        					android:textSize="17sp"		
 						android:textColor="#000" /> 
+					<TextView
+					    android:id="@+id/user_info_relation_content" 
+	       				android:layout_width="wrap_content" 
+	       				android:layout_height="wrap_content"
+	       				android:layout_toLeftOf="@+id/user_info_relation_tag"
+	       				android:layout_centerVertical="true"
+	       				android:padding="8dp" 
+	       				android:text="父亲"
+	       				android:textSize="13sp"		
+						android:textColor="#666" />
 					<ImageView
+					    android:id="@+id/user_info_relation_tag"
            				android:layout_width="wrap_content"
        					android:layout_height="wrap_content"        	     	
        					android:scaleType="matrix"
@@ -150,7 +204,18 @@
        					android:text="是否是注册用户"
        					android:textSize="17sp"		
 						android:textColor="#000" />
-           			<ImageView
+           			<TextView
+					    android:id="@+id/user_info_usertype_content" 
+	       				android:layout_width="wrap_content" 
+	       				android:layout_height="wrap_content"
+	       				android:layout_toLeftOf="@+id/user_info_usertype_tag"
+	       				android:layout_centerVertical="true"
+	       				android:padding="8dp" 
+	       				android:text="注册用户"
+	       				android:textSize="13sp"		
+						android:textColor="#666" />
+					<ImageView
+					    android:id="@+id/user_info_usertype_tag"
            				android:layout_width="wrap_content"
        					android:layout_height="wrap_content"        	     	
        					android:scaleType="matrix"
@@ -168,10 +233,21 @@
        					android:layout_width="wrap_content" 
        					android:layout_height="wrap_content"
        					android:padding="8dp" 
-       					android:text="注册的手机号"
+       					android:text="注册的帐号"
        					android:textSize="17sp"		
 						android:textColor="#000" /> 
+					<TextView
+					    android:id="@+id/user_info_id_content" 
+	       				android:layout_width="wrap_content" 
+	       				android:layout_height="wrap_content"
+	       				android:layout_toLeftOf="@+id/user_info_id_tag"
+	       				android:layout_centerVertical="true"
+	       				android:padding="8dp" 
+	       				android:text="18901398750"
+	       				android:textSize="13sp"		
+						android:textColor="#666" />
 					<ImageView
+					    android:id="@+id/user_info_id_tag"
            				android:layout_width="wrap_content"
        					android:layout_height="wrap_content"        	     	
        					android:scaleType="matrix"

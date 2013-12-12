@@ -124,7 +124,7 @@
         </activity>
         <activity
             android:name="com.neutronstar.neutron.UserInfoActivity"
-            android:label="@string/title_activity_user_info" >
+            android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
     </application>
 
