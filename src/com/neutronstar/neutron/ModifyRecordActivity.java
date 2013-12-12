@@ -51,10 +51,10 @@ public class ModifyRecordActivity extends Activity {
 		modifyButton = (Button)findViewById(R.id.modify_record_modify);
 		deleteButton = (Button)findViewById(R.id.modify_record_delete);
 		if(hasValue)
-			modifyButton.setText("modify");
+			modifyButton.setText(this.getResources().getString(R.string.modify));
 		else
 		{
-			modifyButton.setText("new");
+			modifyButton.setText(this.getResources().getString(R.string.add));
 			deleteButton.setVisibility(View.GONE);
 		}
 	}

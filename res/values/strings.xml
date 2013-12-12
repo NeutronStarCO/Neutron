@@ -58,6 +58,7 @@
     <string name="cancel">取消</string>
     <string name="unknown">未知</string>
     <string name="add">添加</string>
+    <string name="modify">修改</string>
 
     <string-array name="new_record_height">
         <item>量身高</item>
