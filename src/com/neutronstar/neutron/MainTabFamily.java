@@ -12,9 +12,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.neutronstar.neutron.NeutronContract.NeutronUser;
@@ -85,6 +86,15 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 		}
 		fmAdapter = new FamilyMemberEntityAdapter(this, fmDataArrays);
 		fmListView.setAdapter(fmAdapter);
+		
+		fmListView.setOnItemLongClickListener(new OnItemLongClickListener(){
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parentView, View view,
+					int position, long rowCount) {
+				// TODO Auto-generated method stub
+				return false;
+			}});
 	}
 	
 	public void addFamilyMember(View view)
@@ -97,8 +107,34 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 	}
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
-		Log.d("tab family","tab family");
+	{		
+		switch(resultCode){
+		case RESULT_OK:
+			switch(requestCode){
+			case MainTabFamily.TAG_ADD:
+				Bundle bl = data.getExtras();
+				FamilyMemberEntity entity = new FamilyMemberEntity();
+				Bitmap avatar = bl.getParcelable("avatar");
+				entity.setAvatar(avatar);
+				entity.setId(bl.getInt("id"));
+				entity.setName(bl.getString("name"));
+				entity.setGender(bl.getString("gender"));
+				try {
+					entity.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(bl.getString("birthday")));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				entity.setRelation(bl.getInt("relation"));
+				entity.setType(bl.getInt("usertype"));
+				fmDataArrays.add(entity);
+				fmAdapter = new FamilyMemberEntityAdapter(this, fmDataArrays);
+				fmListView.setAdapter(fmAdapter);
+			}
+			break;
+		default:
+			break;
+				
+		}
 	}
 
 	@Override

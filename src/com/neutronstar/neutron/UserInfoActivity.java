@@ -2,20 +2,19 @@ package com.neutronstar.neutron;
 
 import java.io.ByteArrayOutputStream;
 
-import com.neutronstar.neutron.NeutronContract.NeutronUser;
-import com.neutronstar.neutron.NeutronContract.TAG;
-import com.neutronstar.neutron.NeutronContract.USER;
-
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.neutronstar.neutron.NeutronContract.NeutronUser;
+import com.neutronstar.neutron.NeutronContract.TAG;
+import com.neutronstar.neutron.NeutronContract.USER;
 
 public class UserInfoActivity extends Activity {
 	private NeutronDbHelper ndb;
@@ -81,7 +80,15 @@ public class UserInfoActivity extends Activity {
 		cv.put(NeutronUser.COLUMN_NAME_AVATAR, baos.toByteArray());
 		cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.normal);
 		long result = db.insert(NeutronUser.TABLE_NAME, null, cv); 
-
+		
+		bl.putInt("id", 3);
+		bl.putString("name", "Õ²Ä·Ë¹¡¤¿¨Ã·Â¡");
+		bl.putString("gender", "male");
+		bl.putString("birthday", "1954-08-16");
+		bl.putInt("relation", USER.father);
+		bl.putParcelable("avatar", bitmap);
+		bl.putInt("usertype", USER.registered);
+		intent.putExtras(bl);
 		UserInfoActivity.this.setResult(RESULT_OK, intent);
 		UserInfoActivity.this.finish();
 	}
