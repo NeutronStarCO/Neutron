@@ -12,9 +12,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
@@ -26,6 +28,7 @@ import com.neutronstar.neutron.model.FamilyMemberEntityAdapter;
 public class MainTabFamily extends Activity implements OnTabActivityResultListener {
 	public static MainTabFamily instance = null;
 	public static final int TAG_ADD = 1;
+	public static final int TAG_DELETE = 2;
 	private NeutronDbHelper ndb;
 	private ListView fmListView;
 	private FamilyMemberEntityAdapter fmAdapter;
@@ -87,12 +90,27 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 		fmAdapter = new FamilyMemberEntityAdapter(this, fmDataArrays);
 		fmListView.setAdapter(fmAdapter);
 		
+		fmListView.setOnItemClickListener(new OnItemClickListener(){
+
+			@Override
+			public void onItemClick(AdapterView<?> parentView, View view,
+					int position, long rowCount) {
+				Log.d("--fmListView--", "OnItemClickListener");
+				
+			}});
+		
 		fmListView.setOnItemLongClickListener(new OnItemLongClickListener(){
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parentView, View view,
 					int position, long rowCount) {
-				// TODO Auto-generated method stub
+				Intent intent = new Intent(MainTabFamily.this, DeleteActivity.class);
+				Bundle bl = new Bundle();
+				bl.putInt("position",position);
+				bl.putInt("id", fmDataArrays.get(position).getId());
+				bl.putString("name", fmDataArrays.get(position).getName());
+				intent.putExtras(bl);
+				getParent().startActivityForResult(intent, MainTabFamily.TAG_DELETE);
 				return false;
 			}});
 	}
@@ -107,12 +125,13 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 	}
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	{		
+	{	
+		Bundle bl;
 		switch(resultCode){
 		case RESULT_OK:
 			switch(requestCode){
 			case MainTabFamily.TAG_ADD:
-				Bundle bl = data.getExtras();
+				bl = data.getExtras();
 				FamilyMemberEntity entity = new FamilyMemberEntity();
 				Bitmap avatar = bl.getParcelable("avatar");
 				entity.setAvatar(avatar);
@@ -129,6 +148,14 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 				fmDataArrays.add(entity);
 				fmAdapter = new FamilyMemberEntityAdapter(this, fmDataArrays);
 				fmListView.setAdapter(fmAdapter);
+				break;
+			case MainTabFamily.TAG_DELETE:
+				bl = data.getExtras();
+				int position = bl.getInt("position");
+				fmDataArrays.remove(position);
+				fmAdapter = new FamilyMemberEntityAdapter(this, fmDataArrays);
+				fmListView.setAdapter(fmAdapter);
+				break;
 			}
 			break;
 		default:

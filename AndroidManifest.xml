@@ -126,6 +126,10 @@
             android:name="com.neutronstar.neutron.UserInfoActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
+        <activity
+            android:name="com.neutronstar.neutron.DeleteActivity"
+            android:theme="@style/MyDialogStyleBottom" >
+        </activity>
     </application>
 
 </manifest>

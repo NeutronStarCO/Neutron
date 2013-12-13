@@ -168,7 +168,7 @@
         <item>兄弟</item>
         <item>朋友</item>
     </string-array>
-    
+
     <string name="user_info_title">添加家庭成员</string>
     <string name="user_info_title_avatar">头像</string>
     <string name="user_info_title_name">名字</string>
@@ -177,12 +177,12 @@
     <string name="user_info_title_relation">与我的关系</string>
     <string name="user_info_title_usertype">是否是注册用户</string>
     <string name="user_info_title_id">注册账号</string>
-    
     <string name="user_info_hint_name">未填写</string>
     <string name="user_info_hint_gender">请填写</string>
     <string name="user_info_hint_birthday">未知</string>
     <string name="user_info_hint_relation">未设置</string>
     <string name="user_info_hint_usertype">未知</string>
     <string name="user_info_hint_id">未知</string>
+    <string name="title_activity_delete">DeleteActivity</string>
 
 </resources>

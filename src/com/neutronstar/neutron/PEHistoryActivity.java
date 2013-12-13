@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -142,7 +141,7 @@ public class PEHistoryActivity extends Activity {
 				bl.putString("testingInstitution", hDataArrays.get(position).getTestingInstitution());
 				intent.putExtras(bl);
 				startActivityForResult(intent, 2);
-				return false;
+				return true;
 			}
 			
 		});
