@@ -1,27 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
+ 
  <LinearLayout   xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"        
         android:gravity="center"
         android:orientation="vertical"
-        android:background="#eee" >
+        android:background="#eee" 
+        tools:context=".WBAuthActivity" >
 
+     <TextView
+        android:id="@+id/yy_test"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="By：Neutron Star"
+        android:textColor="#000"
+        android:textSize="25dp" />
+     
      <Button
          android:id="@+id/Button01"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_marginTop="15dp"
-         android:background="@drawable/btn_style_green"
          android:gravity="center"
          android:onClick="welcome_login_weibo"
-         android:paddingLeft="130dp"
-         android:paddingRight="130dp"
-         android:text="微博SSO"
-         android:textColor="#ffffff"
-         android:textSize="18sp" />
-     
-
+         android:background="@drawable/com_sina_weibo_sdk_login_button_with_account_text" />
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

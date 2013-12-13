@@ -81,13 +81,19 @@ public class WBAuthActivity extends Activity {
         });
         
         // 通过单点登录 (SSO) 获取 Token
-        findViewById(R.id.obtain_token_via_sso).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSsoHandler = new SsoHandler(WBAuthActivity.this, mWeiboAuth);
-                mSsoHandler.authorize(new AuthListener());
-            }
-        });
+//        findViewById(R.id.obtain_token_via_sso).setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mSsoHandler = new SsoHandler(WBAuthActivity.this, mWeiboAuth);
+//                mSsoHandler.authorize(new AuthListener());
+//            }
+//        });
+        
+        //edit by yy. 
+        //直接进行授权
+          mSsoHandler = new SsoHandler(WBAuthActivity.this, mWeiboAuth);
+          mSsoHandler.authorize(new AuthListener());
+        
         
         //del by yy
         // 通过 Code 获取 Token
@@ -98,12 +104,23 @@ public class WBAuthActivity extends Activity {
 //            }
 //        });
 
+        
         // 从 SharedPreferences 中读取上次已保存好 AccessToken 等信息，
         // 第一次启动本应用，AccessToken 不可用
         mAccessToken = AccessTokenKeeper.readAccessToken(this);
         if (mAccessToken.isSessionValid()) {
             updateTokenView(true);
         }
+        
+        //add by yy 获取登录信息并返回
+        Intent weiboIntent = new Intent();
+        Bundle myBundle = new Bundle();
+        myBundle.putString("username", mTokenText.toString());;
+        weiboIntent.putExtras(myBundle);
+        setResult(1,weiboIntent);
+        
+        //add by yy 直接返回登陆页面welcome
+        this.finish();
     }
 
     /**
