@@ -5,19 +5,30 @@
        android:background="#eee"
        android:orientation="vertical" >
        
-       <LinearLayout 
+       <RelativeLayout 
  			android:layout_width="fill_parent"
  			android:layout_height="45dp"
- 			android:id="@+id/title" 
  			android:background="@drawable/title_bar"
- 			android:gravity="center_horizontal|center_vertical"  >  
+ 			android:gravity="center_vertical"  >  
+ 			<Button
+	            android:layout_width="70dp"
+	            android:layout_height="wrap_content"
+	            android:layout_centerVertical="true"
+	            android:text="@string/back"
+	            android:textSize="14sp"
+	            android:textColor="#fff"
+	            android:onClick="cancel_back"
+	            android:background="@drawable/title_btn_back"
+		    />    
      		<TextView
-       		android:layout_width="wrap_content" 
-       		android:layout_height="wrap_content" 
-       		android:text="个人信息"
-       		android:textSize="20sp"		
-			android:textColor="#ffffff" />       
-		</LinearLayout>
+     		    android:id="@+id/user_info_title"
+	       		android:layout_width="wrap_content" 
+	       		android:layout_height="wrap_content" 
+	       		android:layout_centerInParent="true"
+	       		android:text="@string/user_info_title"
+	       		android:textSize="20sp"		
+				android:textColor="#ffffff" />       
+		</RelativeLayout>
 		<ScrollView 
 	   		android:layout_width="fill_parent"
 	   		android:layout_height="fill_parent"
@@ -37,7 +48,7 @@
        					android:layout_width="wrap_content" 
        					android:layout_height="wrap_content"
        					android:padding="8dp" 
-       					android:text="头像"
+       					android:text="@string/user_info_title_avatar"
        					android:layout_centerVertical="true"
        					android:textSize="17sp"		
 						android:textColor="#000" />
@@ -69,7 +80,7 @@
 	       				android:layout_width="wrap_content" 
 	       				android:layout_height="wrap_content"
 	       				android:padding="8dp" 
-	       				android:text="名字"
+	       				android:text="@string/user_info_title_name"
 	       				android:textSize="17sp"		
 						android:textColor="#000" />      
 					<TextView
@@ -101,7 +112,7 @@
        					android:layout_width="wrap_content" 
        					android:layout_height="wrap_content"
        					android:padding="8dp" 
-       					android:text="性别"
+       					android:text="@string/user_info_title_gender"
        					android:textSize="17sp"		
 						android:textColor="#000" />      
 					<TextView
@@ -133,7 +144,7 @@
 	       				android:layout_width="wrap_content" 
 	       				android:layout_height="wrap_content"
 	       				android:padding="8dp" 
-	       				android:text="出生年月"
+	       				android:text="@string/user_info_title_birthday"
 	       				android:textSize="17sp"		
 						android:textColor="#000" />      
 					<TextView
@@ -165,7 +176,7 @@
        					android:layout_width="wrap_content" 
        					android:layout_height="wrap_content"
        					android:padding="8dp" 
-       					android:text="与我的关系"
+       					android:text="@string/user_info_title_relation"
        					android:textSize="17sp"		
 						android:textColor="#000" /> 
 					<TextView
@@ -201,7 +212,7 @@
        					android:layout_width="wrap_content" 
        					android:layout_height="wrap_content"
        					android:padding="8dp" 
-       					android:text="是否是注册用户"
+       					android:text="@string/user_info_title_usertype"
        					android:textSize="17sp"		
 						android:textColor="#000" />
            			<TextView
@@ -233,7 +244,7 @@
        					android:layout_width="wrap_content" 
        					android:layout_height="wrap_content"
        					android:padding="8dp" 
-       					android:text="注册的帐号"
+       					android:text="@string/user_info_title_id"
        					android:textSize="17sp"		
 						android:textColor="#000" /> 
 					<TextView
@@ -256,7 +267,6 @@
        					android:src="@drawable/mm_submenu" />      					
     			</RelativeLayout>
      				
-     				<!--   ***********************************************************************   -->
 	   			<Button
 	   			    android:layout_width="fill_parent" 
 	   				android:layout_height="wrap_content"
@@ -265,12 +275,12 @@
 	   				android:layout_marginLeft="12dp"
 	   				android:layout_marginRight="12dp"
 	   				android:padding="4dp" 
-	   				android:text="退出登录"
+	   				android:text="@string/save"
 	   				android:textSize="18sp"		
 					android:textColor="#fff"
 					android:gravity="center"
-					android:background="@drawable/btn_style_red"
-					android:onClick="exit_settings"
+					android:background="@drawable/btn_style_green"
+					android:onClick="save"
 	   			/>     	
        		</LinearLayout>
     	</ScrollView>
