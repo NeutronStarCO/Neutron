@@ -58,6 +58,7 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
     	    NeutronUser.COLUMN_NAME_RELATION + INTEGER_TYPE + COMMA_SEP +
     	    NeutronUser.COLUMN_NAME_TYPE + INTEGER_TYPE + COMMA_SEP +
     	    NeutronUser.COLUMN_NAME_AVATAR + BLOG_TYPE + COMMA_SEP +
+    	    NeutronUser.COLUMN_NAME_PASSCODE + TEXT_TYPE + COMMA_SEP +
     	    NeutronUser.COLUMN_NAME_TAG + INTEGER_TYPE + " )";
     
     private static final String SQL_CREATE_TABLE_GROUPTESTING =
@@ -109,6 +110,7 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
 		cv.put(NeutronUser.COLUMN_NAME_RELATION, USER.me);
 		cv.put(NeutronUser.COLUMN_NAME_TYPE, USER.registered);
 		cv.put(NeutronUser.COLUMN_NAME_AVATAR, baos.toByteArray());
+		cv.put(NeutronUser.COLUMN_NAME_PASSCODE, "123456");
 		cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.normal);
 		long result = db.insert(NeutronUser.TABLE_NAME, null, cv); 
 		
@@ -124,6 +126,7 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
 		cv.put(NeutronUser.COLUMN_NAME_RELATION, USER.wife);
 		cv.put(NeutronUser.COLUMN_NAME_TYPE, USER.subregister);
 		cv.put(NeutronUser.COLUMN_NAME_AVATAR, baos.toByteArray());
+		cv.put(NeutronUser.COLUMN_NAME_PASSCODE, "123456");
 		cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.normal);
 		result = db.insert(NeutronUser.TABLE_NAME, null, cv); 
 	}

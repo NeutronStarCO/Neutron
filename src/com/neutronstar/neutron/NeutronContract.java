@@ -30,6 +30,7 @@ public final class NeutronContract {
 		 public static final String COLUMN_NAME_RELATION = "relation";
 		 public static final String COLUMN_NAME_TYPE = "type";
 		 public static final String COLUMN_NAME_AVATAR = "avatar";
+		 public static final String COLUMN_NAME_PASSCODE = "passcode";
 		 public static final String COLUMN_NAME_TAG = "tag";
 	 }
 	 
@@ -112,4 +113,22 @@ public final class NeutronContract {
 		 public static final int normal = 0;
 		 public static final int delete = 1;
 	 }
+	 
+	 public static abstract class GENDER
+	 {
+		 public static final int female = 0;
+		 public static final int male = 1; 
+	 }
+	 
+	 public static abstract class SYNC
+	 {
+		 public static final int synced = 0;
+		 public static final int unsync = 1;
+	 }
+	 
+	 public static abstract class SERVER
+	 {
+		 public static final String address = "http://www.rrd2mysql.com/";
+	 }
+	 
 }

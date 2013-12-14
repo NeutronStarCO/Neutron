@@ -1,17 +1,37 @@
 package com.neutronstar.neutron;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.telephony.TelephonyManager;
+import android.util.Log;
+
+import com.neutronstar.neutron.NeutronContract.NeutronUser;
+import com.neutronstar.neutron.NeutronContract.SERVER;
+import com.neutronstar.neutron.NeutronContract.TAG;
+import com.neutronstar.neutron.NeutronContract.USER;
 
 public class Appstart extends Activity {
-
+	private NeutronDbHelper ndb;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.appstart);
+		ndb = NeutronDbHelper.GetInstance(this);
 		// requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
 		// getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 		// WindowManager.LayoutParams.FLAG_FULLSCREEN); //全屏显示
@@ -19,7 +39,14 @@ public class Appstart extends Activity {
 		// Toast.LENGTH_LONG).show();
 		// overridePendingTransition(R.anim.hyperspace_in,
 		// R.anim.hyperspace_out);
-
+		
+		TelephonyManager phoneMgr=(TelephonyManager)this.getSystemService(this.TELEPHONY_SERVICE); 
+		Log.d("model",Build.MODEL); //手机型号  
+		Log.d("phonenumble",phoneMgr.getSubscriberId());//本机IMSI 
+		Log.d("area",phoneMgr.getNetworkCountryIso());//本机地区代码 
+		Log.d("SDK",Build.VERSION.SDK);//SDK版本号  
+		Log.d("RELEASE",Build.VERSION.RELEASE);//Firmware/OS 版本号 
+		
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -28,5 +55,95 @@ public class Appstart extends Activity {
 				Appstart.this.finish();
 			}
 		}, 1000);
+	}
+	
+	private int testStoredUser()
+	{
+		// 从本地数据库取得用户信息，如果没有本地用户，转入起始页 0
+		SQLiteDatabase db = ndb.getReadableDatabase();
+		int id = 0;
+		String passcode = "";
+		String phoneNumber = "";
+		String areaCode = "";
+		int serverId = 0;
+		String serverPasscode = "";
+		String serverPhoneNumber = "";
+		String serverAreaCode = "";
+		String[] projection = {
+			    NeutronUser.COLUMN_NAME_ID,
+			    NeutronUser.COLUMN_NAME_PASSCODE
+			    };
+		String selection = "" + NeutronUser.COLUMN_NAME_RELATION + "=" + USER.me
+				+ " AND " + NeutronUser.COLUMN_NAME_TAG + "=" + TAG.normal;
+		Cursor cur = db.query(
+				NeutronUser.TABLE_NAME,    	// The table to query
+			    projection,                	// The columns to return
+			    selection,                 	// The columns for the WHERE clause selection
+			    null,                      	// The values for the WHERE clause selectionArgs
+			    null,                      	// don't group the rows
+			    null,                      	// don't filter by row groups
+			    null                  		// The sort order
+			    );
+		if (cur != null) {
+			if (cur.moveToFirst()) {
+				do {
+					id = cur.getInt(cur.getColumnIndex(NeutronUser.COLUMN_NAME_ID));
+					passcode = cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_PASSCODE));
+				} while (cur.moveToNext());
+			}
+			else{
+				return 0;
+			}
+		}
+		
+		// 根据userid获取验证服务器上的信息
+		String strUrl = SERVER.address + "";
+		URL url = null;
+		try{
+			url = new URL(strUrl);
+			HttpURLConnection urlConn = (HttpURLConnection)url.openConnection();
+			urlConn.setDoInput(true);
+			urlConn.setDoOutput(true);
+			urlConn.setRequestMethod("POST");
+			urlConn.setUseCaches(false);
+			urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			urlConn.setRequestProperty("Charset", "utf-8");
+			
+			urlConn.connect();
+			
+			DataOutputStream dop = new DataOutputStream(urlConn.getOutputStream());
+			dop.writeBytes("userid=" + URLEncoder.encode(String.valueOf(id),"utf-8"));
+			dop.flush();
+			dop.close();
+			
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+			String result = "";
+			String readLine = null;
+			while((readLine = bufferedReader.readLine()) != null)
+			{
+				result += readLine;
+			}
+			bufferedReader.close();
+			urlConn.disconnect();
+			
+			Log.d("result", URLDecoder.decode(result, "utf-8"));
+			
+		}catch (IOException e){
+			e.printStackTrace();
+		}
+		
+		
+		// 没有该用户，转入登录注册页面1
+		if(id != serverId) 
+			return 1;
+		else if(id == serverId && passcode == serverPasscode && phoneNumber == serverPhoneNumber && areaCode == serverAreaCode)
+			return 2;
+		else
+			return 1;
+		
+		// 两种一致转入已登录页面 2（对比用户id，phonenumber，passcode）
+		
+		// 两者不一致转入登录注册页面 1
+		
 	}
 }
