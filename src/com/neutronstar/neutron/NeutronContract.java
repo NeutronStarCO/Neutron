@@ -119,7 +119,7 @@ public final class NeutronContract {
 		 public static final int female = 0;
 		 public static final int male = 1; 
 	 }
-	 
+ 
 	 public static abstract class SYNC
 	 {
 		 public static final int synced = 0;
@@ -131,4 +131,5 @@ public final class NeutronContract {
 		 public static final String address = "http://www.rrd2mysql.com/";
 	 }
 	 
+
 }

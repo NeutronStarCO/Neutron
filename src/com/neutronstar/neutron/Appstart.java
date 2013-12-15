@@ -20,7 +20,6 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.neutronstar.neutron.NeutronContract.NeutronUser;
-import com.neutronstar.neutron.NeutronContract.SERVER;
 import com.neutronstar.neutron.NeutronContract.TAG;
 import com.neutronstar.neutron.NeutronContract.USER;
 
@@ -76,13 +75,13 @@ public class Appstart extends Activity {
 		String selection = "" + NeutronUser.COLUMN_NAME_RELATION + "=" + USER.me
 				+ " AND " + NeutronUser.COLUMN_NAME_TAG + "=" + TAG.normal;
 		Cursor cur = db.query(
-				NeutronUser.TABLE_NAME,    	// The table to query
-			    projection,                	// The columns to return
-			    selection,                 	// The columns for the WHERE clause selection
-			    null,                      	// The values for the WHERE clause selectionArgs
-			    null,                      	// don't group the rows
-			    null,                      	// don't filter by row groups
-			    null                  		// The sort order
+				NeutronUser.TABLE_NAME,  // The table to query
+			    projection,                // The columns to return
+			    selection,                 // The columns for the WHERE clause selection
+			    null,                      // The values for the WHERE clause selectionArgs
+			    null,                      // don't group the rows
+			    null,                      // don't filter by row groups
+			    null                  	// The sort order
 			    );
 		if (cur != null) {
 			if (cur.moveToFirst()) {
@@ -97,7 +96,7 @@ public class Appstart extends Activity {
 		}
 		
 		// 根据userid获取验证服务器上的信息
-		String strUrl = SERVER.address + "";
+		String strUrl = "http://";
 		URL url = null;
 		try{
 			url = new URL(strUrl);
