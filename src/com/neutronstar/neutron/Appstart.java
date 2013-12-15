@@ -13,10 +13,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.neutronstar.neutron.NeutronContract.NeutronUser;
@@ -25,6 +23,7 @@ import com.neutronstar.neutron.NeutronContract.USER;
 
 public class Appstart extends Activity {
 	private NeutronDbHelper ndb;
+	private int id;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -39,12 +38,12 @@ public class Appstart extends Activity {
 		// overridePendingTransition(R.anim.hyperspace_in,
 		// R.anim.hyperspace_out);
 		
-		TelephonyManager phoneMgr=(TelephonyManager)this.getSystemService(this.TELEPHONY_SERVICE); 
-		Log.d("model",Build.MODEL); //手机型号  
-		Log.d("phonenumble",phoneMgr.getSubscriberId());//本机IMSI 
-		Log.d("area",phoneMgr.getNetworkCountryIso());//本机地区代码 
-		Log.d("SDK",Build.VERSION.SDK);//SDK版本号  
-		Log.d("RELEASE",Build.VERSION.RELEASE);//Firmware/OS 版本号 
+//		TelephonyManager phoneMgr=(TelephonyManager)this.getSystemService(this.TELEPHONY_SERVICE); 
+//		Log.d("model",Build.MODEL); //手机型号  
+//		Log.d("phonenumble",phoneMgr.getSubscriberId());//本机IMSI 
+//		Log.d("area",phoneMgr.getNetworkCountryIso());//本机地区代码 
+//		Log.d("SDK",Build.VERSION.SDK);//SDK版本号  
+//		Log.d("RELEASE",Build.VERSION.RELEASE);//Firmware/OS 版本号 
 		
 		new Handler().postDelayed(new Runnable() {
 			@Override
@@ -56,11 +55,10 @@ public class Appstart extends Activity {
 		}, 1000);
 	}
 	
-	private int testStoredUser()
+	private void testStoredUser()
 	{
 		// 从本地数据库取得用户信息，如果没有本地用户，转入起始页 0
 		SQLiteDatabase db = ndb.getReadableDatabase();
-		int id = 0;
 		String passcode = "";
 		String phoneNumber = "";
 		String areaCode = "";
@@ -91,7 +89,14 @@ public class Appstart extends Activity {
 				} while (cur.moveToNext());
 			}
 			else{
-				return 0;
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						Intent intent = new Intent(Appstart.this, Welcome.class);
+						startActivity(intent);
+						Appstart.this.finish();
+					}
+				}, 1000);
 			}
 		}
 		
@@ -132,17 +137,28 @@ public class Appstart extends Activity {
 		}
 		
 		
-		// 没有该用户，转入登录注册页面1
-		if(id != serverId) 
-			return 1;
-		else if(id == serverId && passcode == serverPasscode && phoneNumber == serverPhoneNumber && areaCode == serverAreaCode)
-			return 2;
-		else
-			return 1;
-		
-		// 两种一致转入已登录页面 2（对比用户id，phonenumber，passcode）
-		
-		// 两者不一致转入登录注册页面 1
+		// 已存在用户登录成功，转入主页面
+		if(id == serverId && passcode == serverPasscode && phoneNumber == serverPhoneNumber && areaCode == serverAreaCode)
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					Intent intent = new Intent(Appstart.this, MainNeutron.class);
+					Bundle bl = new Bundle();
+					bl.putInt("id", id);
+					intent.putExtras(bl);
+					startActivity(intent);
+					Appstart.this.finish();
+				}
+			}, 1000);
+		else //转入登录注册页面1
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					Intent intent = new Intent(Appstart.this, Welcome.class);
+					startActivity(intent);
+					Appstart.this.finish();
+				}
+			}, 1000);
 		
 	}
 }

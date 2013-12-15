@@ -131,6 +131,10 @@
             android:name="com.neutronstar.neutron.DeleteActivity"
             android:theme="@style/MyDialogStyleBottom" >
         </activity>
+        <activity
+            android:name="com.neutronstar.neutron.PhoneNumberActivity"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
     </application>
 
 </manifest>

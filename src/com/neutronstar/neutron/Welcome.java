@@ -37,5 +37,13 @@ public class Welcome extends Activity {
 		startActivity(intent);
 		// this.finish();
 	}
+	
+	public void login(View v) {
+		Intent intent = new Intent();
+		intent.setClass(Welcome.this, PhoneNumberActivity.class);
+		startActivity(intent);
+		// this.finish();
+		
+	}
 
 }
