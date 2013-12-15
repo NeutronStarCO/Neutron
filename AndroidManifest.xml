@@ -135,6 +135,10 @@
             android:name="com.neutronstar.neutron.PhoneNumberActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
+        <activity
+            android:name="com.neutronstar.neutron.ConfirmationDialogActivity"
+            android:theme="@style/MyDialogStyle" >
+        </activity>
     </application>
 
 </manifest>
