@@ -15,14 +15,6 @@ public class Welcome extends Activity {
 		setContentView(R.layout.welcome);
 	}
 
-	public void welcome_login(View v) {
-		Intent intent = new Intent();
-		intent.setClass(Welcome.this, Login.class);
-		startActivity(intent);
-		// this.finish();
-		
-	}
-
 	public void welcome_login_weibo(View v) {
 		Intent intent = new Intent();
 		intent.setClass(Welcome.this, WBAuthActivity.class);
@@ -31,19 +23,22 @@ public class Welcome extends Activity {
 		System.out.println("here,here");
 	}
 	
-	public void welcome_register(View v) {
-		Intent intent = new Intent();
-		intent.setClass(Welcome.this, MainNeutron.class);
-		startActivity(intent);
-		// this.finish();
-	}
-	
 	public void login(View v) {
 		Intent intent = new Intent();
+		Bundle bl = new Bundle();
+		bl.putInt("tag", PhoneNumberActivity.TAG_LOGIN);
+		intent.putExtras(bl);
 		intent.setClass(Welcome.this, PhoneNumberActivity.class);
-		startActivity(intent);
-		// this.finish();
-		
+		startActivity(intent);		
 	}
 
+	
+	public void sign_in(View v) {
+		Intent intent = new Intent();
+		Bundle bl = new Bundle();
+		bl.putInt("tag", PhoneNumberActivity.TAG_SIGN_IN);
+		intent.putExtras(bl);
+		intent.setClass(Welcome.this, PhoneNumberActivity.class);
+		startActivity(intent);	
+	}
 }

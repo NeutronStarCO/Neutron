@@ -36,7 +36,7 @@ import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.sina.weibo.sdk.exception.WeiboException;
 
 /**
- * 该类主要演示如何进行授权、SSO登陆。
+ * 该类主要演示如何进行授权、SSO登陆〄1�7
  * 
  * @author SINA
  * @since 2013-09-29
@@ -46,13 +46,13 @@ public class WBAuthActivity extends Activity {
     /** 显示认证后的信息，如 AccessToken */
     private TextView mTokenText;
     
-    /** 微博 Web 授权类，提供登陆等功能  */
+    /** 微博 Web 授权类，提供登陆等功胄1�7  */
     private WeiboAuth mWeiboAuth;
     
-    /** 封装了 "access_token"，"expires_in"，"refresh_token"，并提供了他们的管理功能  */
+    /** 封装亄1�7 "access_token"＄1�7"expires_in"＄1�7"refresh_token"，并提供了他们的管理功能  */
     private Oauth2AccessToken mAccessToken;
 
-    /** 注意：SsoHandler 仅当 SDK 支持 SSO 时有效 */
+    /** 注意：SsoHandler 仅当 SDK 支持 SSO 时有敄1�7 */
     private SsoHandler mSsoHandler;
 
     /**
@@ -63,7 +63,7 @@ public class WBAuthActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
         
-        // 获取 Token View，并让提示 View 的内容可滚动（小屏幕可能显示不全）
+        // 获取 Token View，并让提礄1�7 View 的内容可滚动（小屏幕可能显示不全＄1�7
         mTokenText = (TextView) findViewById(R.id.token_text_view);
         TextView hintView = (TextView) findViewById(R.id.obtain_token_hint);
         hintView.setMovementMethod(new ScrollingMovementMethod());
@@ -76,7 +76,7 @@ public class WBAuthActivity extends Activity {
             @Override
             public void onClick(View v) {
                 mWeiboAuth.anthorize(new AuthListener());
-                // 或者使用：mWeiboAuth.authorize(new AuthListener(), Weibo.OBTAIN_AUTH_TOKEN);
+                // 或�1�7�使用：mWeiboAuth.authorize(new AuthListener(), Weibo.OBTAIN_AUTH_TOKEN);
             }
         });
         
@@ -98,8 +98,8 @@ public class WBAuthActivity extends Activity {
 //            }
 //        });
 
-        // 从 SharedPreferences 中读取上次已保存好 AccessToken 等信息，
-        // 第一次启动本应用，AccessToken 不可用
+        // 仄1�7 SharedPreferences 中读取上次已保存奄1�7 AccessToken 等信息，
+        // 第一次启动本应用，AccessToken 不可甄1�7
         mAccessToken = AccessTokenKeeper.readAccessToken(this);
         if (mAccessToken.isSessionValid()) {
             updateTokenView(true);
@@ -107,7 +107,7 @@ public class WBAuthActivity extends Activity {
     }
 
     /**
-     * 当 SSO 授权 Activity 退出时，该函数被调用。
+     * 彄1�7 SSO 授权 Activity 逄1�7出时，该函数被调用�1�7�1�7
      * 
      * @see {@link Activity#onActivityResult}
      */
@@ -116,30 +116,30 @@ public class WBAuthActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
         
         // SSO 授权回调
-        // 重要：发起 SSO 登陆的 Activity 必须重写 onActivityResult
+        // 重要：发资1�7 SSO 登陆的1�7 Activity 必须重写 onActivityResult
         if (mSsoHandler != null) {
             mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
         }
     }
 
     /**
-     * 微博认证授权回调类。
-     * 1. SSO 授权时，需要在 {@link #onActivityResult} 中调用 {@link SsoHandler#authorizeCallBack} 后，
-     *    该回调才会被执行。
-     * 2. 非 SSO 授权时，当授权结束后，该回调就会被执行。
-     * 当授权成功后，请保存该 access_token、expires_in、uid 等信息到 SharedPreferences 中。
+     * 微博认证授权回调类�1�7�1�7
+     * 1. SSO 授权时，霄1�7要在 {@link #onActivityResult} 中调甄1�7 {@link SsoHandler#authorizeCallBack} 后，
+     *    该回调才会被执行〄1�7
+     * 2. 靄1�7 SSO 授权时，当授权结束后，该回调就会被执行�1�7�1�7
+     * 当授权成功后，请保存评1�7 access_token、expires_in、uid 等信息到 SharedPreferences 中�1�7�1�7
      */
     class AuthListener implements WeiboAuthListener {
         
         @Override
         public void onComplete(Bundle values) {
-            // 从 Bundle 中解析 Token
+            // 仄1�7 Bundle 中解构1�7 Token
             mAccessToken = Oauth2AccessToken.parseAccessToken(values);
             if (mAccessToken.isSessionValid()) {
                 // 显示 Token
                 updateTokenView(false);
                 
-                // 保存 Token 到 SharedPreferences
+                // 保存 Token 刄1�7 SharedPreferences
                 AccessTokenKeeper.writeAccessToken(WBAuthActivity.this, mAccessToken);
                 Toast.makeText(WBAuthActivity.this, 
                         R.string.weibosdk_demo_toast_auth_success, Toast.LENGTH_SHORT).show();
@@ -168,7 +168,7 @@ public class WBAuthActivity extends Activity {
     }
     
     /**
-     * 显示当前 Token 信息。
+     * 显示当前 Token 信息〄1�7
      * 
      * @param hasExisted 配置文件中是否已存在 token 信息并且合法
      */
