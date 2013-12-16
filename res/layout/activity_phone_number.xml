@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/phone_number_linearlayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#eee"
@@ -15,9 +16,9 @@
             android:layout_centerVertical="true"
             android:text="返回"
             android:textSize="14sp"
-            android:textColor="#fff"
-            android:onClick="login_back"
-            android:background="@drawable/title_btn_back"/>
+            android:textColor="#fff"            
+            android:background="@drawable/title_btn_back"
+            android:onClick="back"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,11 +54,11 @@
 	        android:gravity="center"
 	        android:textSize="18sp"
 	        android:layout_marginTop="15dp"
-	        android:text="输入您的手机号码和国家代码">
-	        
+	        android:text="输入您的手机号码和国家代码">     
 	    </TextView>
 	    
 	    <Button
+	        android:id="@+id/phone_number_IDDbutton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -69,7 +70,7 @@
             android:drawableRight="@drawable/mm_submenu"
             android:textColor="#000000"
             android:textSize="18sp"
-            android:onClick="welcome_register"  />
+            android:onClick="chooseIDD"  />
 
 	    <LinearLayout
 	        android:layout_width="match_parent"
@@ -78,6 +79,7 @@
 	        android:orientation="horizontal" >
 	    
 		    <EditText
+		        android:id="@+id/phone_number_IDD"
 		        android:layout_width="60dp"
 		        android:layout_height="wrap_content"
 		        android:background="@drawable/login_editbox"
@@ -89,6 +91,7 @@
 		        android:textSize="15sp" />
 		    
 		    <EditText
+		        android:id="@+id/phone_number_number"
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"
 		        android:layout_marginLeft="3dp"
@@ -101,19 +104,27 @@
 		        android:textSize="15sp" />
 	    </LinearLayout>
 	    
-	    <LinearLayout
-	        android:layout_width="match_parent"
+
+
+        <CheckBox
+            android:id="@+id/phone_number_terms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="遵守条款和私隐保护" 
+            android:textColor="#000"
+            android:textSize="10sp"
+            android:checked="true"/>
+
+    	<TextView
+    	    android:id="@+id/phone_number_others"
+	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
-
-	        android:orientation="horizontal" >
-
-	        <CheckBox
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="遵守条款和私隐保护" 
-	            android:textColor="#000"
-	            android:textSize="10sp"
-	            android:checked="true"/>
-    	</LinearLayout>
+	        android:gravity="left"
+	        android:paddingLeft="5dp"
+	        android:textSize="13sp"
+	        android:textColor="#000"
+	        android:text="其他注册方式">
+	        
+	    </TextView>
 	</LinearLayout>
 </LinearLayout>

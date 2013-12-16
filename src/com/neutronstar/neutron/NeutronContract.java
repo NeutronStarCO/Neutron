@@ -128,7 +128,11 @@ public final class NeutronContract {
 	 
 	 public static abstract class SERVER
 	 {
-		 public static final String address = "http://www.rrd2mysql.com/";
+		 public static final String Address = "http://www.rrd2mysql.com:12581/NeutronServer";
+		 public static final String DomainAddress = "http://www.rrd2mysql.com:12581/NeutronServer";
+		 public static final String PublicAddress = "http://219.141.181.131:12581/NeutronServer";
+		 public static final String InnerAddress = "http://172.20.8.183:12581/NeutronServer";
+		 
 	 }
 	 
 

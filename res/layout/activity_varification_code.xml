@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#eee"
+    android:orientation="vertical" >
+    <RelativeLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/title_bar">
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="返回"
+            android:textSize="14sp"
+            android:textColor="#fff"            
+            android:background="@drawable/title_btn_back"
+            android:onClick="back"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:inputType="number"
+            android:textColor="#ffffff"
+            android:text="@string/varification_code"
+           />
+        <Button 
+		    android:layout_width="67dp" 
+       		android:layout_height="wrap_content"
+       		android:layout_alignParentRight="true" 
+       		android:layout_centerVertical="true"
+       		android:layout_marginRight="5dp"
+       		android:text="@string/next"
+       		android:textColor="#fff"
+       		android:textSize="15dp"
+			android:background="@drawable/title_btn_right"
+			android:onClick="next"
+	    />      
+    </RelativeLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="top|center"
+        android:orientation="vertical" >
+
+	    <TextView
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:gravity="center"
+	        android:textSize="18sp"
+	        android:layout_marginTop="15dp"
+	        android:text="验证码已经发送到下面这个号码：">     
+	    </TextView>
+	    
+		<EditText
+		    android:id="@+id/varification_code_code"
+		    android:layout_width="150dp"
+		    android:layout_height="wrap_content"
+		    android:background="@drawable/login_editbox"
+		    android:drawableRight="@drawable/remove_48"
+		    android:gravity="left|center_vertical"
+		    android:hint="@string/varification_code"
+		    android:inputType="number"
+		    android:singleLine="true"
+		    android:textColor="#000"
+		    android:textSize="15sp" />
+
+    	<TextView
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:gravity="center"
+	        android:paddingLeft="5dp"
+	        android:textSize="18sp"
+	        android:text="您将在5秒钟内收到验证码">
+	        
+	    </TextView>
+	</LinearLayout>
+</LinearLayout>

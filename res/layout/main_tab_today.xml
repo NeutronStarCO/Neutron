@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_tab_today"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#fcfcfc"
@@ -13,12 +14,17 @@
 		android:gravity="center_vertical"  >  
     
    		<TextView
+   		    android:id="@+id/man_tab_today_title"
      		android:layout_width="wrap_content" 
      		android:layout_height="wrap_content" 
      		android:text="@string/main_tab_today_title"
      		android:layout_centerInParent="true"
-     		android:textSize="20sp"		
-			android:textColor="#ffffff" /> 
+     		android:drawableRight="@drawable/down_24"
+     		android:textSize="20sp"	
+     		android:focusable="true"
+     		android:clickable="true"	
+			android:textColor="#ffffff" 
+			android:onClick="onDisplayChange"/> 
 	</RelativeLayout>
 
 	
