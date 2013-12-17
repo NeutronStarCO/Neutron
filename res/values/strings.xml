@@ -184,5 +184,7 @@
     <string name="user_info_hint_usertype">未知</string>
     <string name="user_info_hint_id">未知</string>
     <string name="title_activity_delete">DeleteActivity</string>
+    
+    <string name="user_change_name">更改名字</string>
 
 </resources>

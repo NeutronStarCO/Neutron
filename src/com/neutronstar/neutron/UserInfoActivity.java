@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.RelativeLayout;
 
 import com.neutronstar.neutron.NeutronContract.NeutronUser;
 import com.neutronstar.neutron.NeutronContract.TAG;
@@ -28,6 +29,7 @@ public class UserInfoActivity extends Activity {
 	private TextView tvRelation;
 	private TextView tvUserType;
 	private TextView tvId;
+	private RelativeLayout rlChangename;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class UserInfoActivity extends Activity {
 		tvRelation = (TextView)findViewById(R.id.user_info_relation_content);
 		tvUserType = (TextView)findViewById(R.id.user_info_usertype_content);
 		tvId = (TextView)findViewById(R.id.user_info_id_content);
+		rlChangename = (RelativeLayout)findViewById(R.id.user_change_name);
 		// 初始化让界面成为新建立一个用户的形式
 		switch(usage)
 		{
@@ -58,6 +61,30 @@ public class UserInfoActivity extends Activity {
 			tvUserType.setHint(getResources().getString(R.string.user_info_hint_usertype));
 			tvId.setHint(getResources().getString(R.string.user_info_hint_id));
 			break;
+		}
+		rlChangename.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(UserInfoActivity.this,changename.class);
+				Bundle bundle = new Bundle();
+				
+				bundle.putString("name", "name");
+				intent.putExtras(bundle);
+				startActivityForResult(intent,2);
+			}
+		});
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data){
+		switch(requestCode){
+			case 1:
+				String result = data.getExtras().getString("");
+			case 2:
+				String changedName = data.getExtras().getString("name");
+				tvName.setText(changedName);
 		}
 	}
 	
