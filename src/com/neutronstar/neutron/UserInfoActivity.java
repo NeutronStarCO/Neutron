@@ -78,7 +78,6 @@ public class UserInfoActivity extends Activity {
 				Intent intent = new Intent(UserInfoActivity.this,ChangeName.class);
 				Bundle bundle = new Bundle();
 				String name = tvName.getText().toString();
-				Log.i("tvName",name);
 				bundle.putString("name", name);
 				intent.putExtras(bundle);
 				startActivityForResult(intent,2);
@@ -90,6 +89,10 @@ public class UserInfoActivity extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(UserInfoActivity.this,ChangeGender.class);
+				Bundle bundle = new Bundle();
+				String gender = tvGender.getText().toString();
+				bundle.putString("gender", gender);
+				intent.putExtras(bundle);
 				startActivityForResult(intent,3);
 			}
 		});
@@ -99,6 +102,10 @@ public class UserInfoActivity extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(UserInfoActivity.this,ChangeBirthday.class);
+				Bundle bundle = new Bundle();
+				String birthday = tvBirthday.getText().toString();
+				bundle.putString("birthday", birthday);
+				intent.putExtras(bundle);
 				startActivityForResult(intent,4);
 			}
 		});
@@ -221,6 +228,11 @@ public class UserInfoActivity extends Activity {
 	public void cancel_back(View v)
 	{
 		this.finish();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
 	}
 
 }

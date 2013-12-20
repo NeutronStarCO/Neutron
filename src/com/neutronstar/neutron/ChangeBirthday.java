@@ -25,11 +25,22 @@ public class ChangeBirthday extends Activity{
 		etBirthday = (EditText)findViewById(R.id.etBirthday);
 		DatePicker dp = (DatePicker)findViewById(R.id.dpBirthday);
 		
+		Bundle bundle = this.getIntent().getExtras();
+		String birthday = bundle.getString("birthday");
+
 		Calendar calendar = Calendar.getInstance();
 		int year = calendar.get(Calendar.YEAR);
 		int monthOfYear = calendar.get(Calendar.MONTH);
 		int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-		etBirthday.setText(year + "-" + (monthOfYear+1) + "-" + dayOfMonth);
+
+		if(birthday != "")
+		{
+			etBirthday.setText(birthday);			
+		}
+		else
+		{
+			etBirthday.setText(year + "-" + (monthOfYear+1) + "-" + dayOfMonth);
+		}
 		
 		dp.init(year, monthOfYear, dayOfMonth, new OnDateChangedListener() {
 

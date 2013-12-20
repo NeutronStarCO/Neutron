@@ -26,6 +26,10 @@ public class ChangeGender extends Activity{
 		tvGender = (TextView)findViewById(R.id.tvGender);
 		rgGender = (RadioGroup)findViewById(R.id.rgGender);
 		
+		Bundle bundle = this.getIntent().getExtras();
+		String gender = bundle.getString("gender");
+//		tvGender.setText(gender);
+		
 		rgGender.setOnCheckedChangeListener(new OnCheckedChangeListener(){
 
 			@Override

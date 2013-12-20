@@ -12,13 +12,14 @@
 		android:background="@drawable/title_bar"
 		android:gravity="center_vertical"  >  
 		<Button
+		    android:id="@+id/btn_cancel_change_name"
           	android:layout_width="70dp"
           	android:layout_height="wrap_content"
           	android:layout_centerVertical="true"
           	android:text="@string/cancel"
           	android:textSize="14sp"
           	android:textColor="#fff"
-          	android:onClick="cancel_back"
+          	android:onClick="save"
          	android:background="@drawable/title_btn_back"/> 
 
      	<TextView

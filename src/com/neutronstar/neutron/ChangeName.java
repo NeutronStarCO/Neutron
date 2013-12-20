@@ -15,6 +15,7 @@ public class ChangeName extends Activity {
 	
 	EditText etName;
 	Button btnSave;
+	Button btnCancel;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -22,7 +23,9 @@ public class ChangeName extends Activity {
 		setContentView(R.layout.activity_change_name);
 		etName = (EditText)findViewById(R.id.et_changed_name);
 		btnSave = (Button)findViewById(R.id.btn_change_name_save);
-		Bundle bundle = new Bundle();
+		btnCancel = (Button)findViewById(R.id.btn_cancel_change_name);
+		
+		Bundle bundle = this.getIntent().getExtras();
 		String name = bundle.getString("name");
 		etName.setText(name);
 		etName.addTextChangedListener(new TextWatcher(){
@@ -56,7 +59,7 @@ public class ChangeName extends Activity {
 	}
 
 	public void cancel_back(View v) { // 标题栏 返回按钮
-		Log.i("cancel", "cancel");
+		// 目前btn_Cancel按钮添加的方法也是save而不是cancel_back，因为即使是cancel也需要往回传一个值
 		this.finish();
 	}
 }
