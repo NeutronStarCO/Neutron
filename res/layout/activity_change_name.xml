@@ -31,6 +31,8 @@
      	    android:textSize="20sp" />
  
 		<Button 
+		    android:id="@+id/btn_change_name_save"
+		    android:clickable="false"
 		    android:layout_width="67dp" 
        		android:layout_height="wrap_content"
        		android:layout_alignParentRight="true" 
@@ -57,7 +59,7 @@
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
 		    android:background="@drawable/login_editbox"
-		    android:gravity="right|center_vertical"
+		    android:gravity="left|center_vertical"
 		    android:inputType="textPersonName"
 		    android:singleLine="true"
 		    android:textColor="#000"
