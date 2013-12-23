@@ -138,23 +138,20 @@
         </activity>
         <activity
         	android:name="com.neutronstar.neutron.ChangeGender"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateVisible" >
+            android:theme="@android:style/Theme.NoTitleBar">
         </activity>
         <activity
         	android:name="com.neutronstar.neutron.ChangeBirthday"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateVisible" >
+            android:theme="@android:style/Theme.NoTitleBar">
         </activity>
         <activity
         	android:name="com.neutronstar.neutron.ChangeAvatar"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateVisible" >
+            android:windowSoftInputMode="stateVisible">
         </activity>
         <activity
         	android:name="com.neutronstar.neutron.ChangeRelation"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateVisible" >
+            android:theme="@android:style/Theme.NoTitleBar">
         </activity>
     </application>
 

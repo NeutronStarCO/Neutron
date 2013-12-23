@@ -69,6 +69,9 @@ public class UserInfoActivity extends Activity {
 			tvUserType.setHint(getResources().getString(R.string.user_info_hint_usertype));
 			tvId.setHint(getResources().getString(R.string.user_info_hint_id));
 			break;
+		case MainTabFamily.TAG_QUERY:
+			Log.i("TAG_QUERY","TAG_QUERY");
+			break;
 		}
 		rlChangeName.setOnClickListener(new View.OnClickListener() {
 			
@@ -77,7 +80,11 @@ public class UserInfoActivity extends Activity {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(UserInfoActivity.this,ChangeName.class);
 				Bundle bundle = new Bundle();
-				String name = tvName.getText().toString();
+				String name = "";
+				if (tvName.getText() != null)
+				{
+					name = tvName.getText().toString();
+				}	
 				bundle.putString("name", name);
 				intent.putExtras(bundle);
 				startActivityForResult(intent,2);
@@ -103,7 +110,11 @@ public class UserInfoActivity extends Activity {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(UserInfoActivity.this,ChangeBirthday.class);
 				Bundle bundle = new Bundle();
-				String birthday = tvBirthday.getText().toString();
+				String birthday = "";
+				if (tvBirthday.getText() != null)
+				{
+					birthday = tvBirthday.getText().toString();
+				}				
 				bundle.putString("birthday", birthday);
 				intent.putExtras(bundle);
 				startActivityForResult(intent,4);
@@ -166,11 +177,11 @@ public class UserInfoActivity extends Activity {
 		cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.normal);
 		long result = db.insert(NeutronUser.TABLE_NAME, null, cv); 
 		
-		bl.putInt("id", 3);
+		bl.putInt("id", 4);
 		bl.putString("name", name);
-		bl.putString("gender", "male");
-		bl.putString("birthday", "1954-08-16");
-		bl.putInt("relation", USER.father);
+		bl.putString("gender", gender);
+		bl.putString("birthday", birthday);
+		bl.putInt("relation", relation);
 		bl.putParcelable("avatar", bitmap);
 		bl.putInt("usertype", USER.registered);
 		intent.putExtras(bl);

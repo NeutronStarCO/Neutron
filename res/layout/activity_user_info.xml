@@ -158,7 +158,7 @@
 	       				android:layout_toLeftOf="@+id/user_info_birthday_tag"
 	       				android:layout_centerVertical="true"
 	       				android:padding="8dp" 
-	       				android:text="1954-8-16"
+	       				android:text=""
 	       				android:textSize="13sp"		
 						android:textColor="#666" />
 					<ImageView

@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -43,10 +45,30 @@ public class ChangeGender extends Activity{
 		});	
 	}
 	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if(keyCode == KeyEvent.KEYCODE_BACK) { //监控/拦截/屏蔽返回键
+	    	save(getRootView(this));
+	    } else if(keyCode == KeyEvent.KEYCODE_MENU) {
+	        //监控/拦截菜单键
+	    } else if(keyCode == KeyEvent.KEYCODE_HOME) {
+	        //由于Home键为系统键，此处不能捕获，需要重写onAttachedToWindow()
+	    }
+	    return super.onKeyDown(keyCode, event);
+	}
+	
+	private static View getRootView(Activity context)
+	{
+		return ((ViewGroup)context.findViewById(android.R.id.content)).getChildAt(0);
+	}
+	
 	public void save(View v) {
 		Intent intent = new Intent();
-		intent.putExtra("gender", tvGender.getText().toString());
-		ChangeGender.this.setResult(-1,intent);
+		Bundle bl = new Bundle();
+		bl.putInt("usage", MainTabFamily.TAG_QUERY);
+		bl.putString("gender", tvGender.getText().toString());
+		intent.putExtras(bl);
+		ChangeGender.this.setResult(RESULT_OK,intent);
 		this.finish();
 	}
 	

@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -58,10 +60,31 @@ public class ChangeRelation extends Activity{
 		}
 	}
 	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if(keyCode == KeyEvent.KEYCODE_BACK) { //监控/拦截/屏蔽返回键
+	    	save(getRootView(this));
+	    } else if(keyCode == KeyEvent.KEYCODE_MENU) {
+	        //监控/拦截菜单键
+	    } else if(keyCode == KeyEvent.KEYCODE_HOME) {
+	        //由于Home键为系统键，此处不能捕获，需要重写onAttachedToWindow()
+	    }
+	    return super.onKeyDown(keyCode, event);
+	}
+	
+	private static View getRootView(Activity context)
+	{
+		return ((ViewGroup)context.findViewById(android.R.id.content)).getChildAt(0);
+	}
+	
+	
 	public void save(View v) {
 		Intent intent = new Intent();
-		intent.putExtra("relation", tvRelation.getText().toString());
-		ChangeRelation.this.setResult(-1,intent);
+		Bundle bl = new Bundle();
+		bl.putInt("usage", MainTabFamily.TAG_QUERY);
+		bl.putString("relation", tvRelation.getText().toString());
+		intent.putExtras(bl);
+		ChangeRelation.this.setResult(RESULT_OK,intent);
 		this.finish();
 	}
 
