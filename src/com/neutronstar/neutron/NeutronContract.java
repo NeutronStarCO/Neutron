@@ -128,7 +128,7 @@ public final class NeutronContract {
 	 
 	 public static abstract class SERVER
 	 {
-		 public static final String address = "http://www.rrd2mysql.com/";
+		 public static final String address = "http://www.rrd2mysql.com:12581/NeutronServer";
 	 }
 	 
 
