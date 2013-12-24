@@ -156,6 +156,22 @@
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateVisible" >
         </activity>
+        <activity
+            android:name="com.neutronstar.neutron.PhoneNumberActivity"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.neutronstar.neutron.ConfirmationDialogActivity"
+            android:theme="@style/MyDialogStyle" >
+        </activity>
+        <activity
+            android:name="com.neutronstar.neutron.VarificationCodeActivity"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.neutronstar.neutron.SignUpInfoActivity"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
     </application>
 
 </manifest>

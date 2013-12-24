@@ -100,7 +100,7 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
 		
 		// 添加一个初始化的用户
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Bitmap bitmap = ((BitmapDrawable) MainNeutron.instance.getResources().getDrawable(R.drawable.avatar_male)).getBitmap();
+		Bitmap bitmap = ((BitmapDrawable) Appstart.instance.getResources().getDrawable(R.drawable.avatar_male)).getBitmap();
 		bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos); 
 		ContentValues cv = new ContentValues(); 
 		cv.put(NeutronUser.COLUMN_NAME_ID, 1);
@@ -116,7 +116,7 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
 		
 		// 添加另一个初始化用户用于测试家庭成员功能
 		baos = new ByteArrayOutputStream();
-		bitmap = ((BitmapDrawable) MainNeutron.instance.getResources().getDrawable(R.drawable.avatar_female)).getBitmap();
+		bitmap = ((BitmapDrawable) Appstart.instance.getResources().getDrawable(R.drawable.avatar_female)).getBitmap();
 		bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos); 
 		cv = new ContentValues(); 
 		cv.put(NeutronUser.COLUMN_NAME_ID, 2);

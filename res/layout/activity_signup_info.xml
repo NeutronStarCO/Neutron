@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#eee"
+    android:orientation="vertical" >
+    <RelativeLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/title_bar">
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="返回"
+            android:textSize="14sp"
+            android:textColor="#fff"            
+            android:background="@drawable/title_btn_back"
+            android:onClick="back"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            android:text="@string/you"
+           />
+        <Button 
+		    android:layout_width="67dp" 
+       		android:layout_height="wrap_content"
+       		android:layout_alignParentRight="true" 
+       		android:layout_centerVertical="true"
+       		android:layout_marginRight="5dp"
+       		android:text="@string/signup"
+       		android:textColor="#fff"
+       		android:textSize="15dp"
+			android:background="@drawable/title_btn_right"
+			android:onClick="next"
+	    />      
+    </RelativeLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="top|center"
+        android:orientation="vertical" >
+
+	    <TextView
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="15dp"
+	        android:gravity="center"
+	        android:text="设置一些基本信息会有助于我们更好的为您服务:"
+	        android:textSize="18sp" >
+     
+	    </TextView>
+	    
+	    <ImageView 
+		    android:id="@+id/sign_up_info_avatar" 
+		    android:layout_width="80dp" 
+		    android:layout_height="80dp" 
+		    android:layout_marginTop="15dp"
+		    android:src="@drawable/james_cameron" />
+	    
+	    <LinearLayout
+    	    android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:layout_marginTop="10dp"
+        	android:background="@drawable/login_editbox"
+        	android:orientation="horizontal"
+        	android:gravity="center">
+	        <TextView
+		        android:layout_width="70dp"
+		        android:layout_height="wrap_content"
+		        android:gravity="center"
+		        android:textSize="15sp"
+		        android:textColor="#000"
+		        android:text="@string/name">     
+		    </TextView>
+			<EditText
+			    android:id="@+id/sign_up_info_name"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:gravity="left|center_vertical"
+		        android:hint="@string/andy_lau"
+		        android:inputType="phone"
+		        android:singleLine="true"
+		        android:textColor="#000"
+		        android:textSize="15sp" />
+		</LinearLayout>
+		
+		<LinearLayout
+    	    android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:layout_marginTop="10dp"
+        	android:background="@drawable/login_editbox"
+        	android:orientation="horizontal"
+        	android:gravity="center">
+	        <TextView
+		        android:layout_width="70dp"
+		        android:layout_height="wrap_content"
+		        android:gravity="center"
+		        android:textSize="15sp"
+		        android:textColor="#000"
+		        android:text="@string/birthday">     
+		    </TextView>
+			<EditText
+			    android:id="@+id/sign_up_info_birthday"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:gravity="left|center_vertical"
+		        android:hint="@string/andy_lau_birthday"
+		        android:inputType="phone"
+		        android:singleLine="true"
+		        android:textColor="#000"
+		        android:textSize="15sp" />
+		</LinearLayout>
+		
+		<LinearLayout
+    	    android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:layout_marginTop="10dp"
+        	android:background="@drawable/login_editbox"
+        	android:orientation="horizontal"
+        	android:gravity="center">
+	        <TextView
+		        android:layout_width="70dp"
+		        android:layout_height="wrap_content"
+		        android:gravity="center"
+		        android:textSize="15sp"
+		        android:textColor="#000"
+		        android:text="@string/gender">     
+		    </TextView>
+			<Spinner
+			    android:id="@+id/sign_up_info_spinner"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content" 
+			    android:gravity="center"
+			    android:textColor="#000"
+			    android:textSize="15sp" />
+		</LinearLayout>
+
+		
+	</LinearLayout>
+</LinearLayout>
