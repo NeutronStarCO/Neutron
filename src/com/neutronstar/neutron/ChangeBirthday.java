@@ -36,7 +36,7 @@ public class ChangeBirthday extends Activity{
 		int monthOfYear = calendar.get(Calendar.MONTH);
 		int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
-		if(birthday == "")
+		if(birthday.equals(""))
 		{
 			etBirthday.setText(year + "-" + (monthOfYear+1) + "-" + dayOfMonth);
 		}

@@ -33,16 +33,18 @@ public class ChangeRelation extends Activity{
 		tvRelation = (TextView)findViewById(R.id.tvRelation);
 		spRelation = (Spinner)findViewById(R.id.spRelation);
 		
-		adapter = ArrayAdapter.createFromResource(this, R.array.relations, android.R.layout.simple_spinner_item);
+		Bundle bundle = this.getIntent().getExtras();
+		String relation = bundle.getString("relation");
+		int pos = bundle.getInt("pos");
+		tvRelation.setText(relation);	
 		
+		adapter = ArrayAdapter.createFromResource(this, R.array.relations, android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spRelation.setAdapter(adapter);
-		
-		Log.i("relation","setAdapter");
-		
 		spRelation.setOnItemSelectedListener(new SpinnerXMLSelectedListener());
-		
 		spRelation.setVisibility(View.VISIBLE);
+				
+		spRelation.setSelection(pos, true);
 	}
 	
 	class SpinnerXMLSelectedListener implements OnItemSelectedListener{

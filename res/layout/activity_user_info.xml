@@ -38,6 +38,7 @@
 	           	android:layout_height="wrap_content"
 	           	android:orientation="vertical" >
            		<RelativeLayout
+           		    android:id="@+id/user_change_avatar"
            			android:layout_width="fill_parent"
            			android:layout_height="wrap_content"
            			android:layout_marginTop="14dp"
@@ -59,7 +60,8 @@
            			    android:layout_toLeftOf="@+id/user_info_avatar_tag"
            			    android:layout_centerVertical="true" 
            			    android:paddingLeft="5dp" 
-           			    android:src="@drawable/james_cameron" />
+           			    android:src="@drawable/james_cameron" 
+           			    android:onClick="avatar_enlarge" />
            			<ImageView
            			    android:id="@+id/user_info_avatar_tag"
            				android:layout_width="wrap_content"

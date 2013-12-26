@@ -30,7 +30,18 @@ public class ChangeGender extends Activity{
 		
 		Bundle bundle = this.getIntent().getExtras();
 		String gender = bundle.getString("gender");
-//		tvGender.setText(gender);
+		tvGender.setText(gender);
+		RadioButton rbnMale = (RadioButton)findViewById(R.id.rbnMale);
+		RadioButton rbnFemale = (RadioButton)findViewById(R.id.rbnFemale);
+
+		if(gender.equals("ÄÐ"))
+		{
+			rbnMale.setChecked(true);
+		}
+		else
+		{
+			rbnFemale.setChecked(true);
+		}
 		
 		rgGender.setOnCheckedChangeListener(new OnCheckedChangeListener(){
 

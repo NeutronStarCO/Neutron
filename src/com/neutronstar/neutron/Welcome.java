@@ -30,6 +30,9 @@ public class Welcome extends Activity {
 		intent.putExtras(bl);
 		intent.setClass(Welcome.this, PhoneNumberActivity.class);
 		startActivity(intent);		
+//		Intent intent = new Intent();
+//		intent.setClass(Welcome.this, MainNeutron.class);
+//		startActivity(intent);
 	}
 
 	

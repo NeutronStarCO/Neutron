@@ -1,18 +1,28 @@
 package com.neutronstar.neutron;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.neutronstar.neutron.NeutronContract.NeutronUser;
 import com.neutronstar.neutron.NeutronContract.TAG;
@@ -30,10 +40,23 @@ public class UserInfoActivity extends Activity {
 	private TextView tvRelation;
 	private TextView tvUserType;
 	private TextView tvId;
+	private RelativeLayout rlChangeAvatar;
 	private RelativeLayout rlChangeName;
 	private RelativeLayout rlChangeGender;
 	private RelativeLayout rlChangeBirthday;
 	private RelativeLayout rlChangeRelation;
+	
+	private static final int AVATAR_REQUEST_CODE = 1;
+	private static final int NAME_REQUEST_CODE = 2;
+	private static final int GENDER_REQUEST_CODE = 3;
+	private static final int BIRTHDAY_REQUEST_CODE = 4;
+	private static final int RELATION_REQUEST_CODE = 5;
+	private static final int IMAGE_REQUEST_CODE = 10;
+	private static final int CAMERA_REQUEST_CODE = 11;
+	private static final int RESIZE_REQUEST_CODE = 12;
+	
+	private static final String IMAGE_FILE_NAME = "header.jpg";
+	private String[] items = new String[] {"Ñ¡Ôñ±¾µØÍ¼Æ¬", "ÅÄÕÕ"};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +75,7 @@ public class UserInfoActivity extends Activity {
 		tvRelation = (TextView)findViewById(R.id.user_info_relation_content);
 		tvUserType = (TextView)findViewById(R.id.user_info_usertype_content);
 		tvId = (TextView)findViewById(R.id.user_info_id_content);
+		rlChangeAvatar = (RelativeLayout)findViewById(R.id.user_change_avatar);
 		rlChangeName = (RelativeLayout)findViewById(R.id.user_change_name);
 		rlChangeGender = (RelativeLayout)findViewById(R.id.user_change_gender);
 		rlChangeBirthday = (RelativeLayout)findViewById(R.id.user_change_birthday);
@@ -61,18 +85,40 @@ public class UserInfoActivity extends Activity {
 		switch(usage)
 		{
 		case MainTabFamily.TAG_ADD:
-			ivAvatar.setImageDrawable(getResources().getDrawable(R.drawable.mini_avatar_shadow));
+			ivAvatar.setImageDrawable(getResources().getDrawable(R.drawable.avatar_female));
 			tvName.setHint(getResources().getString(R.string.user_info_hint_name));
 			tvGender.setHint(getResources().getString(R.string.user_info_hint_gender));
 			tvBirthday.setHint(getResources().getString(R.string.user_info_hint_birthday));
 			tvRelation.setHint(getResources().getString(R.string.user_info_hint_relation));
 			tvUserType.setHint(getResources().getString(R.string.user_info_hint_usertype));
 			tvId.setHint(getResources().getString(R.string.user_info_hint_id));
+			Log.i("TAG_ADD", "TAG_ADD");
 			break;
 		case MainTabFamily.TAG_QUERY:
 			Log.i("TAG_QUERY","TAG_QUERY");
 			break;
 		}
+		
+		ivAvatar.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Log.v("fangda","avatar");
+			}
+		});
+		
+		rlChangeAvatar.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				showDialog();
+//				Intent intent = new Intent(UserInfoActivity.this,ChangeAvatar.class);
+//				startActivityForResult(intent,1);
+			}
+		});
+		
 		rlChangeName.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -87,7 +133,7 @@ public class UserInfoActivity extends Activity {
 				}	
 				bundle.putString("name", name);
 				intent.putExtras(bundle);
-				startActivityForResult(intent,2);
+				startActivityForResult(intent,NAME_REQUEST_CODE);
 			}
 		});
 		rlChangeGender.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +146,7 @@ public class UserInfoActivity extends Activity {
 				String gender = tvGender.getText().toString();
 				bundle.putString("gender", gender);
 				intent.putExtras(bundle);
-				startActivityForResult(intent,3);
+				startActivityForResult(intent,GENDER_REQUEST_CODE);
 			}
 		});
 		rlChangeBirthday.setOnClickListener(new View.OnClickListener() {
@@ -111,13 +157,13 @@ public class UserInfoActivity extends Activity {
 				Intent intent = new Intent(UserInfoActivity.this,ChangeBirthday.class);
 				Bundle bundle = new Bundle();
 				String birthday = "";
-				if (tvBirthday.getText() != null)
+				if (!TextUtils.isEmpty(tvBirthday.getText()))
 				{
 					birthday = tvBirthday.getText().toString();
 				}				
 				bundle.putString("birthday", birthday);
 				intent.putExtras(bundle);
-				startActivityForResult(intent,4);
+				startActivityForResult(intent,BIRTHDAY_REQUEST_CODE);
 			}
 		});
 		rlChangeRelation.setOnClickListener(new View.OnClickListener() {
@@ -126,29 +172,167 @@ public class UserInfoActivity extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(UserInfoActivity.this,ChangeRelation.class);
-				startActivityForResult(intent,5);
+				Bundle bundle = new Bundle();
+				String relation = tvRelation.getText().toString();
+				int position = findRelation(relation);
+				bundle.putString("relation", relation);
+				bundle.putInt("pos", position);
+				intent.putExtras(bundle);
+				startActivityForResult(intent,RELATION_REQUEST_CODE);				
+			}
+		});
+		ivAvatar.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+				ivAvatar.setDrawingCacheEnabled(true);
+				Bitmap bitmap = Bitmap.createBitmap(ivAvatar.getDrawingCache());
+				ivAvatar.setDrawingCacheEnabled(false);
+				
+				Intent intent = new Intent();
+				Bundle bl = new Bundle();
+				bl.putParcelable("avatar", bitmap);
+				intent.setClass(UserInfoActivity.this, Avatar.class);
+				intent.putExtras(bl);
+				startActivity(intent);
 			}
 		});
 	}
 	
+	private void showDialog() {
+		// TODO Auto-generated method stub
+		new AlertDialog.Builder(this).setTitle("¸ü»»Í·Ïñ").setItems(items, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				switch(which) 
+				{
+				case 0:
+					Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+					galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
+					galleryIntent.setType("image/*");
+					startActivityForResult(galleryIntent, IMAGE_REQUEST_CODE);
+					break;
+				case 1:
+					if (isSdcardExisting()) 
+					{
+						Intent cameraIntent = new Intent("android.media.action.IMAGE_CAPTURE");
+						cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, getImageUri());
+						cameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+						startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
+					} 
+					else 
+					{
+						Toast.makeText(UserInfoActivity.this, "Çë²åÈësd¿¨", Toast.LENGTH_LONG).show();
+					}
+					break;
+				}
+			}
+		}).setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				dialog.dismiss();
+			}
+		}).show();
+		
+	}
+	
+	private boolean isSdcardExisting() {
+		final String state = Environment.getExternalStorageState();
+		if (state.equals(Environment.MEDIA_MOUNTED)) 
+		{
+			return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public void resizeImage(Uri uri){
+		Intent intent = new Intent("com.android.camera.action.CROP");
+		intent.setDataAndType(uri, "image/*");
+		intent.putExtra("crop", "true");
+		intent.putExtra("aspectX", 1);
+		intent.putExtra("aspectY", 1);
+		intent.putExtra("outputX", 150);
+		intent.putExtra("outputY", 150);
+		intent.putExtra("return-data", true);
+		startActivityForResult(intent, RESIZE_REQUEST_CODE);
+	}
+	
+	private void showResizeImage(Intent data){
+		Bundle extras = data.getExtras();
+		if (extras != null)
+		{
+			Bitmap photo = extras.getParcelable("data");
+			Drawable drawable = new BitmapDrawable(photo);
+			ivAvatar.setImageDrawable(drawable);
+		}
+	}
+	
+	private Uri getImageUri(){
+		return Uri.fromFile(new File(Environment.getExternalStorageDirectory(),IMAGE_FILE_NAME));
+	}
+	
+	
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data){
-		switch(requestCode){
-			case 1:
-				String result = data.getExtras().getString("");
-			case 2:
-				String changedName = data.getExtras().getString("name");
-				tvName.setText(changedName);
-			case 3:
-				String changeGender = data.getExtras().getString("gender");
-				tvGender.setText(changeGender);
-			case 4:
-				String changeBirthday = data.getExtras().getString("birthday");
-				tvBirthday.setText(changeBirthday);
-			case 5:
-				String changeRelation = data.getExtras().getString("relation");
-				tvRelation.setText(changeRelation);
+		if(resultCode != RESULT_OK)
+		{
+			return;
 		}
+		else
+		{
+			switch(requestCode)
+			{
+				case AVATAR_REQUEST_CODE:
+//					String result = data.getExtras().getString("");
+					break;
+				case NAME_REQUEST_CODE:
+					String changedName = data.getExtras().getString("name");
+					tvName.setText(changedName);
+					break;
+				case GENDER_REQUEST_CODE:
+					String changeGender = data.getExtras().getString("gender");
+					tvGender.setText(changeGender);
+					break;
+				case BIRTHDAY_REQUEST_CODE:
+					String changeBirthday = data.getExtras().getString("birthday");
+					tvBirthday.setText(changeBirthday);
+					break;
+				case RELATION_REQUEST_CODE:
+					String changeRelation = data.getExtras().getString("relation");
+					tvRelation.setText(changeRelation);
+					break;
+				case IMAGE_REQUEST_CODE:
+					resizeImage(data.getData());
+					break;
+				case CAMERA_REQUEST_CODE:
+					if (isSdcardExisting())
+					{
+						resizeImage(getImageUri());
+					}
+					else
+					{
+						Toast.makeText(UserInfoActivity.this, "Î´ÕÒµ½´æ´¢¿¨", Toast.LENGTH_LONG).show();
+					}
+					break;
+				case RESIZE_REQUEST_CODE:
+					if (data != null)
+					{
+						showResizeImage(data);
+					}
+					break;
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 	
 	public void save(View v)
@@ -192,43 +376,43 @@ public class UserInfoActivity extends Activity {
 	//return ¹ØÏµµÄÊýÖµ
 	public int findRelation(String relation) {
 		int result = 0;
-		if(relation == "ÐÖµÜ")
+		if(relation.equals("ÐÖµÜ"))
 		{
 			result = USER.brother;
 		}
-		else if (relation == "Å®¶ù")
+		else if (relation.equals("Å®¶ù"))
 		{
 			result = USER.daughter;
 		}
-		else if(relation == "¸¸Ç×")
+		else if(relation.equals("¸¸Ç×"))
 		{
 			result = USER.father;
 		}
-		else if(relation == "ÅóÓÑ")
+		else if(relation.equals("ÅóÓÑ"))
 		{
 			result = USER.friends;
 		}
-		else if(relation == "ÄÌÄÌ")
+		else if(relation.equals("ÄÌÄÌ"))
 		{
 			result = USER.grandma;
 		}
-		else if(relation == "Ò¯Ò¯")
+		else if(relation.equals("Ò¯Ò¯"))
 		{
 			result = USER.grandpa;
 		}
-		else if(relation == "Ä¸Ç×")
+		else if(relation.equals("Ä¸Ç×"))
 		{
 			result = USER.mother;
 		}
-		else if(relation == "ÕÉ·ò")
+		else if(relation.equals("ÕÉ·ò"))
 		{
 			result = USER.husband;
 		}
-		else if(relation == "½ãÃÃ")
+		else if(relation.equals("½ãÃÃ"))
 		{
 			result = USER.sister;
 		}
-		else if(relation == "ÆÞ×Ó")
+		else if(relation.equals("ÆÞ×Ó"))
 		{
 			result = USER.wife;
 		}
@@ -240,6 +424,14 @@ public class UserInfoActivity extends Activity {
 	{
 		this.finish();
 	}
+	
+	public void avatar_enlarge(View v)
+	{
+		Intent intent = new Intent();
+		intent.setClass(UserInfoActivity.this, Avatar.class);
+		startActivity(intent);
+	}
+	
 	
 	@Override
 	protected void onResume() {
