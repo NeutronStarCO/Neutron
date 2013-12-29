@@ -104,7 +104,7 @@ public class NeutronService extends Service {
 
 			// 消去原有的重力引起的压力
 			currentAcceleration = Math.abs((float) (a - calibration));
-			Log.i("sensor", "\n currentAcceleration " + currentAcceleration);
+			Log.i("sensor", "\n Service currentAcceleration " + currentAcceleration);
 			sensorManager.unregisterListener(sensorEventListener);
 		}
 	};

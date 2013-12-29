@@ -3,6 +3,7 @@ package com.neutronstar.neutron;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.neutronstar.neutron.weibosso.WBAuthActivity;
@@ -29,10 +30,7 @@ public class Welcome extends Activity {
 		bl.putInt("tag", PhoneNumberActivity.TAG_LOGIN);
 		intent.putExtras(bl);
 		intent.setClass(Welcome.this, PhoneNumberActivity.class);
-		startActivity(intent);		
-//		Intent intent = new Intent();
-//		intent.setClass(Welcome.this, MainNeutron.class);
-//		startActivity(intent);
+		startActivityForResult(intent, 0);		
 	}
 
 	
@@ -42,6 +40,18 @@ public class Welcome extends Activity {
 		bl.putInt("tag", PhoneNumberActivity.TAG_SIGN_IN);
 		intent.putExtras(bl);
 		intent.setClass(Welcome.this, PhoneNumberActivity.class);
-		startActivity(intent);	
+		startActivityForResult(intent, 0);	
+	}
+	
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{	
+		switch(resultCode){
+		case RESULT_OK:
+			break;
+		case RESULT_FIRST_USER:
+			this.finish();
+			break;
+		}
 	}
 }
