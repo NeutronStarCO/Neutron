@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <RelativeLayout
+           		    android:id="@+id/user_change_avatar_1"
+           			android:layout_width="fill_parent"
+           			android:layout_height="wrap_content"
+           			android:layout_marginTop="14dp"
+           			android:gravity="center_vertical"
+           			android:clickable="true"
+           			android:background="@drawable/preference_first_item" >
+           			<TextView
+       					android:layout_width="wrap_content" 
+       					android:layout_height="wrap_content"
+       					android:padding="8dp" 
+       					android:text="@string/user_info_title_avatar"
+       					android:layout_centerVertical="true"
+       					android:textSize="17sp"		
+						android:textColor="#000" />
+           			<ImageView 
+           			    android:id="@+id/user_info_avatar_content_1" 
+           			    android:layout_width="55dp" 
+           			    android:layout_height="55dp" 
+           			    android:layout_toLeftOf="@+id/user_info_avatar_tag"
+           			    android:layout_centerVertical="true" 
+           			    android:paddingLeft="5dp" 
+           			    android:src="@drawable/james_cameron" />
+           			<ImageView
+           			    android:id="@+id/user_info_avatar_tag_1"
+           				android:layout_width="wrap_content"
+       					android:layout_height="wrap_content"        	     	
+       					android:scaleType="matrix"
+       					android:layout_centerVertical="true"
+       					android:layout_alignParentRight="true"
+       					android:clickable="true"
+       					android:src="@drawable/mm_submenu" />					
+     			</RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_selectimage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/btn_style_green"
+        android:clickable="false"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="selectimage"
+        android:textColor="#fff"
+        android:textSize="18sp" />
+    <Button
+        android:id="@+id/btn_takephoto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/btn_style_green"
+        android:clickable="false"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="takephoto"
+        android:textColor="#fff"
+        android:textSize="18sp" />
+
+  </LinearLayout>

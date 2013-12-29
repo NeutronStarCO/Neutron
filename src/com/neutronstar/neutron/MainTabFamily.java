@@ -30,6 +30,7 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 	public static MainTabFamily instance = null;
 	public static final int TAG_ADD = 1;
 	public static final int TAG_DELETE = 2;
+	public static final int TAG_QUERY = 3;
 	private NeutronDbHelper ndb;
 	private ListView fmListView;
 	private FamilyMemberEntityAdapter fmAdapter;

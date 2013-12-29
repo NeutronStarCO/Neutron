@@ -132,6 +132,27 @@
             android:theme="@style/MyDialogStyleBottom" >
         </activity>
         <activity
+        	android:name="com.neutronstar.neutron.ChangeName"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateVisible" >
+        </activity>
+        <activity
+        	android:name="com.neutronstar.neutron.ChangeGender"
+            android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
+        <activity
+        	android:name="com.neutronstar.neutron.ChangeBirthday"
+            android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
+        <activity
+        	android:name="com.neutronstar.neutron.ChangeAvatar"
+            android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
+        <activity
+        	android:name="com.neutronstar.neutron.ChangeRelation"
+            android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
+        <activity
             android:name="com.neutronstar.neutron.PhoneNumberActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
@@ -147,6 +168,7 @@
             android:name="com.neutronstar.neutron.SignUpInfoActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
+        <activity android:name="Avatar" android:theme="@style/HeadScale" />
     </application>
 
 </manifest>
