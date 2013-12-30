@@ -16,10 +16,18 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.neutronstar.neutron.NeutronContract.ITEM;
@@ -41,6 +49,12 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 	private TextView man_tab_today_metabolismRate;
 	private TextView man_tab_today_metabolismTotal;
 	private TextView man_tab_today_metabolismRMRRateValue;	
+	private TextView tvTitle;
+	private PopupWindow pwTitle;
+	private LinearLayout llTitle;
+	private ListView lvTitle;
+	private String title[] = { "我", "萨利", "奈蒂莉", "卡梅隆", "布什" };
+
 	private double currentTotalCost = 0;
 	double currentAcceleration = 0;
 	private Timer updateTimer;
@@ -82,7 +96,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 		accelerometer = sensorManager
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		
-
+		tvTitle = (TextView) findViewById(R.id.man_tab_today_title);
 		man_tab_today_metabolismAcceleration = (TextView) findViewById(R.id.man_tab_today_metabolismAcceleration);
 		man_tab_today_metabolismRate = (TextView) findViewById(R.id.man_tab_today_metabolismRate);
 		man_tab_today_metabolismTotal = (TextView) findViewById(R.id.man_tab_today_metabolismTotal);
@@ -218,7 +232,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 
 			// 消去原有的重力引起的压力
 			currentAcceleration = acc - lowAcc;
-			Log.i("sensor", "\n Service currentAcceleration " + currentAcceleration);
+			Log.i("sensor", "\n Current Acceleration: " + currentAcceleration);
 			sensorManager.unregisterListener(sensorEventListener);
 			refreshAccelerometer();
 		}
@@ -269,6 +283,55 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 			}
 		}, 0, 5000);
 	}
+	
+	public void onDisplayChange(View v)
+	{
+		tvTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.up_32), null);
+		int y = tvTitle.getBottom() * 3 / 2;
+		int x = getWindowManager().getDefaultDisplay().getWidth() / 4;
+		showPopupWindow(x, y);
+	}
+	
+	public void showPopupWindow(int x, int y) {
+		llTitle = (LinearLayout) LayoutInflater.from(MainTabToday.this).inflate(
+				R.layout.tab_today_dialog, null);
+		lvTitle = (ListView) llTitle.findViewById(R.id.tab_today_dialog);
+		lvTitle.setAdapter(new ArrayAdapter<String>(MainTabToday.this,
+				R.layout.simple_text_item, R.id.simple_text_item, title));
+		pwTitle = new PopupWindow(MainTabToday.this);
+//		pwTitle.setBackgroundDrawable(new BitmapDrawable());
+		pwTitle.setWidth(getWindowManager().getDefaultDisplay().getWidth() / 2);
+		pwTitle.setHeight(getWindowManager().getDefaultDisplay().getHeight() / 2);
+		pwTitle.setOutsideTouchable(true);
+		pwTitle.setFocusable(true);
+		pwTitle.setContentView(llTitle);
+		// showAsDropDown会把里面的view作为参照物，所以要那满屏幕parent
+		// popupWindow.showAsDropDown(findViewById(R.id.tv_title), x, 10);
+		pwTitle.showAtLocation(findViewById(R.id.main_tab_today), Gravity.LEFT
+				| Gravity.TOP, x, y);//需要指定Gravity，默认情况是center.
+
+		lvTitle.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				tvTitle.setText(title[arg2]);
+				pwTitle.dismiss();
+				pwTitle = null;
+				tvTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.down_24), null);
+			}
+		});
+	}
+
+	
+//	public boolean onKeyDown(int keyCode, KeyEvent event) {  
+//        if (keyCode == KeyEvent.KEYCODE_BACK ) {  
+//        	Log.d("keyMain", ""+ KeyEvent.KEYCODE_BACK);
+//        	moveTaskToBack(true);  
+//            return true;
+//        }  
+//        return super.onKeyDown(keyCode, event);  
+//    }  
 	
 	private String getRemoteData() {
 		try {

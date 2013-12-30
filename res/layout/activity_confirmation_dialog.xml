@@ -36,29 +36,28 @@
              >
             
             <Button
-              android:id="@+id/confirmation_dialog_confirm"
-              android:layout_width="110dp"
-              android:layout_height="wrap_content"
-              android:text="@string/yes"
-              android:textSize="16sp"
-              android:textColor="#fff"
-              android:background="@drawable/btn_style_green"
-              android:gravity="center"
-			  android:onClick="confirm"
-              />
+              	android:id="@+id/confirmation_dialog_cancel"
+              	android:layout_width="110dp"
+				android:layout_height="wrap_content"
+				android:text="@string/no"
+				android:textSize="16sp"
+				android:textColor="#333"
+				android:background="@drawable/btn_style_white"
+				android:gravity="center"
+				android:onClick="cancel"
+			/>
             
             <Button
-              android:id="@+id/confirmation_dialog_cancel"
-              android:layout_width="110dp"
-              android:layout_height="wrap_content"
-              android:layout_marginLeft="10dp"
-              android:text="@string/no"
-              android:textSize="16sp"
-              android:textColor="#333"
-              android:background="@drawable/btn_style_white"
-              android:gravity="center"
-			  android:onClick="cancel"
-              />
+				android:id="@+id/confirmation_dialog_confirm"
+				android:layout_width="110dp"
+				android:layout_height="wrap_content"
+				android:text="@string/yes"
+				android:layout_marginLeft="10dp"
+				android:textSize="16sp"
+				android:textColor="#fff"
+				android:background="@drawable/btn_style_green"
+				android:gravity="center"
+				android:onClick="confirm"
+			/>
         </LinearLayout>
-
     </LinearLayout>

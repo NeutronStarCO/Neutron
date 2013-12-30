@@ -26,12 +26,11 @@ public class ConfirmationDialogActivity extends Activity {
 		case TAG_PHONE_NUMBER:
 			String[] strs = getResources().getStringArray(R.array.confirmation_dialog_phone_number);
 			String phonenumber = bl.getString("phonenumber");
-			String areacode = bl.getString("areacode");
+			String areacode = bl.getString("IDD");
 			tvTitle.setText(strs[0]);
 			tvMessage.setText(strs[1] + areacode + " " + phonenumber);
 			break;
-		}
-		
+		}		
 	}
 	
 	public void confirm(View view)

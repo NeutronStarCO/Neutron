@@ -1,10 +1,7 @@
 package com.neutronstar.neutron;
 
-import java.util.Calendar;
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -15,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class SignUpInfoActivity extends Activity {
@@ -32,7 +28,7 @@ public class SignUpInfoActivity extends Activity {
 		spinner = (Spinner) findViewById(R.id.sign_up_info_spinner);
 		tvName = (TextView) findViewById(R.id.sign_up_info_name);
 		tvBirthday = (TextView) findViewById(R.id.sign_up_info_birthday);
-		adapter = new ArrayAdapter<String>(this, R.layout.simple_spinner_item);
+		adapter = new ArrayAdapter<String>(this, R.layout.simple_text_item, R.id.simple_text_item);
 		adapter.add(getResources().getString(R.string.male));
 		adapter.add(getResources().getString(R.string.female));
 		spinner.setAdapter(adapter);
@@ -68,9 +64,11 @@ public class SignUpInfoActivity extends Activity {
 			Intent intent = new Intent();
 			intent.setClass(SignUpInfoActivity.this, MainNeutron.class);
 			startActivity(intent);
+			this.setResult(RESULT_FIRST_USER, new Intent());
 			this.finish();
 		}		
 	}
+	
 	
 	class SpinnerSelectedListener implements OnItemSelectedListener {   
 		

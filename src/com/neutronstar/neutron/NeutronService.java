@@ -28,7 +28,6 @@ public class NeutronService extends Service {
 	double currentAcceleration = 0;
 	float maxAcceleration = 0;
 	private Timer updateTimer;
-	
 	private double lowAcc;
 	private final double FILTERING_VALUE = 0.8;
 
@@ -108,7 +107,7 @@ public class NeutronService extends Service {
 			lowAcc = lowAcc * FILTERING_VALUE + acc * ( 1.0f - FILTERING_VALUE );
 
 			// 消去原有的重力引起的压力
-			currentAcceleration = acc - lowAcc;
+			currentAcceleration = Math.abs(acc - lowAcc);
 			Log.i("sensor", "\n Service currentAcceleration " + currentAcceleration);
 			sensorManager.unregisterListener(sensorEventListener);
 		}
