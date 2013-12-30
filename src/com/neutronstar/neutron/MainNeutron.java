@@ -97,7 +97,7 @@ public class MainNeutron extends Activity  {
 		// 将要分页显示的View装入数组中
 		LayoutInflater mLi = LayoutInflater.from(this);
 //		View view_tab_today = mLi.inflate(R.layout.main_tab_today, null);
-		View view2 = mLi.inflate(R.layout.main_tab_family, null);
+//		View view2 = mLi.inflate(R.layout.main_tab_family, null);
 		View view3 = mLi.inflate(R.layout.main_tab_friends, null);
 		View view4 = mLi.inflate(R.layout.main_tab_settings, null);
 
