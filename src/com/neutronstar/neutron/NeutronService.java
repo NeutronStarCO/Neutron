@@ -25,9 +25,12 @@ public class NeutronService extends Service {
 
 	private SensorManager sensorManager;
 	private Sensor accelerometer;
-	float currentAcceleration = 0;
+	double currentAcceleration = 0;
 	float maxAcceleration = 0;
 	private Timer updateTimer;
+	
+	private double lowAcc;
+	private final double FILTERING_VALUE = 0.8;
 
 	public NeutronService() {
 		// TODO Auto-generated constructor stub
@@ -101,10 +104,12 @@ public class NeutronService extends Service {
 			// 计算三个方向的加速度
 			double a = Math.round(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)
 					+ Math.pow(z, 2)));
+			double acc = Math.abs((float) (a - calibration));
+			lowAcc = lowAcc * FILTERING_VALUE + acc * ( 1.0f - FILTERING_VALUE );
 
 			// 消去原有的重力引起的压力
-			currentAcceleration = Math.abs((float) (a - calibration));
-			Log.i("sensor", "\n currentAcceleration " + currentAcceleration);
+			currentAcceleration = acc - lowAcc;
+			Log.i("sensor", "\n Service currentAcceleration " + currentAcceleration);
 			sensorManager.unregisterListener(sensorEventListener);
 		}
 	};
