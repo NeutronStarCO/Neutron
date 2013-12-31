@@ -36,8 +36,9 @@ public class VarificationCodeActivity extends Activity {
 		tag = bl.getInt("tag");
 		IDD = bl.getString("IDD");
 		phonenumber = bl.getString("phonenumber");
+		passcode = bl.getString("passcode");
 		etVarificationCode = (EditText) findViewById(R.id.varification_code_code);
-		getRemoteVarificationCode("getpasscode", IDD, phonenumber);
+		etVarificationCode.setText(passcode);
 	}
 	
 	private void getRemoteVarificationCode(String strServlet, String IDD, String phonenumber)
@@ -58,7 +59,6 @@ public class VarificationCodeActivity extends Activity {
 		@Override
 		protected String doInBackground(String... params) {
 			String strUrl = params[0];
-			passcode = "112233";
 			try {
 				 URL url = new URL(strUrl);
 			     HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
@@ -107,7 +107,7 @@ public class VarificationCodeActivity extends Activity {
 	
 	public void next(View view)
 	{
-		if(etVarificationCode.length() == 6)
+		if(passcode.equals(etVarificationCode.getText().toString()))
 		{
 			Intent intent = new Intent();
 			Bundle bl = new Bundle();
@@ -118,19 +118,14 @@ public class VarificationCodeActivity extends Activity {
 			switch(tag)
 			{
 			case TAG_LOGIN:		
-				if(passcode.equals(etVarificationCode.getText().toString()))
-				{
-					// 更新服务器该用户的passcode
-					// 传递userid到MainNeutron
-//					bl.putString("userid", userid);
-//					intent.putExtras(bl);
-//					intent.setClass(VarificationCodeActivity.this, MainNeutron.class);
-//					startActivityForResult(intent, 0);
-				} 
-				else
-				{
-					Toast.makeText(this, "验证码错误！", Toast.LENGTH_LONG ).show();
-				}				
+
+				// 更新服务器该用户的passcode
+				// 传递userid到MainNeutron
+//				bl.putString("userid", userid);
+//				intent.putExtras(bl);
+//				intent.setClass(VarificationCodeActivity.this, MainNeutron.class);
+//				startActivityForResult(intent, 0);
+				
 				break;
 			case TAG_SIGN_IN:
 				bl.putString("phonenumber", phonenumber);
@@ -144,7 +139,7 @@ public class VarificationCodeActivity extends Activity {
 		}
 		else
 		{
-			Toast toast = Toast.makeText(this, "验证码应为6位数字.", Toast.LENGTH_LONG );
+			Toast toast = Toast.makeText(this, "验证码错误！", Toast.LENGTH_LONG );
 			toast.show();
 		}		
 	}

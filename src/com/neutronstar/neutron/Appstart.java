@@ -60,7 +60,7 @@ public class Appstart extends Activity {
 		{
 //			localUser.settUserImei(tm.getDeviceId());		// IMEI 设备号
 //			localUser.settUserImsi(tm.getSubscriberId());	// IMSI 国际移动用户识别码(International Mobile Subscriber Identity)
-			getRemoteUser("login", localUser);	// 获取服务器对应id用户信息
+			checkLocalUser("passcode", localUser);	// 获取服务器对应id用户信息
 //			Log.d("IMEI", localUser.gettUserImei());
 //			Log.d("UserId", "" +localUser.gettUserId());
 		}
@@ -100,41 +100,41 @@ public class Appstart extends Activity {
 		return user;
 	}
 	
-	private void getRemoteUser(String strServlet, T_user user)
+	private void checkLocalUser(String strServlet, T_user user)
 	{
 		String strUrl = SERVER.Address + "/" + strServlet;	
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            new GetRemoteUserTask().execute(strUrl);
+            new CheckUserOnRemoteSideTask().execute(strUrl);
         } else {
         	Toast toast = Toast.makeText(this, "No network connection available.", Toast.LENGTH_LONG );
 			toast.show();
         }
 	}
 	
-	 private class GetRemoteUserTask extends AsyncTask<String, Void, String> 
-	 {
-		 String isOK = "";
+	private class CheckUserOnRemoteSideTask extends AsyncTask<String, Void, String> 
+	{
+		String state = "";
 		@Override
 		protected String doInBackground(String... params) {
 			String strUrl = params[0];
 			try {
-				 URL url = new URL(strUrl);
-			     HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-			     urlConn.setReadTimeout(10000 /* milliseconds */);
-			     urlConn.setConnectTimeout(15000 /* milliseconds */);
-			     urlConn.setDoInput(true);
-			     urlConn.setDoOutput(true);
-			     urlConn.setRequestMethod("POST");
-			     urlConn.setUseCaches(false);
+				URL url = new URL(strUrl);
+				HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+				urlConn.setReadTimeout(10000 /* milliseconds */);
+				urlConn.setConnectTimeout(15000 /* milliseconds */);
+				urlConn.setDoInput(true);
+				urlConn.setDoOutput(true);
+				urlConn.setRequestMethod("POST");
+				urlConn.setUseCaches(false);
 				urlConn.setRequestProperty("Content-Type", "application/x-java-serialized-object");
 				urlConn.connect();
 				OutputStream outStrm = urlConn.getOutputStream();  
-		        ObjectOutputStream oos = new ObjectOutputStream(outStrm);  
-		        
-		        ArrayList<Serializable> paraList = new ArrayList<Serializable>();
-		        paraList.add("query");
+				ObjectOutputStream oos = new ObjectOutputStream(outStrm);  
+				
+				ArrayList<Serializable> paraList = new ArrayList<Serializable>();
+				paraList.add("isvalid");
 		        paraList.add(localUser);
 		        oos.writeObject(paraList);  
 		        oos.flush();  
@@ -142,9 +142,10 @@ public class Appstart extends Activity {
 		  
 		        ObjectInputStream ois = new ObjectInputStream(urlConn.getInputStream());  
 		        paraList = (ArrayList<Serializable>)ois.readObject();
-		        isOK = (String)paraList.get(0);
-		        Log.d("isSucceed", isOK);
-		        remoteUser = (T_user)paraList.get(1);
+		        state = (String)paraList.get(0);
+		        Log.d("isSucceed", state);
+		        Log.d("id", localUser.gettUserId().toString());
+		        Log.d("id", localUser.gettUserPasscode());
             } catch (Exception e) {
                 return "Unable to retrieve web page. URL may be invalid.";
             }
@@ -153,25 +154,7 @@ public class Appstart extends Activity {
 		 
 		protected void onPostExecute(String result) 
 		{
-			if(!isOK.equals("ok")) // 没有正常返回，退出或者重新连接
-			{				
-				Intent intent = new Intent(Appstart.this, ConfirmationDialogActivity.class);
-				Bundle bl = new Bundle();
-				bl.putInt("tag", ConfirmationDialogActivity.TAG_CONNECT_FAILED);
-				intent.putExtras(bl);
-				startActivityForResult(intent, requestCode);
-			}
-			else if(null == remoteUser) // 转入登录注册页面
-			{
-				new Handler().postDelayed(new Runnable() {
-					public void run() {
-						Intent intent = new Intent(Appstart.this, Welcome.class);
-						startActivity(intent);
-						Appstart.this.finish();
-					}
-				}, 1000);
-			}
-			else // 已存在用户登录成功，转入主页面
+			if(state.equals("valid"))	// 已存在用户登录成功，转入主页面
 			{				
 				new Handler().postDelayed(new Runnable() {
 					public void run() {
@@ -183,7 +166,25 @@ public class Appstart extends Activity {
 						Appstart.this.finish();
 					}
 				}, 1000);
-			} 				
+			} 	
+			else if(state.equals("novalid"))	// 转入登录注册页面
+			{
+				new Handler().postDelayed(new Runnable() {
+					public void run() {
+						Intent intent = new Intent(Appstart.this, Welcome.class);
+						startActivity(intent);
+						Appstart.this.finish();
+					}
+				}, 1000);
+			}
+			else // 没有正常返回，退出或者重新连接	
+			{				
+				Intent intent = new Intent(Appstart.this, ConfirmationDialogActivity.class);
+				Bundle bl = new Bundle();
+				bl.putInt("tag", ConfirmationDialogActivity.TAG_CONNECT_FAILED);
+				intent.putExtras(bl);
+				startActivityForResult(intent, requestCode);
+			}
 		}
 	 }
 	 
@@ -195,7 +196,7 @@ public class Appstart extends Activity {
 			boolean confirmation = bl.getBoolean("confirmation");
 			if(confirmation)
 			{
-				getRemoteUser("login", localUser);
+				checkLocalUser("passcode", localUser);
 			}
 			else
 			{

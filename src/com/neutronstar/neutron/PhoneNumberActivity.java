@@ -1,8 +1,22 @@
 package com.neutronstar.neutron;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,6 +32,9 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.neutron.server.persistence.model.T_user;
+import com.neutronstar.neutron.NeutronContract.SERVER;
+
 public class PhoneNumberActivity extends Activity {
 	public static final int TAG_LOGIN = 1;
 	public static final int TAG_SIGN_IN = 2;
@@ -31,6 +48,11 @@ public class PhoneNumberActivity extends Activity {
 	private String IDDCountry[];
 	private String IDD[];
 	private PopupWindow pwIDD;
+	private T_user localUser;
+	private String passcode;
+	private String IMEI;
+	private String IMSI;
+	private TelephonyManager tm;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,6 +68,7 @@ public class PhoneNumberActivity extends Activity {
 		cbTerms = (CheckBox) findViewById(R.id.phone_number_terms);
 		IDDCountry = getResources().getStringArray(R.array.idd_country);
 		IDD = getResources().getStringArray(R.array.idd);
+		tm = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
 		
 		switch(tag)
 		{
@@ -69,11 +92,11 @@ public class PhoneNumberActivity extends Activity {
 			Toast toast = Toast.makeText(this, "您还没有同意用户协议", Toast.LENGTH_LONG );
 			toast.show();
 		}
-//		else if(tvPhoneNumber.getText().length() <= 8)
-//		{
-//			Toast toast = Toast.makeText(this, "你的手机号码少于8位", Toast.LENGTH_LONG );
-//			toast.show();
-//		}
+		else if(tvPhoneNumber.getText().length() <= 8)
+		{
+			Toast toast = Toast.makeText(this, "你确信您的手机号码少于8位吗？", Toast.LENGTH_LONG );
+			toast.show();
+		}
 		else
 		{
 			Intent intent = new Intent(PhoneNumberActivity.this, ConfirmationDialogActivity.class);
@@ -132,28 +155,10 @@ public class PhoneNumberActivity extends Activity {
 			boolean confirmation = bl.getBoolean("confirmation");
 			if(confirmation)
 			{
-				Log.d("return", String.valueOf(confirmation));
-				Intent intent = new Intent();
-				Bundle bundle  = new Bundle();
-				switch(tag)
-				{
-				case TAG_LOGIN:
-					intent = new Intent(PhoneNumberActivity.this, VarificationCodeActivity.class);
-					bundle.putInt("tag", VarificationCodeActivity.TAG_LOGIN);
-					bundle.putString("IDD", tvIDD.getText().toString());
-					bundle.putString("phonenumber", tvPhoneNumber.getText().toString());
-					intent.putExtras(bundle);
-					startActivityForResult(intent, 0);
-					break;
-				case TAG_SIGN_IN:
-					intent = new Intent(PhoneNumberActivity.this, VarificationCodeActivity.class);
-					bundle.putInt("tag", VarificationCodeActivity.TAG_SIGN_IN);
-					bundle.putString("IDD", tvIDD.getText().toString());
-					bundle.putString("phonenumber", tvPhoneNumber.getText().toString());
-					intent.putExtras(bundle);
-					startActivityForResult(intent, 0);
-					break;
-				}
+				localUser = new T_user();
+				localUser.settUserAreacode(tvIDD.getText().toString());
+				localUser.settUserPhonenumber(tvPhoneNumber.getText().toString());
+				getPasscode("passcode", localUser);
 			}
 			else
 			{
@@ -164,6 +169,125 @@ public class PhoneNumberActivity extends Activity {
 			this.setResult(RESULT_FIRST_USER, new Intent());
 			this.finish();
 			break;
+		}
+	}
+	
+	private void getPasscode(String strServlet, T_user user)
+	{
+		String strUrl = SERVER.Address + "/" + strServlet;	
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            new GetPasscodeTask().execute(strUrl);
+        } else {
+        	Toast toast = Toast.makeText(this, "No network connection available.", Toast.LENGTH_LONG );
+			toast.show();
+        }
+	}
+	
+	private class GetPasscodeTask extends AsyncTask<String, Void, String> 
+	{
+		String state = "";
+		@Override
+		protected String doInBackground(String... params) {
+			String strUrl = params[0];
+			try {
+				URL url = new URL(strUrl);
+			    HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+			    urlConn.setReadTimeout(10000 /* milliseconds */);
+			    urlConn.setConnectTimeout(15000 /* milliseconds */);
+			    urlConn.setDoInput(true);
+			    urlConn.setDoOutput(true);
+			    urlConn.setRequestMethod("POST");
+			    urlConn.setUseCaches(false);
+				urlConn.setRequestProperty("Content-Type", "application/x-java-serialized-object");
+				urlConn.connect();
+				OutputStream outStrm = urlConn.getOutputStream();  
+		        ObjectOutputStream oos = new ObjectOutputStream(outStrm);  
+		        
+		        ArrayList<Serializable> paraList = new ArrayList<Serializable>();
+		        paraList.add("getpasscode");
+		        paraList.add(localUser);
+		        oos.writeObject(paraList);  
+		        oos.flush();  
+		        oos.close();  
+		  
+		        ObjectInputStream ois = new ObjectInputStream(urlConn.getInputStream());  
+		        paraList = (ArrayList<Serializable>)ois.readObject();
+		        state = (String)paraList.get(0);
+		        Log.d("GetPasscodeTask", state);
+		        Log.d("IDD", localUser.gettUserAreacode());
+		        Log.d("Phonenumber", localUser.gettUserPhonenumber());
+		        T_user user = (T_user)paraList.get(1);
+		        passcode = user.gettUserPasscode();
+		        IMEI = user.gettUserImei();
+		        IMSI = user.gettUserImsi();
+		        Log.d("passcode", passcode);
+//		        Log.d("IMEI", IMEI);
+//		        Log.d("IMSI", IMSI);
+		        
+           } catch (Exception e) {
+               e.printStackTrace();
+           }
+			return passcode;
+		}
+		
+		protected void onPostExecute(String result) 
+		{
+			Intent intent = new Intent();
+			Bundle bundle  = new Bundle();
+			if(state.equals("new"))
+			{
+				switch(tag)
+				{
+				case TAG_LOGIN:
+					new AlertDialog.Builder(PhoneNumberActivity.this)
+                    .setIcon(getResources().getDrawable(R.drawable.login_error_icon))
+                    .setTitle("电话号码错误")
+                    .setMessage("您输入的号码尚未注册，请确认号码后再获取验证码！")
+                    .create().show();
+					break;
+				case TAG_SIGN_IN:
+					intent = new Intent(PhoneNumberActivity.this, VarificationCodeActivity.class);
+					bundle.putInt("tag", VarificationCodeActivity.TAG_SIGN_IN);
+					bundle.putString("IDD", tvIDD.getText().toString());
+					bundle.putString("phonenumber", tvPhoneNumber.getText().toString());
+					bundle.putString("passcode", result);
+					intent.putExtras(bundle);
+					startActivityForResult(intent, 0);
+					break;
+				}
+			}
+			else if (state.equals("registered"))
+			{
+				switch(tag)
+				{
+				case TAG_LOGIN:					
+					intent = new Intent(PhoneNumberActivity.this, VarificationCodeActivity.class);
+					bundle.putInt("tag", VarificationCodeActivity.TAG_LOGIN);
+					bundle.putString("IDD", tvIDD.getText().toString());
+					bundle.putString("phonenumber", tvPhoneNumber.getText().toString());
+					bundle.putString("passcode", result);
+					intent.putExtras(bundle);
+					startActivityForResult(intent, 0);
+					break;
+				case TAG_SIGN_IN:
+					new AlertDialog.Builder(PhoneNumberActivity.this)
+                    .setIcon(getResources().getDrawable(R.drawable.login_error_icon))
+                    .setTitle("电话号码错误")
+                    .setMessage("您输入的号码已经注册，请确认号码后再获取验证码！")
+                    .create().show();
+					break;
+				}
+			}
+			else
+			{
+				new AlertDialog.Builder(PhoneNumberActivity.this)
+                .setIcon(getResources().getDrawable(R.drawable.login_error_icon))
+                .setTitle("failed to get passcode")
+                .setMessage("failed to get passcode!")
+                .create().show();
+			}
 		}
 	}
 }
