@@ -11,6 +11,7 @@ import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -20,6 +21,8 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.neutronstar.neutron.NeutronContract.NeutronAcceleration;
+import com.neutronstar.neutron.NeutronContract.NeutronUser;
+import com.neutronstar.neutron.NeutronContract.TAG;
 
 public class NeutronService extends Service {
 
@@ -62,6 +65,13 @@ public class NeutronService extends Service {
 				refreshAccelerometer();
 			}
 		}, 0, 5000);
+		updateTimer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				uploadAcceleration();
+			}
+		}, 0, 5000);
 	}
 
 	@Override
@@ -87,6 +97,34 @@ public class NeutronService extends Service {
 		cv.put(NeutronAcceleration.COLUMN_NAME_UPLOADTAG, 0);
 		db.insert(NeutronAcceleration.TABLE_NAME, null, cv);
 
+	}
+	
+	private void uploadAcceleration() {
+		NeutronDbHelper ndb = NeutronDbHelper.GetInstance(this);
+		SQLiteDatabase db = ndb.getReadableDatabase();
+		
+		
+		//// 从数据库得到用户的基础数据
+		String[] projection = {
+			    NeutronUser.COLUMN_NAME_ID,
+			    NeutronUser.COLUMN_NAME_NAME,
+			    NeutronUser.COLUMN_NAME_GENDER,
+			    NeutronUser.COLUMN_NAME_BIRTHDAY,
+			    NeutronUser.COLUMN_NAME_RELATION,
+			    NeutronUser.COLUMN_NAME_AVATAR,
+			    NeutronUser.COLUMN_NAME_TYPE
+			    };
+//		String selection = "" + NeutronUser.COLUMN_NAME_ID + "=" + userid
+//				+ " AND " + NeutronUser.COLUMN_NAME_TAG + "=" + TAG.normal;
+//		Cursor cur = db.query(
+//				NeutronUser.TABLE_NAME,  // The table to query
+//			    projection,                // The columns to return
+//			    selection,                 // The columns for the WHERE clause selection
+//			    null,                      // The values for the WHERE clause selectionArgs
+//			    null,                      // don't group the rows
+//			    null,                      // don't filter by row groups
+//			    null                  	// The sort order
+//			    );
 	}
 
 	private final SensorEventListener sensorEventListener = new SensorEventListener() {
