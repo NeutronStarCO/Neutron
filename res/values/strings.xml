@@ -208,7 +208,12 @@
         <item>确认手机号码</item>
         <item>我们将向您的这个手机号码发送一串验证码：</item>
     </string-array>
-    
+ 
+    <string-array name="confirmation_dialog_connect_failed">
+        <item>啊呀，没连上！</item>
+        <item>可能是网络连接不畅，导致我们的这次努力没连上！再试一次看看！</item>
+    </string-array>
+       
     <string-array name="idd_country">
         <item>美国</item>
         <item>加拿大</item>

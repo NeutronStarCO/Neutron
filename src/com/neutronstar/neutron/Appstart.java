@@ -30,6 +30,7 @@ import com.neutronstar.neutron.NeutronContract.USER;
 
 public class Appstart extends Activity {
 	public static Appstart instance = null;
+	private final int requestCode = 1;
 	private NeutronDbHelper ndb;
 	T_user localUser; 
 	T_user remoteUser;
@@ -57,11 +58,11 @@ public class Appstart extends Activity {
 		}
 		else
 		{
-			localUser.settUserImei(tm.getDeviceId());		// IMEI 设备号
-			localUser.settUserImsi(tm.getSubscriberId());	// IMSI 国际移动用户识别码(International Mobile Subscriber Identity)
-			getRemoteUser("login", localUser.gettUserId());	// 获取服务器对应id用户信息
-			Log.d("IMEI", localUser.gettUserImei());
-			Log.d("UserId", "" +localUser.gettUserId());
+//			localUser.settUserImei(tm.getDeviceId());		// IMEI 设备号
+//			localUser.settUserImsi(tm.getSubscriberId());	// IMSI 国际移动用户识别码(International Mobile Subscriber Identity)
+			getRemoteUser("login", localUser);	// 获取服务器对应id用户信息
+//			Log.d("IMEI", localUser.gettUserImei());
+//			Log.d("UserId", "" +localUser.gettUserId());
 		}
 	}
 	
@@ -99,13 +100,13 @@ public class Appstart extends Activity {
 		return user;
 	}
 	
-	private void getRemoteUser(String strServlet, int id)
+	private void getRemoteUser(String strServlet, T_user user)
 	{
 		String strUrl = SERVER.Address + "/" + strServlet;	
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            new GetRemoteUserTask().execute(strUrl, String.valueOf(id));
+            new GetRemoteUserTask().execute(strUrl);
         } else {
         	Toast toast = Toast.makeText(this, "No network connection available.", Toast.LENGTH_LONG );
 			toast.show();
@@ -114,11 +115,10 @@ public class Appstart extends Activity {
 	
 	 private class GetRemoteUserTask extends AsyncTask<String, Void, String> 
 	 {
-
+		 String isOK = "";
 		@Override
 		protected String doInBackground(String... params) {
 			String strUrl = params[0];
-			int id = Integer.valueOf(params[1]);
 			try {
 				 URL url = new URL(strUrl);
 			     HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
@@ -142,8 +142,8 @@ public class Appstart extends Activity {
 		  
 		        ObjectInputStream ois = new ObjectInputStream(urlConn.getInputStream());  
 		        paraList = (ArrayList<Serializable>)ois.readObject();
-		        String isSucceed = (String)paraList.get(0);
-		        Log.d("isSucceed", isSucceed);
+		        isOK = (String)paraList.get(0);
+		        Log.d("isSucceed", isOK);
 		        remoteUser = (T_user)paraList.get(1);
             } catch (Exception e) {
                 return "Unable to retrieve web page. URL may be invalid.";
@@ -153,33 +153,16 @@ public class Appstart extends Activity {
 		 
 		protected void onPostExecute(String result) 
 		{
-			if(null != remoteUser)
+			if(!isOK.equals("ok")) // 没有正常返回，退出或者重新连接
+			{				
+				Intent intent = new Intent(Appstart.this, ConfirmationDialogActivity.class);
+				Bundle bl = new Bundle();
+				bl.putInt("tag", ConfirmationDialogActivity.TAG_CONNECT_FAILED);
+				intent.putExtras(bl);
+				startActivityForResult(intent, requestCode);
+			}
+			else if(null == remoteUser) // 转入登录注册页面
 			{
-				// 已存在用户登录成功，转入主页面
-				if(localUser.gettUserId().equals(remoteUser.gettUserId())
-						&& localUser.gettUserPasscode().equals(remoteUser.gettUserPasscode())
-	//					&& localUser.gettUserImei().equals(remoteUser.gettUserImei())
-	//					&& localUser.gettUserImsi()==remoteUser.gettUserImsi()
-						)
-					new Handler().postDelayed(new Runnable() {
-						public void run() {
-							Intent intent = new Intent(Appstart.this, MainNeutron.class);
-							Bundle bl = new Bundle();
-							bl.putInt("id", localUser.gettUserId());
-							intent.putExtras(bl);
-							startActivity(intent);
-							Appstart.this.finish();
-						}
-					}, 1000);
-				else //转入登录注册页面1
-					new Handler().postDelayed(new Runnable() {
-						public void run() {
-							Intent intent = new Intent(Appstart.this, Welcome.class);
-							startActivity(intent);
-							Appstart.this.finish();
-						}
-					}, 1000);
-			} else //转入登录注册页面1
 				new Handler().postDelayed(new Runnable() {
 					public void run() {
 						Intent intent = new Intent(Appstart.this, Welcome.class);
@@ -187,7 +170,38 @@ public class Appstart extends Activity {
 						Appstart.this.finish();
 					}
 				}, 1000);
+			}
+			else // 已存在用户登录成功，转入主页面
+			{				
+				new Handler().postDelayed(new Runnable() {
+					public void run() {
+						Intent intent = new Intent(Appstart.this, MainNeutron.class);
+						Bundle bl = new Bundle();
+						bl.putInt("id", localUser.gettUserId());
+						intent.putExtras(bl);
+						startActivity(intent);
+						Appstart.this.finish();
+					}
+				}, 1000);
+			} 				
 		}
+	 }
+	 
+	 protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	 {
+		 switch(resultCode){
+		 case RESULT_OK:
+			Bundle bl = data.getExtras();
+			boolean confirmation = bl.getBoolean("confirmation");
+			if(confirmation)
+			{
+				getRemoteUser("login", localUser);
+			}
+			else
+			{
+				this.finish();
+			}
+		 }
 	 }
 
 }
