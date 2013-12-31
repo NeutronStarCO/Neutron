@@ -4,11 +4,13 @@ import java.io.ByteArrayOutputStream;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 
 import com.neutronstar.neutron.NeutronContract.NeutronAcceleration;
 import com.neutronstar.neutron.NeutronContract.NeutronGroupTesting;
@@ -20,7 +22,7 @@ import com.neutronstar.neutron.NeutronContract.USER;
 
 public class NeutronDbHelper extends SQLiteOpenHelper {
 	public static NeutronDbHelper mInstance = null;
-	public static final int DATABASE_VERSION = 1;
+	public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "NEUTRON";
     
     private static final String REAL_TYPE = " REAL";
@@ -32,7 +34,15 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_TABLE_ACCELERATION =
     	    "CREATE TABLE IF NOT EXISTS " + NeutronAcceleration.TABLE_NAME + " (" +
     	    NeutronAcceleration.COLUMN_NAME_ACCELERATION + REAL_TYPE + COMMA_SEP +
-    	    NeutronAcceleration.COLUMN_NAME_TIMESTAMP + TEXT_TYPE + " )";
+    	    NeutronAcceleration.COLUMN_NAME_TIMESTAMP + TEXT_TYPE + COMMA_SEP +
+    	    NeutronAcceleration.COLUMN_NAME_UPLOADTAG + INTEGER_TYPE + " )";
+    
+    private static final String SQL_DEL_TABLE_ACCELERATION = 
+    		"DROP TABLE IF EXISTS " + NeutronAcceleration.TABLE_NAME;
+    
+    private static final String SQL_ALTER_TABLE_ACCELERATION = 
+    		"ALTER TABLE " + NeutronAcceleration.TABLE_NAME + " ADD " + NeutronAcceleration.COLUMN_NAME_UPLOADTAG +
+    		INTEGER_TYPE;
     
     private static final String SQL_CREATE_TABLE_RMR_INDEX = 
     		"CREATE TABLE IF NOT EXISTS " + NeutronRMRIndex.TABLE_NAME + " ("+ 
@@ -92,6 +102,7 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
+		db.execSQL(SQL_DEL_TABLE_ACCELERATION);
 		db.execSQL(SQL_CREATE_TABLE_ACCELERATION);
 		db.execSQL(SQL_CREATE_TABLE_RMR_INDEX);
 		db.execSQL(SQL_CREATE_TABLE_RECORD);
@@ -133,6 +144,10 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		if (!checkColumnExist(db, NeutronAcceleration.TABLE_NAME, NeutronAcceleration.COLUMN_NAME_UPLOADTAG))
+		{
+			db.execSQL(SQL_ALTER_TABLE_ACCELERATION);
+		}
 /*		db.execSQL("ALTER TABLE "+ NeutronRecord.TABLE_NAME + " RENAME TO "+ NeutronRecord.TABLE_NAME + "temp");
 		db.execSQL(SQL_CREATE_TABLE_RECORD);
 		db.execSQL("INSERT INTO " + NeutronRecord.TABLE_NAME + " SELECT " + 
@@ -149,6 +164,32 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
 //		db.execSQL("drop table if exists " + NeutronGroupTesting.TABLE_NAME);
 //		db.execSQL(SQL_CREATE_TABLE_GROUPTESTING);
 
+	}
+	
+	private boolean checkColumnExist(SQLiteDatabase db, String tableName
+	        , String columnName) {
+	    boolean result = false ;
+	    Cursor cursor = null ;
+	    try
+	    {
+	        //≤È—Ø“ª––
+	        cursor = db.rawQuery( "SELECT * FROM " + tableName + " LIMIT 0"
+	            , null );
+	        result = cursor != null && cursor.getColumnIndex(columnName) != -1 ;
+	    }
+	    catch (Exception e)
+	    {
+	         Log.e("SQLiteDB","checkColumnExists" + e.getMessage()) ;
+	    }
+	    finally
+	    {
+	        if(null != cursor && !cursor.isClosed())
+	        {
+	            cursor.close() ;
+	        }
+	    }
+
+	    return result ;
 	}
 
 }

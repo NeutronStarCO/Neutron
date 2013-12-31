@@ -231,7 +231,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 			lowAcc = lowAcc * FILTERING_VALUE + acc * ( 1.0f - FILTERING_VALUE );
 
 			// 消去原有的重力引起的压力
-			currentAcceleration = acc - lowAcc;
+			currentAcceleration = Math.abs(acc - lowAcc);
 			Log.i("sensor", "\n Current Acceleration: " + currentAcceleration);
 			sensorManager.unregisterListener(sensorEventListener);
 			refreshAccelerometer();
