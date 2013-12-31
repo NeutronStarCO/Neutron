@@ -10,7 +10,6 @@ import org.json.JSONException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -240,13 +239,8 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 			// 计算三个方向的加速度
 			currentAcceleration = (float) Math.sqrt(Math.pow(highX, 2) + Math.pow(highY, 2)
 					+ Math.pow(highZ, 2));
-			
-			//double a = Math.round(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)
-			//		+ Math.pow(z, 2)));
 
-			// 消去原有的重力引起的压力
-			//currentAcceleration = Math.abs((float) (a - calibration));
-			Log.i("sensor", "\n currentAcceleration " + currentAcceleration);
+			Log.i("sensor", "\n Current Acceleration: " + currentAcceleration);
 			sensorManager.unregisterListener(sensorEventListener);
 			refreshAccelerometer();
 		}

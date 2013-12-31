@@ -2,13 +2,13 @@ package com.neutronstar.neutron;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -17,7 +17,6 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class PhoneNumberActivity extends Activity {
 	public static final int TAG_LOGIN = 1;
@@ -70,11 +69,11 @@ public class PhoneNumberActivity extends Activity {
 			Toast toast = Toast.makeText(this, "您还没有同意用户协议", Toast.LENGTH_LONG );
 			toast.show();
 		}
-//		else if(tvPhoneNumber.getText().length() <= 8)
-//		{
-//			Toast toast = Toast.makeText(this, "你的手机号码少于8位", Toast.LENGTH_LONG );
-//			toast.show();
-//		}
+		else if(tvPhoneNumber.getText().length() <= 8)
+		{
+			Toast toast = Toast.makeText(this, "你确信您的手机号码少于8位吗？", Toast.LENGTH_LONG );
+			toast.show();
+		}
 		else
 		{
 			Intent intent = new Intent(PhoneNumberActivity.this, ConfirmationDialogActivity.class);
@@ -155,6 +154,10 @@ public class PhoneNumberActivity extends Activity {
 					startActivityForResult(intent, 0);
 					break;
 				}
+			}
+			else
+			{
+				// Nothing to do!
 			}
 			break;
 		case RESULT_FIRST_USER:
