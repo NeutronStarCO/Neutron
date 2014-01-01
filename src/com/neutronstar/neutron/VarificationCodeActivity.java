@@ -1,9 +1,12 @@
 package com.neutronstar.neutron;
 
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,10 +14,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.neutron.server.persistence.model.T_user;
 import com.neutronstar.neutron.NeutronContract.SERVER;
 
 public class VarificationCodeActivity extends Activity {
@@ -26,7 +31,9 @@ public class VarificationCodeActivity extends Activity {
 	private String phonenumber;
 	private String IDD;
 	private String passcode;
+	private int userid;
 	private EditText etVarificationCode;
+	private T_user user;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,69 +43,12 @@ public class VarificationCodeActivity extends Activity {
 		tag = bl.getInt("tag");
 		IDD = bl.getString("IDD");
 		phonenumber = bl.getString("phonenumber");
+		passcode = bl.getString("passcode");
+		userid = bl.getInt("userid");
 		etVarificationCode = (EditText) findViewById(R.id.varification_code_code);
-		getRemoteVarificationCode("getpasscode", IDD, phonenumber);
+		etVarificationCode.setText(passcode);
 	}
 	
-	private void getRemoteVarificationCode(String strServlet, String IDD, String phonenumber)
-	{
-		String strUrl = SERVER.Address + "/" + strServlet;	
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            new GetRemoteVarificationCodeTask().execute(strUrl, IDD, phonenumber);
-        } else {
-        	Toast toast = Toast.makeText(this, "No network connection available.", Toast.LENGTH_LONG );
-			toast.show();
-        }
-	}
-	
-	private class GetRemoteVarificationCodeTask extends AsyncTask<String, Void, String> {
-
-		@Override
-		protected String doInBackground(String... params) {
-			String strUrl = params[0];
-			passcode = "112233";
-			try {
-				 URL url = new URL(strUrl);
-			     HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-			     urlConn.setReadTimeout(10000 /* milliseconds */);
-			     urlConn.setConnectTimeout(15000 /* milliseconds */);
-			     urlConn.setDoInput(true);
-			     urlConn.setDoOutput(true);
-			     urlConn.setRequestMethod("POST");
-			     urlConn.setUseCaches(false);
-				urlConn.setRequestProperty("Content-Type", "application/x-java-serialized-object");
-				urlConn.connect();
-				OutputStream outStrm = urlConn.getOutputStream();  
-		        ObjectOutputStream oos = new ObjectOutputStream(outStrm);  
-		        
-		        // 输入电话号码和IDD，检查是否已经存在
-		        // 对注册，已存在则提醒更改电话号码，不存在则返回passcode
-		        // 对登录，不存在则提醒更改电话号码，存在则返回passcode
-//		        ArrayList<Serializable> paraList = new ArrayList<Serializable>();
-//		        paraList.add("query");
-//		        oos.writeObject(paraList);  
-//		        oos.flush();  
-//		        oos.close();  
-//		  
-//		        ObjectInputStream ois = new ObjectInputStream(urlConn.getInputStream());  
-//		        paraList = (ArrayList<Serializable>)ois.readObject();
-//		        String isSucceed = (String)paraList.get(0);
-//		        Log.d("isSucceed", isSucceed);
-//		        remoteUser = (T_user)paraList.get(1);
-			}catch (Exception e) {
-                e.printStackTrace();
-            }
-			return passcode;
-		}
-		
-		protected void onPostExecute(String result)
-		{
-			etVarificationCode.setText(result);
-		}
-		
-	}
 	
 	public void back(View view)
 	{
@@ -107,7 +57,7 @@ public class VarificationCodeActivity extends Activity {
 	
 	public void next(View view)
 	{
-		if(etVarificationCode.length() == 6)
+		if(passcode.equals(etVarificationCode.getText().toString()))
 		{
 			Intent intent = new Intent();
 			Bundle bl = new Bundle();
@@ -117,20 +67,19 @@ public class VarificationCodeActivity extends Activity {
 			intent.putExtras(bl);
 			switch(tag)
 			{
-			case TAG_LOGIN:		
-				if(passcode.equals(etVarificationCode.getText().toString()))
-				{
-					// 更新服务器该用户的passcode
-					// 传递userid到MainNeutron
-//					bl.putString("userid", userid);
-//					intent.putExtras(bl);
-//					intent.setClass(VarificationCodeActivity.this, MainNeutron.class);
-//					startActivityForResult(intent, 0);
-				} 
-				else
-				{
-					Toast.makeText(this, "验证码错误！", Toast.LENGTH_LONG ).show();
-				}				
+			case TAG_LOGIN:	
+				user.settUserAreacode(IDD);
+				user.settUserPhonenumber(phonenumber);
+				user.settUserPasscode(passcode);
+				user.settUserId(userid);
+				login("login", user);
+				// 更新服务器该用户的passcode
+				// 传递userid到MainNeutron
+//				bl.putString("userid", userid);
+//				intent.putExtras(bl);
+//				intent.setClass(VarificationCodeActivity.this, MainNeutron.class);
+//				startActivityForResult(intent, 0);
+				
 				break;
 			case TAG_SIGN_IN:
 				bl.putString("phonenumber", phonenumber);
@@ -144,7 +93,7 @@ public class VarificationCodeActivity extends Activity {
 		}
 		else
 		{
-			Toast toast = Toast.makeText(this, "验证码应为6位数字.", Toast.LENGTH_LONG );
+			Toast toast = Toast.makeText(this, "验证码错误！", Toast.LENGTH_LONG );
 			toast.show();
 		}		
 	}
@@ -158,6 +107,75 @@ public class VarificationCodeActivity extends Activity {
 			this.setResult(RESULT_FIRST_USER, new Intent());
 			this.finish();
 			break;
+		}
+	}
+	
+	private void login(String strServlet, T_user user)
+	{
+		String strUrl = SERVER.Address + "/" + strServlet;	
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            new LoginTask().execute(strUrl);
+        } else {
+        	Toast toast = Toast.makeText(this, "No network connection available.", Toast.LENGTH_LONG );
+			toast.show();
+        }
+	}
+	
+	private class LoginTask extends AsyncTask<String, Void, Integer> 
+	{
+		String state = "";
+
+		@Override
+		protected Integer doInBackground(String... params) {
+			String strUrl = params[0];
+			int result = 0;
+			try {
+				URL url = new URL(strUrl);
+			    HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+			    urlConn.setReadTimeout(10000 /* milliseconds */);
+			    urlConn.setConnectTimeout(15000 /* milliseconds */);
+			    urlConn.setDoInput(true);
+			    urlConn.setDoOutput(true);
+			    urlConn.setRequestMethod("POST");
+			    urlConn.setUseCaches(false);
+				urlConn.setRequestProperty("Content-Type", "application/x-java-serialized-object");
+				urlConn.connect();
+				OutputStream outStrm = urlConn.getOutputStream();  
+		        ObjectOutputStream oos = new ObjectOutputStream(outStrm);  
+		        
+		        ArrayList<Serializable> paraList = new ArrayList<Serializable>();
+		        paraList.add("update");
+		        paraList.add(user);
+		        oos.writeObject(paraList);  
+		        oos.flush();  
+		        oos.close();  
+		  
+		        ObjectInputStream ois = new ObjectInputStream(urlConn.getInputStream());  
+		        paraList = (ArrayList<Serializable>)ois.readObject();
+		        state = (String)paraList.get(0);
+		        result = (Integer)paraList.get(1);
+		        Log.d("LoginTask", state);	        
+           } catch (Exception e) {
+               e.printStackTrace();
+           }
+			return result;
+		}
+		
+		protected void onPostExecute(String result) 
+		{
+			Intent intent = new Intent();
+			Bundle bundle  = new Bundle();
+			if(state.equals("ok"))
+			{
+				bundle.putInt("userid", userid);
+				intent.putExtras(bl);
+				intent.setClass(VarificationCodeActivity.this, MainNeutron.class);
+				startActivityForResult(intent, 0);
+				setResult(RESULT_FIRST_USER, new Intent());
+				finish();
+			}
 		}
 	}
 }

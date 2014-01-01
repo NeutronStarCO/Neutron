@@ -144,6 +144,8 @@ public class Appstart extends Activity {
 		        paraList = (ArrayList<Serializable>)ois.readObject();
 		        state = (String)paraList.get(0);
 		        Log.d("isSucceed", state);
+		        Log.d("id", localUser.gettUserId().toString());
+		        Log.d("id", localUser.gettUserPasscode());
             } catch (Exception e) {
                 return "Unable to retrieve web page. URL may be invalid.";
             }

@@ -9,11 +9,14 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -47,6 +50,10 @@ public class PhoneNumberActivity extends Activity {
 	private PopupWindow pwIDD;
 	private T_user localUser;
 	private String passcode;
+	private String IMEI;
+	private String IMSI;
+	private int userid;
+	private TelephonyManager tm;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -62,6 +69,7 @@ public class PhoneNumberActivity extends Activity {
 		cbTerms = (CheckBox) findViewById(R.id.phone_number_terms);
 		IDDCountry = getResources().getStringArray(R.array.idd_country);
 		IDD = getResources().getStringArray(R.array.idd);
+		tm = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
 		
 		switch(tag)
 		{
@@ -209,9 +217,16 @@ public class PhoneNumberActivity extends Activity {
 		        paraList = (ArrayList<Serializable>)ois.readObject();
 		        state = (String)paraList.get(0);
 		        Log.d("GetPasscodeTask", state);
+		        Log.d("IDD", localUser.gettUserAreacode());
+		        Log.d("Phonenumber", localUser.gettUserPhonenumber());
 		        T_user user = (T_user)paraList.get(1);
 		        passcode = user.gettUserPasscode();
+		        IMEI = user.gettUserImei();
+		        IMSI = user.gettUserImsi();
+		        userid = user.gettUserId();
 		        Log.d("passcode", passcode);
+//		        Log.d("IMEI", IMEI);
+//		        Log.d("IMSI", IMSI);
 		        
            } catch (Exception e) {
                e.printStackTrace();
@@ -221,20 +236,18 @@ public class PhoneNumberActivity extends Activity {
 		
 		protected void onPostExecute(String result) 
 		{
-			if(state.equals("ok"))
+			Intent intent = new Intent();
+			Bundle bundle  = new Bundle();
+			if(state.equals("new"))
 			{
-				Intent intent = new Intent();
-				Bundle bundle  = new Bundle();
 				switch(tag)
 				{
 				case TAG_LOGIN:
-					intent = new Intent(PhoneNumberActivity.this, VarificationCodeActivity.class);
-					bundle.putInt("tag", VarificationCodeActivity.TAG_LOGIN);
-					bundle.putString("IDD", tvIDD.getText().toString());
-					bundle.putString("phonenumber", tvPhoneNumber.getText().toString());
-					bundle.putString("passcode", result);
-					intent.putExtras(bundle);
-					startActivityForResult(intent, 0);
+					new AlertDialog.Builder(PhoneNumberActivity.this)
+                    .setIcon(getResources().getDrawable(R.drawable.login_error_icon))
+                    .setTitle("电话号码错误")
+                    .setMessage("您输入的号码尚未注册，请确认号码后再获取验证码！")
+                    .create().show();
 					break;
 				case TAG_SIGN_IN:
 					intent = new Intent(PhoneNumberActivity.this, VarificationCodeActivity.class);
@@ -247,9 +260,48 @@ public class PhoneNumberActivity extends Activity {
 					break;
 				}
 			}
+			else if (state.equals("registered"))
+			{
+				switch(tag)
+				{
+				case TAG_LOGIN:	
+					if(tm.getDeviceId().equals(IMEI) || tm.getSubscriberId().equals(IMSI))
+					{
+						intent = new Intent(PhoneNumberActivity.this, VarificationCodeActivity.class);
+						bundle.putInt("tag", VarificationCodeActivity.TAG_LOGIN);
+						bundle.putString("IDD", tvIDD.getText().toString());
+						bundle.putString("phonenumber", tvPhoneNumber.getText().toString());
+						bundle.putString("passcode", result);
+						bundle.putInt("userid", userid);
+						intent.putExtras(bundle);
+						startActivityForResult(intent, 0);
+					}
+					else
+					{
+						new AlertDialog.Builder(PhoneNumberActivity.this)
+	                    .setIcon(getResources().getDrawable(R.drawable.login_error_icon))
+	                    .setTitle("设备不对")
+	                    .setMessage("您未使用注册的电话或sim卡来登录注册用户！")
+	                    .create().show();
+					}
+					
+					break;
+				case TAG_SIGN_IN:
+					new AlertDialog.Builder(PhoneNumberActivity.this)
+                    .setIcon(getResources().getDrawable(R.drawable.login_error_icon))
+                    .setTitle("电话号码错误")
+                    .setMessage("您输入的号码已经注册，请确认号码后再获取验证码！")
+                    .create().show();
+					break;
+				}
+			}
 			else
 			{
-				Log.d("failed to get passcode", "failed to get passcode");
+				new AlertDialog.Builder(PhoneNumberActivity.this)
+                .setIcon(getResources().getDrawable(R.drawable.login_error_icon))
+                .setTitle("failed to get passcode")
+                .setMessage("failed to get passcode!")
+                .create().show();
 			}
 		}
 	}
