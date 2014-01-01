@@ -52,6 +52,7 @@ public class PhoneNumberActivity extends Activity {
 	private String passcode;
 	private String IMEI;
 	private String IMSI;
+	private int userid;
 	private TelephonyManager tm;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -222,6 +223,7 @@ public class PhoneNumberActivity extends Activity {
 		        passcode = user.gettUserPasscode();
 		        IMEI = user.gettUserImei();
 		        IMSI = user.gettUserImsi();
+		        userid = user.gettUserId();
 		        Log.d("passcode", passcode);
 //		        Log.d("IMEI", IMEI);
 //		        Log.d("IMSI", IMSI);
@@ -262,14 +264,27 @@ public class PhoneNumberActivity extends Activity {
 			{
 				switch(tag)
 				{
-				case TAG_LOGIN:					
-					intent = new Intent(PhoneNumberActivity.this, VarificationCodeActivity.class);
-					bundle.putInt("tag", VarificationCodeActivity.TAG_LOGIN);
-					bundle.putString("IDD", tvIDD.getText().toString());
-					bundle.putString("phonenumber", tvPhoneNumber.getText().toString());
-					bundle.putString("passcode", result);
-					intent.putExtras(bundle);
-					startActivityForResult(intent, 0);
+				case TAG_LOGIN:	
+					if(tm.getDeviceId().equals(IMEI) || tm.getSubscriberId().equals(IMSI))
+					{
+						intent = new Intent(PhoneNumberActivity.this, VarificationCodeActivity.class);
+						bundle.putInt("tag", VarificationCodeActivity.TAG_LOGIN);
+						bundle.putString("IDD", tvIDD.getText().toString());
+						bundle.putString("phonenumber", tvPhoneNumber.getText().toString());
+						bundle.putString("passcode", result);
+						bundle.putInt("userid", userid);
+						intent.putExtras(bundle);
+						startActivityForResult(intent, 0);
+					}
+					else
+					{
+						new AlertDialog.Builder(PhoneNumberActivity.this)
+	                    .setIcon(getResources().getDrawable(R.drawable.login_error_icon))
+	                    .setTitle("设备不对")
+	                    .setMessage("您未使用注册的电话或sim卡来登录注册用户！")
+	                    .create().show();
+					}
+					
 					break;
 				case TAG_SIGN_IN:
 					new AlertDialog.Builder(PhoneNumberActivity.this)
