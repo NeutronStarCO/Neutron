@@ -84,6 +84,7 @@ public class NeutronService extends Service {
 		ContentValues cv = new ContentValues();
 		cv.put(NeutronAcceleration.COLUMN_NAME_ACCELERATION, currentAcceleration);
 		cv.put(NeutronAcceleration.COLUMN_NAME_TIMESTAMP, date);
+		cv.put(NeutronAcceleration.COLUMN_NAME_UPLOADTAG, 0);
 		db.insert(NeutronAcceleration.TABLE_NAME, null, cv);
 
 	}

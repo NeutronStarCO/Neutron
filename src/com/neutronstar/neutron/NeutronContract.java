@@ -11,6 +11,7 @@ public final class NeutronContract {
 		 public static final String TABLE_NAME = "t_acceleration";
 		 public static final String COLUMN_NAME_ACCELERATION = "acceleration";
 		 public static final String COLUMN_NAME_TIMESTAMP = "timestamp";
+		 public static final String COLUMN_NAME_UPLOADTAG = "uploadtag";
 	 }
 	 
 	 public static abstract class NeutronRMRIndex implements BaseColumns 

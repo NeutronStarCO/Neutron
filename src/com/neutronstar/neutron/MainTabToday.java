@@ -56,10 +56,10 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 	private String title[] = { "我", "萨利", "奈蒂莉", "卡梅隆", "布什" };
 
 	private double currentTotalCost = 0;
-	float currentAcceleration = 0;
+	double currentAcceleration = 0;
 	private Timer updateTimer;
 	
-	private double lowX,lowY,lowZ;
+	private double lowAcc;
 	private final double FILTERING_VALUE = 0.8;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -224,22 +224,14 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 			double y = event.values[1];
 			double z = event.values[2];
 			
-			lowX = lowX * FILTERING_VALUE + x * ( 1.0f - FILTERING_VALUE );
-			lowY = lowY * FILTERING_VALUE + y * ( 1.0f - FILTERING_VALUE );
-			lowZ = lowZ * FILTERING_VALUE + z * ( 1.0f - FILTERING_VALUE );
-			
-			double highX = x - lowX;
-			double highY = y - lowY;
-			double highZ = z - lowZ;
-			
-			Log.i("sensor","\n highX" + highX);			
-			Log.i("sensor","\n highY" + highY);
-			Log.i("sensor","\n highZ" + highZ);
-
 			// 计算三个方向的加速度
-			currentAcceleration = (float) Math.sqrt(Math.pow(highX, 2) + Math.pow(highY, 2)
-					+ Math.pow(highZ, 2));
+			double a = Math.round(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)
+					+ Math.pow(z, 2)));
+			double acc = Math.abs((float) (a - calibration));
+			lowAcc = lowAcc * FILTERING_VALUE + acc * ( 1.0f - FILTERING_VALUE );
 
+			// 消去原有的重力引起的压力
+			currentAcceleration = Math.abs(acc - lowAcc);
 			Log.i("sensor", "\n Current Acceleration: " + currentAcceleration);
 			sensorManager.unregisterListener(sensorEventListener);
 			refreshAccelerometer();

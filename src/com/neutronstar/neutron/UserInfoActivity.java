@@ -85,7 +85,7 @@ public class UserInfoActivity extends Activity {
 		switch(usage)
 		{
 		case MainTabFamily.TAG_ADD:
-			ivAvatar.setImageDrawable(getResources().getDrawable(R.drawable.avatar_female));
+			ivAvatar.setImageDrawable(getResources().getDrawable(R.drawable.xiaohei_big));
 			tvName.setHint(getResources().getString(R.string.user_info_hint_name));
 			tvGender.setHint(getResources().getString(R.string.user_info_hint_gender));
 			tvBirthday.setHint(getResources().getString(R.string.user_info_hint_birthday));
@@ -104,7 +104,15 @@ public class UserInfoActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Log.v("fangda","avatar");
+				ivAvatar.setDrawingCacheEnabled(true);
+				Bitmap bitmap = Bitmap.createBitmap(ivAvatar.getDrawingCache());
+				ivAvatar.setDrawingCacheEnabled(false);
+				
+				Intent intent = new Intent(UserInfoActivity.this, Avatar.class);
+				Bundle bl = new Bundle();
+				bl.putParcelable("avatar", bitmap);
+				intent.putExtras(bl);
+				startActivity(intent);
 			}
 		});
 		
@@ -179,24 +187,6 @@ public class UserInfoActivity extends Activity {
 				bundle.putInt("pos", position);
 				intent.putExtras(bundle);
 				startActivityForResult(intent,RELATION_REQUEST_CODE);				
-			}
-		});
-		ivAvatar.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
-				ivAvatar.setDrawingCacheEnabled(true);
-				Bitmap bitmap = Bitmap.createBitmap(ivAvatar.getDrawingCache());
-				ivAvatar.setDrawingCacheEnabled(false);
-				
-				Intent intent = new Intent();
-				Bundle bl = new Bundle();
-				bl.putParcelable("avatar", bitmap);
-				intent.setClass(UserInfoActivity.this, Avatar.class);
-				intent.putExtras(bl);
-				startActivity(intent);
 			}
 		});
 	}
@@ -351,7 +341,7 @@ public class UserInfoActivity extends Activity {
 		String birthday = tvBirthday.getText().toString();
 		int relation = findRelation(tvRelation.getText().toString());
 						
-		cv.put(NeutronUser.COLUMN_NAME_ID, 4);
+		cv.put(NeutronUser.COLUMN_NAME_ID, 5);
 		cv.put(NeutronUser.COLUMN_NAME_NAME, name);
 		cv.put(NeutronUser.COLUMN_NAME_GENDER, gender);
 		cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, birthday);
