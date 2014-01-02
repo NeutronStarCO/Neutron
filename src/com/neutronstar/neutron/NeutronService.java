@@ -232,12 +232,12 @@ public class NeutronService extends Service {
             } catch (Exception e) {
                 return "Unable to send acceleration to the server. The server may be invalid.";
             }
-			return null;
+			return "isSucceed";
 		}
 		 
 		protected void onPostExecute(String result) 
 		{
-			if(result == "")
+			if(result == "isSucceed")
 			{
 				Toast toast = Toast.makeText(NeutronService.this, "Upload Acceleration Succeed.", Toast.LENGTH_LONG );
 				toast.show();
