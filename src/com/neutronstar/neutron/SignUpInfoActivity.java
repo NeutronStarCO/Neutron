@@ -14,12 +14,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
@@ -51,6 +53,7 @@ public class SignUpInfoActivity extends Activity {
 	private Calendar c = Calendar.getInstance();
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	private NeutronDbHelper ndb;
+	private TelephonyManager tm;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -62,6 +65,7 @@ public class SignUpInfoActivity extends Activity {
 		user.settUserAreacode(bl.getString("IDD"));
 		user.settUserPhonenumber(bl.getString("phonenumber"));
 		user.settUserPasscode(bl.getString("passcode"));
+		tm = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
 		
 		spinner = (Spinner) findViewById(R.id.sign_up_info_spinner);
 		tvName = (TextView) findViewById(R.id.sign_up_info_name);
@@ -107,6 +111,11 @@ public class SignUpInfoActivity extends Activity {
 			user.settUserName(tvName.getText().toString());
 		user.settUserBirth(dateFormat.format(c.getTime()));
 		user.settUserGender(spinner.getSelectedItemId()==0? 1:0);
+		user.settUserRegtag(USER.registered);
+		user.settUserDeltag("0");
+		user.settUserImei(tm.getDeviceId());
+		user.settUserImsi(tm.getSubscriberId());
+		user.settUserRegdate(Calendar.getInstance().getTime());
 		addNewUser("login", user);	
 	}
 	
@@ -154,6 +163,7 @@ public class SignUpInfoActivity extends Activity {
 			    urlConn.setDoOutput(true);
 			    urlConn.setRequestMethod("POST");
 			    urlConn.setUseCaches(false);
+			    urlConn.setRequestProperty("Accept-Charset", "utf-8");  
 				urlConn.setRequestProperty("Content-Type", "application/x-java-serialized-object");
 				urlConn.connect();
 				OutputStream outStrm = urlConn.getOutputStream();  
@@ -170,7 +180,7 @@ public class SignUpInfoActivity extends Activity {
 		        paraList = (ArrayList<Serializable>)ois.readObject();
 		        state = (String)paraList.get(0);
 		        Log.d("AddNewUserTask", state);
-		        userid = Integer.valueOf((String)paraList.get(1));
+		        userid = (Integer)paraList.get(1);
 		        Log.d("userid", ""+userid);
 		        
            } catch (Exception e) {
@@ -187,9 +197,9 @@ public class SignUpInfoActivity extends Activity {
 			{
 				// 清除本地数据表数据
 				SQLiteDatabase db = ndb.getWritableDatabase();
-				db.execSQL("Delete * from " + NeutronUser.TABLE_NAME);
-				db.execSQL("Delete * from " + NeutronRecord.TABLE_NAME);
-				db.execSQL("Delete * from " + NeutronGroupTesting.TABLE_NAME);
+				db.execSQL("Delete from " + NeutronUser.TABLE_NAME);
+				db.execSQL("Delete from " + NeutronRecord.TABLE_NAME);
+				db.execSQL("Delete from " + NeutronGroupTesting.TABLE_NAME);
 				// 插入新数据
 				ContentValues cv = new ContentValues(); 
 				cv.put(NeutronUser.COLUMN_NAME_ID, result);

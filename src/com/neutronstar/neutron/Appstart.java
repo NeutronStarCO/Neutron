@@ -145,7 +145,7 @@ public class Appstart extends Activity {
 		        state = (String)paraList.get(0);
 		        Log.d("isSucceed", state);
 		        Log.d("id", localUser.gettUserId().toString());
-		        Log.d("id", localUser.gettUserPasscode());
+		        Log.d("passcode", localUser.gettUserPasscode());
             } catch (Exception e) {
                 return "Unable to retrieve web page. URL may be invalid.";
             }
@@ -160,7 +160,7 @@ public class Appstart extends Activity {
 					public void run() {
 						Intent intent = new Intent(Appstart.this, MainNeutron.class);
 						Bundle bl = new Bundle();
-						bl.putInt("id", localUser.gettUserId());
+						bl.putInt("userid", localUser.gettUserId());
 						intent.putExtras(bl);
 						startActivity(intent);
 						Appstart.this.finish();
