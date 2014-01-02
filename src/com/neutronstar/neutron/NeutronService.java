@@ -9,8 +9,10 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -79,12 +81,17 @@ public class NeutronService extends Service {
 		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		accelerometer = sensorManager
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		
+		localUser = getLocalUser();
 		updateTimer = new Timer("gForceUpdateService");
 		updateTimer.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
 				refreshAccelerometer();
 			}
 		}, 0, 5000);
+		
+		SecureRandom random = new SecureRandom();
+		int d1 = random.nextInt(10) * 1000;   
 		updateTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
@@ -92,7 +99,7 @@ public class NeutronService extends Service {
 				uploadAcceleration();
 				// 先测试一分钟上传一次的情况
 			}
-		}, 0, 60000);
+		}, d1, 60000);
 	}
 
 	@Override
@@ -169,7 +176,8 @@ public class NeutronService extends Service {
 			acce += acc.getAcceleration() + acc.getTimestamp();
 		}
 		// 第二步  将数据上传至服务器
-		sendAcceleration("", 1, acce);
+		int id = localUser.gettUserId();
+		sendAcceleration("", id, acce);
 		
 	}
 
@@ -285,6 +293,40 @@ public class NeutronService extends Service {
 		}
 	 }
 	
+	 
+	 private T_user getLocalUser()
+		{
+			T_user user = null;
+			NeutronDbHelper ndb = NeutronDbHelper.GetInstance(this);
+			SQLiteDatabase db = ndb.getReadableDatabase();
+			String[] projection = {
+				    NeutronUser.COLUMN_NAME_ID,
+				    NeutronUser.COLUMN_NAME_PASSCODE
+				    };
+			String selection = "" + NeutronUser.COLUMN_NAME_RELATION + "=" + USER.me
+					+ " AND " + NeutronUser.COLUMN_NAME_TAG + "=" + TAG.normal;
+			Cursor cur = db.query(
+					NeutronUser.TABLE_NAME,  // The table to query
+				    projection,                // The columns to return
+				    selection,                 // The columns for the WHERE clause selection
+				    null,                      // The values for the WHERE clause selectionArgs
+				    null,                      // don't group the rows
+				    null,                      // don't filter by row groups
+				    null                  		// The sort order
+				    );
+			if (cur != null) {
+				if (cur.moveToFirst()) {
+					user = new T_user();
+					do {
+						user.settUserId(cur.getInt(cur.getColumnIndex(NeutronUser.COLUMN_NAME_ID)));
+						user.settUserPasscode(cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_PASSCODE)));
+					} while (cur.moveToNext());
+				}else{
+					user = null;
+				}
+			}
+			return user;
+		}
 	
 	private final SensorEventListener sensorEventListener = new SensorEventListener() {
 		// 系统设置的重力加速度标准值，设备在水平静止的情况下就承受这个压力，所以默认Y轴方向的加速度值为STANDARD_GRAVITY
