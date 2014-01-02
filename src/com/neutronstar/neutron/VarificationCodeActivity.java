@@ -9,7 +9,9 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -20,11 +22,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.neutron.server.persistence.model.T_user;
+import com.neutronstar.neutron.NeutronContract.NeutronUser;
 import com.neutronstar.neutron.NeutronContract.SERVER;
 
 public class VarificationCodeActivity extends Activity {
 	public static final int TAG_LOGIN = 1;
 	public static final int TAG_SIGN_IN = 2;
+	private NeutronDbHelper ndb;
 	private Intent intent;
 	private Bundle bl;
 	private int tag;
@@ -38,6 +42,7 @@ public class VarificationCodeActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_varification_code);
+		ndb = NeutronDbHelper.GetInstance(this);
 		intent = this.getIntent();
 		bl = intent.getExtras();
 		tag = bl.getInt("tag");
@@ -68,6 +73,7 @@ public class VarificationCodeActivity extends Activity {
 			switch(tag)
 			{
 			case TAG_LOGIN:	
+				user = new T_user();
 				user.settUserAreacode(IDD);
 				user.settUserPhonenumber(phonenumber);
 				user.settUserPasscode(passcode);
@@ -169,6 +175,12 @@ public class VarificationCodeActivity extends Activity {
 			Bundle bundle  = new Bundle();
 			if(state.equals("ok"))
 			{
+				SQLiteDatabase db = ndb.getWritableDatabase();
+				ContentValues cv = new ContentValues();
+				cv.put(NeutronUser.COLUMN_NAME_PASSCODE, result);
+				String[] whereArgs = {String.valueOf(userid)};
+				db.update(NeutronUser.TABLE_NAME, cv, NeutronUser.COLUMN_NAME_ID + "=?", whereArgs);
+				
 				bundle.putInt("userid", userid);
 				intent.putExtras(bl);
 				intent.setClass(VarificationCodeActivity.this, MainNeutron.class);

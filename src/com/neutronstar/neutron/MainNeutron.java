@@ -104,7 +104,12 @@ public class MainNeutron extends Activity  {
 		// 每个页面的view数据
 		final ArrayList<View> views = new ArrayList<View>();
 //		views.add(view_tab_today);
-		views.add(manager.startActivity("MainTabToday", new Intent(this, MainTabToday.class)).getDecorView());
+		Intent intent = this.getIntent();
+		Log.d("-----", "" + intent.getExtras().getInt("userid"));
+		intent.setClass(this, MainTabToday.class);
+		Log.d("-----", "" + intent.getExtras().getInt("userid"));
+		views.add(manager.startActivity("MainTabToday", intent).getDecorView());
+//		views.add(manager.startActivity("MainTabToday", new Intent(this, MainTabToday.class)).getDecorView());
 		views.add(manager.startActivity("MainTabFamily", new Intent(this, MainTabFamily.class)).getDecorView());
 //		views.add(view2);
 		views.add(view3);
