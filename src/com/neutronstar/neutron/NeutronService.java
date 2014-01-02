@@ -167,17 +167,21 @@ public class NeutronService extends Service {
 				acc = null;
 			}
 		}
-		String acce = "";
-		Iterator iterator = paraList.iterator();
-		acc = null;
-		while(iterator.hasNext())
-		{
-			acc = (Acceleration)iterator.next();
-			acce += acc.getAcceleration() + acc.getTimestamp();
-		}
+		
+		int acount = paraList.size();
+		String [] accele = (String[])paraList.toArray(new String[acount]);
+		String acce = ",";
+//		ArrayList<Serializable> list = Arrays.asList(accele); 
+//		Iterator iterator = paraList.iterator();
+//		acc = null;
+//		while(iterator.hasNext())
+//		{
+//			acc = (Acceleration)iterator.next();
+//			acce += acc.getAcceleration() + acc.getTimestamp();
+//		}
 		// 第二步  将数据上传至服务器
 		int id = localUser.gettUserId();
-		sendAcceleration("", id, acce);
+		sendAcceleration("upload", id, acce);
 		
 	}
 
@@ -202,6 +206,7 @@ public class NeutronService extends Service {
 			String strUrl = params[0];
 			int id = Integer.valueOf(params[1]);
 			String acce = params[2];
+//			ArrayList<Serializable> b = new ArrayList<Serializable>( acce.split(','));
 			try {
 				 URL url = new URL(strUrl);
 			     HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
@@ -241,6 +246,12 @@ public class NeutronService extends Service {
 			{
 				Toast toast = Toast.makeText(NeutronService.this, "Upload Acceleration Succeed.", Toast.LENGTH_LONG );
 				toast.show();
+				
+				NeutronDbHelper ndb = NeutronDbHelper.GetInstance(NeutronService.this);
+				SQLiteDatabase db = ndb.getWritableDatabase();
+				ContentValues cv = new ContentValues();
+				cv.put("uploadtag",1);
+				db.update(NeutronAcceleration.TABLE_NAME, cv, "uploadtag=?", new String[]{"0"});  
 			}
 			else
 			{

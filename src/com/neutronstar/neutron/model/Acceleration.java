@@ -10,7 +10,7 @@ public class Acceleration implements Serializable{
 	private static final long serialVersionUID = 4572703078330071684L;
 	private double acceleration;
 	private String timestamp;
-	private int uploadtag;
+	private int uploadtag = 0;
 	
 	public Acceleration() {}
 	
