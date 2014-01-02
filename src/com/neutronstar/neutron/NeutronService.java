@@ -13,7 +13,6 @@ import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Timer;
@@ -188,6 +187,7 @@ public class NeutronService extends Service {
 				return;
 			}
 		}
+
 		// 第二步 将数据上传至服务器
 		String strUrl = SERVER.PublicAddress + "/" + strServlet;
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
@@ -260,6 +260,12 @@ public class NeutronService extends Service {
 				Toast toast = Toast.makeText(NeutronService.this,
 						"Upload Acceleration Failed.", Toast.LENGTH_LONG);
 				toast.show();
+				
+				NeutronDbHelper ndb = NeutronDbHelper.GetInstance(NeutronService.this);
+				SQLiteDatabase db = ndb.getWritableDatabase();
+				ContentValues cv = new ContentValues();
+				cv.put("uploadtag",1);
+				db.update(NeutronAcceleration.TABLE_NAME, cv, "uploadtag=?", new String[]{"0"});  
 			}
 		}
 	}
