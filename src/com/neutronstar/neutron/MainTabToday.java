@@ -39,6 +39,8 @@ import com.neutronstar.neutron.model.User;
 public class MainTabToday extends Activity implements OnTabActivityResultListener{
 	
 	public static MainTabToday instance = null;
+	private Intent intent;
+	private Bundle bl;
 	private User user;
 	private BMIModel bmiModel;
 	private RMRModel rmrModel;
@@ -68,6 +70,9 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 		getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		instance = this;
+		intent = this.getIntent();
+		bl = intent.getExtras();
+		Log.d("-----", "" + bl.getInt("userid"));
 		initMainTabToday();
 		
 		
@@ -75,7 +80,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 	
 	private void initMainTabToday() {
 		// init WebView
-		user = new User(this, USER.me);
+		user = new User(this, bl.getInt("userid"));
 		bmiModel = new BMIModel(this, user);
 		rmrModel = new RMRModel(this, user);
 		
