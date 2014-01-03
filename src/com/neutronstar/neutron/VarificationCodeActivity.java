@@ -1,5 +1,6 @@
 package com.neutronstar.neutron;
 
+import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -9,9 +10,12 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -22,8 +26,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.neutron.server.persistence.model.T_user;
+import com.neutronstar.neutron.NeutronContract.NeutronGroupTesting;
+import com.neutronstar.neutron.NeutronContract.NeutronRecord;
 import com.neutronstar.neutron.NeutronContract.NeutronUser;
 import com.neutronstar.neutron.NeutronContract.SERVER;
+import com.neutronstar.neutron.NeutronContract.TAG;
+import com.neutronstar.neutron.NeutronContract.USER;
 
 public class VarificationCodeActivity extends Activity {
 	public static final int TAG_LOGIN = 1;
@@ -73,11 +81,12 @@ public class VarificationCodeActivity extends Activity {
 			switch(tag)
 			{
 			case TAG_LOGIN:	
-				user = new T_user();
+				user = (T_user)this.getIntent().getExtras().getSerializable("t_user");
 				user.settUserAreacode(IDD);
 				user.settUserPhonenumber(phonenumber);
 				user.settUserPasscode(passcode);
 				user.settUserId(userid);
+				user.settUserRegtag(USER.registered);
 				login("login", user);
 				break;
 			case TAG_SIGN_IN:
@@ -122,14 +131,14 @@ public class VarificationCodeActivity extends Activity {
         }
 	}
 	
-	private class LoginTask extends AsyncTask<String, Void, Integer> 
+	private class LoginTask extends AsyncTask<String, Void, String> 
 	{
 		String state = "";
 
 		@Override
-		protected Integer doInBackground(String... params) {
+		protected String doInBackground(String... params) {
 			String strUrl = params[0];
-			int result = 0;
+			String result = "";
 			try {
 				URL url = new URL(strUrl);
 			    HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
@@ -154,8 +163,8 @@ public class VarificationCodeActivity extends Activity {
 		        ObjectInputStream ois = new ObjectInputStream(urlConn.getInputStream());  
 		        paraList = (ArrayList<Serializable>)ois.readObject();
 		        state = (String)paraList.get(0);
-		        result = (Integer)paraList.get(1);
-		        Log.d("LoginTask", state);	        
+		        result = user.gettUserPasscode();
+		        Log.d("LoginTask---", state);	        
            } catch (Exception e) {
                e.printStackTrace();
            }
@@ -166,14 +175,29 @@ public class VarificationCodeActivity extends Activity {
 		{
 			Intent intent = new Intent();
 			Bundle bundle  = new Bundle();
+			Log.d("LoginTask--onpost",result);
 			if(state.equals("ok"))
 			{
 				// 清除本地数据库数据，插入本地数据库用户
 				SQLiteDatabase db = ndb.getWritableDatabase();
-				ContentValues cv = new ContentValues();
+				db.execSQL("Delete from " + NeutronUser.TABLE_NAME);
+				db.execSQL("Delete from " + NeutronRecord.TABLE_NAME);
+				db.execSQL("Delete from " + NeutronGroupTesting.TABLE_NAME);
+				
+				ContentValues cv = new ContentValues(); 
+				cv.put(NeutronUser.COLUMN_NAME_ID, user.gettUserId());
+				cv.put(NeutronUser.COLUMN_NAME_NAME, user.gettUserName());
+				cv.put(NeutronUser.COLUMN_NAME_GENDER, user.gettUserGender());
+				cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, user.gettUserBirth());
+				cv.put(NeutronUser.COLUMN_NAME_RELATION, USER.me);
+				cv.put(NeutronUser.COLUMN_NAME_TYPE, USER.registered);
 				cv.put(NeutronUser.COLUMN_NAME_PASSCODE, result);
-				String[] whereArgs = {String.valueOf(userid)};
-				db.update(NeutronUser.TABLE_NAME, cv, NeutronUser.COLUMN_NAME_ID + "=?", whereArgs);
+				cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.normal);
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				Bitmap bitmap = ((BitmapDrawable) Appstart.instance.getResources().getDrawable(R.drawable.avatar_male)).getBitmap();
+				bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos); 
+				cv.put(NeutronUser.COLUMN_NAME_AVATAR, baos.toByteArray());
+				db.insert(NeutronUser.TABLE_NAME, null, cv); 
 				
 				bundle.putInt("userid", userid);
 				intent.putExtras(bl);
@@ -181,6 +205,14 @@ public class VarificationCodeActivity extends Activity {
 				startActivityForResult(intent, 0);
 				setResult(RESULT_FIRST_USER, new Intent());
 				finish();
+			}
+			else
+			{
+				new AlertDialog.Builder(VarificationCodeActivity.this)
+                .setIcon(getResources().getDrawable(R.drawable.login_error_icon))
+                .setTitle("OOPS")
+                .setMessage("We cannot login the user for you!")
+                .create().show();
 			}
 		}
 	}

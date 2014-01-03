@@ -268,6 +268,7 @@ public class PhoneNumberActivity extends Activity {
 						bundle.putString("phonenumber", tvPhoneNumber.getText().toString());
 						bundle.putString("passcode", result);
 						bundle.putInt("userid", remoteUser.gettUserId());
+						bundle.putSerializable("t_user", remoteUser);
 						intent.putExtras(bundle);
 						startActivityForResult(intent, 0);
 					}
