@@ -87,7 +87,7 @@
 		        android:layout_height="wrap_content"
 		        android:gravity="left|center_vertical"
 		        android:hint="@string/andy_lau"
-		        android:inputType="phone"
+		        android:inputType="textPersonName"
 		        android:singleLine="true"
 		        android:textColor="#000"
 		        android:textSize="15sp" />
@@ -114,7 +114,6 @@
 		        android:layout_height="wrap_content"
 		        android:gravity="left|center_vertical"
 		        android:hint="@string/andy_lau_birthday"
-		        android:inputType="phone"
 		        android:singleLine="true"
 		        android:textColor="#000"
 		        android:textSize="15sp" />

@@ -35,6 +35,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -181,10 +182,11 @@ public class NeutronService extends Service {
 					alAccData.add(accData);
 				} while (cur.moveToNext());
 			} else {
-				accData = null;
+				Looper.prepare();
 				Toast toast = Toast.makeText(this,
 						"Everything up to date.", Toast.LENGTH_LONG);
 				toast.show();
+				Looper.loop();
 				return;
 			}
 		}
@@ -195,9 +197,11 @@ public class NeutronService extends Service {
 		if (networkInfo != null && networkInfo.isConnected()) {
 			new UploadAccelerationTask().execute(strUrl);
 		} else {
+			Looper.prepare();
 			Toast toast = Toast.makeText(this,
 					"No network connection available.", Toast.LENGTH_LONG);
 			toast.show();
+			Looper.loop();
 		}
 	}
 
@@ -240,6 +244,8 @@ public class NeutronService extends Service {
 			} catch (Exception e) {
 				Log.d("exception", e.getMessage());
 			}
+			
+			alAccData.clear();
 			return result;
 		}
 
