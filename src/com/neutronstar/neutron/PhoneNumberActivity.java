@@ -49,10 +49,8 @@ public class PhoneNumberActivity extends Activity {
 	private String IDD[];
 	private PopupWindow pwIDD;
 	private T_user localUser;
+	private T_user remoteUser;
 	private String passcode;
-	private String IMEI;
-	private String IMSI;
-	private int userid;
 	private TelephonyManager tm;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -219,11 +217,8 @@ public class PhoneNumberActivity extends Activity {
 		        Log.d("GetPasscodeTask", state);
 		        Log.d("IDD", localUser.gettUserAreacode());
 		        Log.d("Phonenumber", localUser.gettUserPhonenumber());
-		        T_user user = (T_user)paraList.get(1);
-		        passcode = user.gettUserPasscode();
-		        IMEI = user.gettUserImei();
-		        IMSI = user.gettUserImsi();
-		        userid = user.gettUserId();
+		        remoteUser = (T_user)paraList.get(1);
+		        passcode = remoteUser.gettUserPasscode();
 		        Log.d("passcode", passcode);
 //		        Log.d("IMEI", IMEI);
 //		        Log.d("IMSI", IMSI);
@@ -265,14 +260,15 @@ public class PhoneNumberActivity extends Activity {
 				switch(tag)
 				{
 				case TAG_LOGIN:	
-					if(tm.getDeviceId().equals(IMEI) || tm.getSubscriberId().equals(IMSI))
+					if(tm.getDeviceId().equals(remoteUser.gettUserImei()) || tm.getSubscriberId().equals(remoteUser.gettUserImsi()))
 					{
 						intent = new Intent(PhoneNumberActivity.this, VarificationCodeActivity.class);
 						bundle.putInt("tag", VarificationCodeActivity.TAG_LOGIN);
 						bundle.putString("IDD", tvIDD.getText().toString());
 						bundle.putString("phonenumber", tvPhoneNumber.getText().toString());
 						bundle.putString("passcode", result);
-						bundle.putInt("userid", userid);
+						bundle.putInt("userid", remoteUser.gettUserId());
+						bundle.putSerializable("t_user", remoteUser);
 						intent.putExtras(bundle);
 						startActivityForResult(intent, 0);
 					}
