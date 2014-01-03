@@ -189,7 +189,7 @@ public class NeutronService extends Service {
 			}
 		}
 		// 第二步 将数据上传至服务器
-		String strUrl = SERVER.InnerAddress + "/" + strServlet;
+		String strUrl = SERVER.Address + "/" + strServlet;
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 		if (networkInfo != null && networkInfo.isConnected()) {
