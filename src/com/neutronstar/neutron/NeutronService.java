@@ -189,7 +189,7 @@ public class NeutronService extends Service {
 			}
 		}
 		// 第二步 将数据上传至服务器
-		String strUrl = SERVER.PublicAddress + "/" + strServlet;
+		String strUrl = SERVER.InnerAddress + "/" + strServlet;
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 		if (networkInfo != null && networkInfo.isConnected()) {
@@ -207,6 +207,7 @@ public class NeutronService extends Service {
 		@Override
 		protected String doInBackground(String... params) {
 			String strUrl = params[0];
+			String result = "error";
 			try {
 				URL url = new URL(strUrl);
 				HttpURLConnection urlConn = (HttpURLConnection) url
@@ -233,18 +234,17 @@ public class NeutronService extends Service {
 				ObjectInputStream ois = new ObjectInputStream(
 						urlConn.getInputStream());
 				paraList = (ArrayList<Serializable>) ois.readObject();
-				String isSucceed = (String) paraList.get(0);
-				Log.d("ok", isSucceed);
+				result = (String) paraList.get(0);
+				Log.d("result", result);
 
 			} catch (Exception e) {
-				Log.d("error", "error");
-				return "error";
+				Log.d("exception", e.getMessage());
 			}
-			return "ok";
+			return result;
 		}
 
 		protected void onPostExecute(String result) {
-			if (result == "ok") {
+			if (result.equals("ok")) {
 				NeutronDbHelper ndb = NeutronDbHelper
 						.GetInstance(NeutronService.this);
 				SQLiteDatabase db = ndb.getWritableDatabase();
