@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 
+import com.neutronstar.neutron.NeutronContract.GENDER;
 import com.neutronstar.neutron.NeutronContract.NeutronAcceleration;
 import com.neutronstar.neutron.NeutronContract.NeutronGroupTesting;
 import com.neutronstar.neutron.NeutronContract.NeutronRMRIndex;
@@ -63,7 +64,7 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
     	    "CREATE TABLE IF NOT EXISTS " + NeutronUser.TABLE_NAME + " (" +
     	    NeutronUser.COLUMN_NAME_ID + INTEGER_TYPE + COMMA_SEP +
     	    NeutronUser.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
-    	    NeutronUser.COLUMN_NAME_GENDER + TEXT_TYPE + COMMA_SEP +
+    	    NeutronUser.COLUMN_NAME_GENDER + INTEGER_TYPE + COMMA_SEP +
     	    NeutronUser.COLUMN_NAME_BIRTHDAY + TEXT_TYPE + COMMA_SEP +
     	    NeutronUser.COLUMN_NAME_RELATION + INTEGER_TYPE + COMMA_SEP +
     	    NeutronUser.COLUMN_NAME_TYPE + INTEGER_TYPE + COMMA_SEP +
@@ -116,7 +117,7 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
 		ContentValues cv = new ContentValues(); 
 		cv.put(NeutronUser.COLUMN_NAME_ID, 1);
 		cv.put(NeutronUser.COLUMN_NAME_NAME, "½Ü¿Ë¡¤ÈøÀû");
-		cv.put(NeutronUser.COLUMN_NAME_GENDER, "male");
+		cv.put(NeutronUser.COLUMN_NAME_GENDER, GENDER.male);
 		cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, "1980-04-20");
 		cv.put(NeutronUser.COLUMN_NAME_RELATION, USER.me);
 		cv.put(NeutronUser.COLUMN_NAME_TYPE, USER.registered);
@@ -132,7 +133,7 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
 		cv = new ContentValues(); 
 		cv.put(NeutronUser.COLUMN_NAME_ID, 2);
 		cv.put(NeutronUser.COLUMN_NAME_NAME, "ÄÎµÙÀò");
-		cv.put(NeutronUser.COLUMN_NAME_GENDER, "male");
+		cv.put(NeutronUser.COLUMN_NAME_GENDER, GENDER.female);
 		cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, "1983-01-15");
 		cv.put(NeutronUser.COLUMN_NAME_RELATION, USER.wife);
 		cv.put(NeutronUser.COLUMN_NAME_TYPE, USER.subregister);

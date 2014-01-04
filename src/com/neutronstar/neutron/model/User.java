@@ -21,7 +21,7 @@ public class User {
 	private int id;
 	private String name;
 	private Date birthday;
-	private String gender;
+	private int gender;
 	private boolean hasUser = false;
 	private int relation;
 	private Bitmap avatar;
@@ -60,7 +60,7 @@ public class User {
 				do {
 					id = cur.getInt(cur.getColumnIndex(NeutronUser.COLUMN_NAME_ID));
 					name = cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_NAME));
-					gender = cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_GENDER));
+					gender = cur.getInt(cur.getColumnIndex(NeutronUser.COLUMN_NAME_GENDER));
 					timestamp = cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_BIRTHDAY));
 					relation = cur.getInt(cur.getColumnIndex(NeutronUser.COLUMN_NAME_RELATION));
 					byte[] in = cur.getBlob(cur.getColumnIndex(NeutronUser.COLUMN_NAME_AVATAR));
@@ -85,8 +85,8 @@ public class User {
 	
 	public String getName() {return name;}
 	public boolean hasUser() { return hasUser; }
-	public boolean isMale() {return gender=="male"? true:false;}
-	public String getGender() {return gender;}
+	public boolean isMale() {return gender==1? true:false;}
+	public int getGender() {return gender;}
 	public int getID(){return id;}
 	public int getAge(){
 		Calendar cBirth =  Calendar.getInstance();
