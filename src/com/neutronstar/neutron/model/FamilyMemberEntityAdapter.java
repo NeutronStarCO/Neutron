@@ -3,18 +3,16 @@ package com.neutronstar.neutron.model;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import com.neutronstar.neutron.MainNeutron;
-import com.neutronstar.neutron.R;
-import com.neutronstar.neutron.model.GroupTestingEntityAdapter.ViewHolder;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.neutronstar.neutron.MainNeutron;
+import com.neutronstar.neutron.R;
 
 public class FamilyMemberEntityAdapter extends BaseAdapter {
 	
@@ -61,7 +59,7 @@ public class FamilyMemberEntityAdapter extends BaseAdapter {
 		
 		viewHolder.ivHead.setImageBitmap(entity.getAvatar());
 		viewHolder.tvName.setText(entity.getName());
-		viewHolder.tvBirthday.setText(new SimpleDateFormat("yyyyƒÍMM‘¬dd»’").format(entity.getBirthday()));
+		viewHolder.tvBirthday.setText(new SimpleDateFormat(MainNeutron.instance.getResources().getString(R.string.dateformat_birthday)).format(entity.getBirthday()));
 		viewHolder.tvRelation.setText(MainNeutron.instance.getResources().getStringArray(R.array.relations)[entity.getRelation()]);
 		return convertView;
 	}

@@ -51,6 +51,9 @@
         <item>测量日期</item>
         <item>年-月-日 时:分</item>
     </string-array>
+    
+    <!-- 日期格式 -->
+    <string name="dateformat_birthday">"yyyy年MM月dd日"</string>
 
     <!-- 常用词和短语 -->
     <string name="save">保存</string>
