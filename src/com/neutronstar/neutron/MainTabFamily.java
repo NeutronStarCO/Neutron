@@ -13,7 +13,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -31,6 +30,7 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 	public static final int TAG_ADD = 1;
 	public static final int TAG_DELETE = 2;
 	public static final int TAG_QUERY = 3;
+	public static final int TAG_MODIFY = 4;
 	private NeutronDbHelper ndb;
 	private ListView fmListView;
 	private FamilyMemberEntityAdapter fmAdapter;
@@ -51,6 +51,8 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 				NeutronUser.COLUMN_NAME_NAME,
 				NeutronUser.COLUMN_NAME_GENDER,
 				NeutronUser.COLUMN_NAME_BIRTHDAY,
+				NeutronUser.COLUMN_NAME_IDD,
+				NeutronUser.COLUMN_NAME_PHONE_NUMBER,
 				NeutronUser.COLUMN_NAME_RELATION,
 				NeutronUser.COLUMN_NAME_AVATAR,
 				NeutronUser.COLUMN_NAME_TYPE
@@ -76,12 +78,14 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 					entity.setAvatar(bmpout);
 					entity.setId(cur.getInt(cur.getColumnIndex(NeutronUser.COLUMN_NAME_ID)));
 					entity.setName(cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_NAME)));
-					entity.setGender(cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_GENDER)));					
+					entity.setGender(cur.getInt(cur.getColumnIndex(NeutronUser.COLUMN_NAME_GENDER)));					
 					try {
 						entity.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_BIRTHDAY))));
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
+					entity.setIDD(cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_IDD)));
+					entity.setPhoneNumber(cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_PHONE_NUMBER)));
 					entity.setRelation(cur.getInt(cur.getColumnIndex(NeutronUser.COLUMN_NAME_RELATION)));
 					entity.setType(cur.getInt(cur.getColumnIndex(NeutronUser.COLUMN_NAME_TYPE)));
 
@@ -97,7 +101,12 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 			@Override
 			public void onItemClick(AdapterView<?> parentView, View view,
 					int position, long rowCount) {
-				Log.d("--fmListView--", "OnItemClickListener");
+				Intent intent = new Intent(MainTabFamily.this, UserInfoActivity.class);
+				Bundle bl = new Bundle();
+				bl.putInt("usage", MainTabFamily.TAG_MODIFY);
+				bl.putSerializable("family_member_entity", fmDataArrays.get(position));
+				intent.putExtras(bl);
+				getParent().startActivityForResult(intent,MainTabFamily.TAG_MODIFY);
 				
 			}});
 		
@@ -139,7 +148,7 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 				entity.setAvatar(avatar);
 				entity.setId(bl.getInt("id"));
 				entity.setName(bl.getString("name"));
-				entity.setGender(bl.getString("gender"));
+				entity.setGender(bl.getInt("gender"));
 				try {
 					entity.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(bl.getString("birthday")));
 				} catch (ParseException e) {

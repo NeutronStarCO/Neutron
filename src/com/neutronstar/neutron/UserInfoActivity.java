@@ -2,6 +2,7 @@ package com.neutronstar.neutron;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.text.SimpleDateFormat;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -17,16 +18,24 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.neutronstar.neutron.NeutronContract.NeutronUser;
 import com.neutronstar.neutron.NeutronContract.TAG;
 import com.neutronstar.neutron.NeutronContract.USER;
+import com.neutronstar.neutron.model.FamilyMemberEntity;
 
 public class UserInfoActivity extends Activity {
 	private NeutronDbHelper ndb;
@@ -39,12 +48,19 @@ public class UserInfoActivity extends Activity {
 	private TextView tvBirthday;
 	private TextView tvRelation;
 	private TextView tvUserType;
-	private TextView tvId;
+	private TextView tvIDD;
+	private TextView tvIDDName;
+	private TextView tvPhoneNumber;
 	private RelativeLayout rlChangeAvatar;
 	private RelativeLayout rlChangeName;
 	private RelativeLayout rlChangeGender;
 	private RelativeLayout rlChangeBirthday;
 	private RelativeLayout rlChangeRelation;
+	private RelativeLayout rlChangeUsertype;
+	private RelativeLayout rlChangeIDD;
+	private RelativeLayout rlChangePhoneNumber;
+	
+	private PopupWindow pwIDD;
 	
 	private static final int AVATAR_REQUEST_CODE = 1;
 	private static final int NAME_REQUEST_CODE = 2;
@@ -74,7 +90,12 @@ public class UserInfoActivity extends Activity {
 		tvBirthday = (TextView)findViewById(R.id.user_info_birthday_content);
 		tvRelation = (TextView)findViewById(R.id.user_info_relation_content);
 		tvUserType = (TextView)findViewById(R.id.user_info_usertype_content);
-		tvId = (TextView)findViewById(R.id.user_info_id_content);
+		tvIDD = (TextView)findViewById(R.id.user_info_idd_content);
+		tvIDDName = (TextView)findViewById(R.id.user_info_idd_name);
+		tvPhoneNumber = (TextView)findViewById(R.id.user_info_phonenumber_content);
+		rlChangeUsertype = (RelativeLayout)findViewById(R.id.user_change_usertype);
+		rlChangeIDD = (RelativeLayout)findViewById(R.id.user_change_idd);
+		rlChangePhoneNumber = (RelativeLayout)findViewById(R.id.user_change_phone_number);
 		rlChangeAvatar = (RelativeLayout)findViewById(R.id.user_change_avatar);
 		rlChangeName = (RelativeLayout)findViewById(R.id.user_change_name);
 		rlChangeGender = (RelativeLayout)findViewById(R.id.user_change_gender);
@@ -91,17 +112,25 @@ public class UserInfoActivity extends Activity {
 			tvBirthday.setHint(getResources().getString(R.string.user_info_hint_birthday));
 			tvRelation.setHint(getResources().getString(R.string.user_info_hint_relation));
 			tvUserType.setHint(getResources().getString(R.string.user_info_hint_usertype));
-			tvId.setHint(getResources().getString(R.string.user_info_hint_id));
-			Log.i("TAG_ADD", "TAG_ADD");
+			tvIDD.setHint(getResources().getString(R.string.user_info_hint_idd));
+			tvPhoneNumber.setHint(getResources().getString(R.string.user_info_hint_phone_number));
 			break;
-		case MainTabFamily.TAG_QUERY:
-			Log.i("TAG_QUERY","TAG_QUERY");
+		case MainTabFamily.TAG_MODIFY:
+			FamilyMemberEntity fme = (FamilyMemberEntity) bl.getSerializable("family_member_entity");
+			((TextView)findViewById(R.id.user_info_title)).setText(fme.getName());
+			ivAvatar.setImageBitmap(fme.getAvatar());
+			tvName.setText(fme.getName());
+			tvGender.setText(fme.getGender()==0 ? getResources().getString(R.string.female):getResources().getString(R.string.male));
+			tvBirthday.setText(new SimpleDateFormat(getResources().getString(R.string.dateformat_birthday)).format(fme.getBirthday()));
+			tvRelation.setText(getResources().getStringArray(R.array.relations)[fme.getRelation()]);
+			tvUserType.setText(getResources().getStringArray(R.array.user_type)[fme.getType()]);
+			tvIDD.setText(fme.getIDD());
+			tvPhoneNumber.setText(fme.getPhoneNumber());
 			break;
 		}
 		
 		ivAvatar.setOnClickListener(new View.OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				ivAvatar.setDrawingCacheEnabled(true);
@@ -113,6 +142,86 @@ public class UserInfoActivity extends Activity {
 				bl.putParcelable("avatar", bitmap);
 				intent.putExtras(bl);
 				startActivity(intent);
+			}
+		});
+		
+		rlChangeIDD.setOnClickListener(new View.OnClickListener() {
+			String[] IDDCountry = getResources().getStringArray(R.array.idd_country);
+			String[] IDD = getResources().getStringArray(R.array.idd);
+			public void onClick(View view) 
+			{
+				int x = getWindowManager().getDefaultDisplay().getWidth() / 4;
+				int y = getWindowManager().getDefaultDisplay().getHeight() / 5;
+				
+				LinearLayout llIDD = (LinearLayout) LayoutInflater.from(UserInfoActivity.this).inflate(
+						R.layout.tab_today_dialog, null);
+				ListView lvIDD = (ListView) llIDD.findViewById(R.id.tab_today_dialog);
+				lvIDD.setAdapter(new ArrayAdapter<String>(UserInfoActivity.this,
+						R.layout.simple_text_item, R.id.simple_text_item, IDDCountry));
+				
+				pwIDD = new PopupWindow(UserInfoActivity.this);
+				pwIDD.setWidth(getWindowManager().getDefaultDisplay().getWidth() / 2);
+				pwIDD.setHeight(getWindowManager().getDefaultDisplay().getHeight() / 2);
+				pwIDD.setOutsideTouchable(true);
+				pwIDD.setFocusable(true);
+				pwIDD.setContentView(llIDD);
+
+				pwIDD.showAtLocation(findViewById(R.id.user_info_idd_content), Gravity.LEFT | Gravity.TOP, x, y);
+				
+				lvIDD.setOnItemClickListener(new OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+							long arg3) {
+						tvIDDName.setText(IDDCountry[arg2]);
+						tvIDD.setText(IDD[arg2]);
+						pwIDD.dismiss();
+						pwIDD = null;
+					}
+				});				
+			}
+		});
+		
+		rlChangeUsertype.setOnClickListener(new View.OnClickListener() {
+			String[] userType = getResources().getStringArray(R.array.user_type);
+			public void onClick(View arg0) 
+			{
+				int x = getWindowManager().getDefaultDisplay().getWidth() / 4;
+				int y = getWindowManager().getDefaultDisplay().getHeight() / 5;
+				
+				LinearLayout llIDD = (LinearLayout) LayoutInflater.from(UserInfoActivity.this).inflate(
+						R.layout.tab_today_dialog, null);
+				ListView lvIDD = (ListView) llIDD.findViewById(R.id.tab_today_dialog);
+				lvIDD.setAdapter(new ArrayAdapter<String>(UserInfoActivity.this,
+						R.layout.simple_text_item, R.id.simple_text_item, userType));
+				
+				pwIDD = new PopupWindow(UserInfoActivity.this);
+				pwIDD.setWidth(getWindowManager().getDefaultDisplay().getWidth() / 2);
+				pwIDD.setHeight(getWindowManager().getDefaultDisplay().getHeight() / 2);
+				pwIDD.setOutsideTouchable(true);
+				pwIDD.setFocusable(true);
+				pwIDD.setContentView(llIDD);
+
+				pwIDD.showAtLocation(findViewById(R.id.user_info_usertype_content), Gravity.LEFT | Gravity.TOP, x, y);
+				
+				lvIDD.setOnItemClickListener(new OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+							long arg3) {
+						tvUserType.setText(userType[arg2]);
+						switch(arg2){
+						case 0:
+							rlChangeIDD.setVisibility(View.GONE);
+							break;
+						case 1:
+							rlChangeIDD.setVisibility(View.VISIBLE);
+						}
+						pwIDD.dismiss();
+						pwIDD = null;
+					}
+				});	
+				
 			}
 		});
 		
@@ -337,7 +446,7 @@ public class UserInfoActivity extends Activity {
 		ContentValues cv = new ContentValues(); 
 		
 		String name = tvName.getText().toString();
-		String gender = tvGender.getText().toString();
+		int gender = tvGender.getText().toString().equals(getResources().getString(R.string.male))? 1:0;
 		String birthday = tvBirthday.getText().toString();
 		int relation = findRelation(tvRelation.getText().toString());
 						
@@ -353,7 +462,7 @@ public class UserInfoActivity extends Activity {
 		
 		bl.putInt("id", 4);
 		bl.putString("name", name);
-		bl.putString("gender", gender);
+		bl.putInt("gender", gender);
 		bl.putString("birthday", birthday);
 		bl.putInt("relation", relation);
 		bl.putParcelable("avatar", bitmap);

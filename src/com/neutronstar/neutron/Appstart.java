@@ -18,7 +18,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -41,8 +40,6 @@ public class Appstart extends Activity {
 		instance = this;
 		ndb = NeutronDbHelper.GetInstance(this);
 		
-		TelephonyManager tm = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
-
 		// 从本地数据库取得用户信息，如果没有本地用户，转入起始页 
 		localUser = getLocalUser();
 		if(null==localUser)
@@ -58,15 +55,10 @@ public class Appstart extends Activity {
 		}
 		else
 		{
-//			localUser.settUserImei(tm.getDeviceId());		// IMEI 设备号
-//			localUser.settUserImsi(tm.getSubscriberId());	// IMSI 国际移动用户识别码(International Mobile Subscriber Identity)
 			checkLocalUser("passcode", localUser);	// 获取服务器对应id用户信息
-//			Log.d("IMEI", localUser.gettUserImei());
-//			Log.d("UserId", "" +localUser.gettUserId());
 		}
 	}
-	
-	
+		
 	private T_user getLocalUser()
 	{
 		T_user user = null;
@@ -103,7 +95,7 @@ public class Appstart extends Activity {
 	private void checkLocalUser(String strServlet, T_user user)
 	{
 		String strUrl = SERVER.Address + "/" + strServlet;	
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             new CheckUserOnRemoteSideTask().execute(strUrl);
@@ -116,6 +108,7 @@ public class Appstart extends Activity {
 	private class CheckUserOnRemoteSideTask extends AsyncTask<String, Void, String> 
 	{
 		String state = "";
+		@SuppressWarnings("unchecked")
 		@Override
 		protected String doInBackground(String... params) {
 			String strUrl = params[0];
