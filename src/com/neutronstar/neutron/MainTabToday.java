@@ -1,6 +1,8 @@
 package com.neutronstar.neutron;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -10,6 +12,8 @@ import org.json.JSONException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -30,7 +34,11 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.neutron.server.persistence.model.T_user;
 import com.neutronstar.neutron.NeutronContract.ITEM;
+import com.neutronstar.neutron.NeutronContract.NeutronUser;
+import com.neutronstar.neutron.NeutronContract.TAG;
+import com.neutronstar.neutron.NeutronContract.USER;
 import com.neutronstar.neutron.model.BMIModel;
 import com.neutronstar.neutron.model.RMRModel;
 import com.neutronstar.neutron.model.User;
@@ -38,6 +46,7 @@ import com.neutronstar.neutron.model.User;
 public class MainTabToday extends Activity implements OnTabActivityResultListener{
 	
 	public static MainTabToday instance = null;
+	private NeutronDbHelper ndb;
 	private Intent intent;
 	private Bundle bl;
 	private User user;
@@ -54,8 +63,9 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 	private PopupWindow pwTitle;
 	private LinearLayout llTitle;
 	private ListView lvTitle;
-	private String title[] = { "我", "萨利", "奈蒂莉", "卡梅隆", "布什" };
-
+//	private String title[] = { "我", "萨利", "奈蒂莉", "卡梅隆", "布什" };
+	private String familyTitle[];
+	private Integer familyId[];
 	private double currentTotalCost = 0;
 	double currentAcceleration = 0;
 	private Timer updateTimer;
@@ -69,17 +79,48 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 		getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		instance = this;
+		ndb = NeutronDbHelper.GetInstance(this);
 		intent = this.getIntent();
 		bl = intent.getExtras();
 		Log.d("-----", "" + bl.getInt("userid"));
-		initMainTabToday();
+		// 获取家庭成员列表
+		familyId = new Integer[1];
+		familyTitle = new String[1];
+		List<Integer> listId = new ArrayList<Integer>();  
+		List<String> listName = new ArrayList<String>(); 
+		SQLiteDatabase db = ndb.getReadableDatabase();
+		String[] projection = {
+			    NeutronUser.COLUMN_NAME_ID,
+			    NeutronUser.COLUMN_NAME_NAME
+			    };
+		String selection = "" + NeutronUser.COLUMN_NAME_TAG + "=" + TAG.normal;
+		Cursor cur = db.query(
+				NeutronUser.TABLE_NAME,  // The table to query
+			    projection,                // The columns to return
+			    selection,                 // The columns for the WHERE clause selection
+			    null,                      // The values for the WHERE clause selectionArgs
+			    null,                      // don't group the rows
+			    null,                      // don't filter by row groups
+			    null                  		// The sort order
+			    );
+		if (cur != null) {
+			if (cur.moveToFirst()) {
+				do {
+					listId.add(cur.getInt(cur.getColumnIndex(NeutronUser.COLUMN_NAME_ID)));
+					listName.add(cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_NAME)));
+				} while (cur.moveToNext());
+			}
+			familyId = listId.toArray(new Integer[1]);
+			familyTitle = listName.toArray(new String[1]);
+		}
 		
-		
+		// 初始化界面内容
+		initMainTabToday(bl.getInt("userid"));	
 	}
 	
-	private void initMainTabToday() {
+	private void initMainTabToday(int id) {
 		// init WebView
-		user = new User(this, bl.getInt("userid"));
+		user = new User(this, id);
 		bmiModel = new BMIModel(this, user);
 		rmrModel = new RMRModel(this, user);
 		
@@ -94,19 +135,16 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 		wv.addJavascriptInterface(new WebAppInterface(this), "Android");
 		wv.loadUrl("file:///android_asset/html/test_chart.html"); // 加载assert目录下的文件
 		// wv.loadUrl("javascript:refreshToday('" + getRemoteData() + "')");
-		// init Numbers
 		// 获取sensor服务，选择加速度感应器
 		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		accelerometer = sensorManager
-				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		
 		tvTitle = (TextView) findViewById(R.id.man_tab_today_title);
 		man_tab_today_metabolismAcceleration = (TextView) findViewById(R.id.man_tab_today_metabolismAcceleration);
 		man_tab_today_metabolismRate = (TextView) findViewById(R.id.man_tab_today_metabolismRate);
 		man_tab_today_metabolismTotal = (TextView) findViewById(R.id.man_tab_today_metabolismTotal);
 		currentTotalCost = rmrModel.getCurrentTotalCost();
-		man_tab_today_metabolismTotal.setText(new DecimalFormat("#.##")
-				.format(currentTotalCost));
+		man_tab_today_metabolismTotal.setText(new DecimalFormat("#.##").format(currentTotalCost));
 		man_tab_today_metabolismRMRRateValue = (TextView) findViewById(R.id.man_tab_today_metabolismRMRRateValue);
 		man_tab_today_metabolismRMRRateValue.setText(new DecimalFormat("#.##")
 		.format(rmrModel.getRMRPerHour()));
@@ -127,21 +165,18 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 			man_tab_today_weight.setText(new DecimalFormat("#.#").format(bmiModel.getWeight()));
 		else
 			man_tab_today_weight.setText(getResources().getString(R.string.unknown));
-		
 		// 身高
 		TextView man_tab_today_height = (TextView) findViewById(R.id.man_tab_today_height);
 		if(bmiModel.isHeightRecorded())
 			man_tab_today_height.setText(new DecimalFormat("#.#").format(bmiModel.getHeight()));
 		else
 			man_tab_today_height.setText(getResources().getString(R.string.unknown));
-		
 		// BMI
 		TextView man_tab_today_bmi = (TextView) findViewById(R.id.man_tab_today_bmi);
 		if(bmiModel.isHeightRecorded()&&bmiModel.isWeightRecorded())
 			man_tab_today_bmi.setText(new DecimalFormat("#.#").format(bmiModel.getBMI()));
 		else
 			man_tab_today_bmi.setText(getResources().getString(R.string.unknown));	
-		
 		// 体型
 		TextView man_tab_today_bmiMeasure = (TextView) findViewById(R.id.man_tab_today_bmiMeasure);
 		if(bmiModel.isHeightRecorded()&&bmiModel.isWeightRecorded())
@@ -184,8 +219,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 			bl.putInt("rowid", -1);
 			intent.putExtras(bl);
 			getParent().startActivityForResult(intent,ITEM.height);
-		}
-		
+		}		
 	}
 	
 	public void btn_bloodTestHistory(View v) { // 添加数据
@@ -220,8 +254,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 		// 系统设置的重力加速度标准值，设备在水平静止的情况下就承受这个压力，所以默认Y轴方向的加速度值为STANDARD_GRAVITY
 		double calibration = SensorManager.STANDARD_GRAVITY;
 
-		public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		}
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
 		public void onSensorChanged(SensorEvent event) {
 			double x = event.values[0];
@@ -236,23 +269,16 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 
 			// 消去原有的重力引起的压力
 			currentAcceleration = Math.abs(acc - lowAcc);
-			Log.i("sensor", "\n Current Acceleration: " + currentAcceleration);
 			sensorManager.unregisterListener(sensorEventListener);
 			refreshAccelerometer();
 		}
 	};
 	
 	private void refreshAccelerometer() {
-		/*
-		 * 推荐的一个刷新UI的方法 Activity.runOnUiThread（Runnable） 在新的线程中更新UI
-		 * Runnable是一个接口，需要你实现run方法，上面的TimerTask就是实现了这个接口同样需要实现run方法
-		 */
 		runOnUiThread(new Runnable() {
 			public void run() {
 				String currentG = currentAcceleration
 						/ SensorManager.STANDARD_GRAVITY + "Gs";
-				// wv.loadUrl("javascript:setContentInfo('" + getRemoteData()
-				// + "')");
 				man_tab_today_metabolismAcceleration.setText(new DecimalFormat(
 						"#.###").format(currentAcceleration));
 
@@ -265,8 +291,6 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 						.getExerciseCostRate(currentAcceleration)) * 5 / 3600;
 				man_tab_today_metabolismTotal.setText(new DecimalFormat("#.##")
 						.format(currentTotalCost));
-
-				// Log.i("TEXT", "\n currentG " + currentG);
 			}
 		});
 	}
@@ -301,7 +325,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 				R.layout.tab_today_dialog, null);
 		lvTitle = (ListView) llTitle.findViewById(R.id.tab_today_dialog);
 		lvTitle.setAdapter(new ArrayAdapter<String>(MainTabToday.this,
-				R.layout.simple_text_item, R.id.simple_text_item, title));
+				R.layout.simple_text_item, R.id.simple_text_item, familyTitle));
 		pwTitle = new PopupWindow(MainTabToday.this);
 //		pwTitle.setBackgroundDrawable(new BitmapDrawable());
 		pwTitle.setWidth(getWindowManager().getDefaultDisplay().getWidth() / 2);
@@ -309,24 +333,19 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 		pwTitle.setOutsideTouchable(true);
 		pwTitle.setFocusable(true);
 		pwTitle.setContentView(llTitle);
-		// showAsDropDown会把里面的view作为参照物，所以要那满屏幕parent
-		// popupWindow.showAsDropDown(findViewById(R.id.tv_title), x, 10);
-		pwTitle.showAtLocation(findViewById(R.id.main_tab_today), Gravity.LEFT
-				| Gravity.TOP, x, y);//需要指定Gravity，默认情况是center.
+		pwTitle.showAtLocation(findViewById(R.id.main_tab_today), Gravity.LEFT | Gravity.TOP, x, y);
 
 		lvTitle.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				tvTitle.setText(title[arg2]);
+				tvTitle.setText(familyTitle[arg2]);
+				initMainTabToday(familyId[arg2]);
 				pwTitle.dismiss();
 				pwTitle = null;
 				tvTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.down_24), null);
 			}
 		});
 	}
-
 	
 //	public boolean onKeyDown(int keyCode, KeyEvent event) {  
 //        if (keyCode == KeyEvent.KEYCODE_BACK ) {  
@@ -340,19 +359,10 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 	private String getRemoteData() {
 		try {
 			double sumHour[] = rmrModel.getCurrentHourCosts(this);
-			// double sumHour[] = rmrModel.test(this);
-			// JSONObject object1 = new JSONObject();
-			// object1.put("name", "代谢率");
-			// object1.put("color", "#1f7e92");
 			JSONArray jadata = new JSONArray();
 			for (int i = 0; i < 24; i++) {
 				jadata.put(sumHour[i]);
 			}
-			// object1.put("value", jadata);
-			// JSONArray jsonArray = new JSONArray();
-			// jsonArray.put(object1);
-			Log.i("json", "\n json " + jadata.toString());
-			System.out.println(jadata.toString());
 			return jadata.toString();
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -363,14 +373,12 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 	
 	public class WebAppInterface {
 		Context mContext;
-
 		/** Instantiate the interface and set the context */
 		WebAppInterface(Context c) {
 			mContext = c;
 		}
 
 		public String getHourData(String toast) {
-//			Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
 			return getRemoteData();
 		}
 	}
@@ -399,10 +407,8 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 		}
 	}
 	
-
-	@Override
 	public void onTabActivityResult(int requestCode, int resultCode, Intent data) {
-		Log.d("listener","listener");onActivityResult(requestCode, resultCode, data);		
+		onActivityResult(requestCode, resultCode, data);		
 	}
 
 }

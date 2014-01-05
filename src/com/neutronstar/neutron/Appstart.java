@@ -61,12 +61,9 @@ public class Appstart extends Activity {
 //			localUser.settUserImei(tm.getDeviceId());		// IMEI 设备号
 //			localUser.settUserImsi(tm.getSubscriberId());	// IMSI 国际移动用户识别码(International Mobile Subscriber Identity)
 			checkLocalUser("passcode", localUser);	// 获取服务器对应id用户信息
-//			Log.d("IMEI", localUser.gettUserImei());
-//			Log.d("UserId", "" +localUser.gettUserId());
 		}
 	}
-	
-	
+		
 	private T_user getLocalUser()
 	{
 		T_user user = null;

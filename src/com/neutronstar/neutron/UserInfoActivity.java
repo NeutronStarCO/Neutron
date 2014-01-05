@@ -2,6 +2,7 @@ package com.neutronstar.neutron;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.text.SimpleDateFormat;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -20,13 +21,14 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.neutronstar.neutron.NeutronContract.NeutronUser;
 import com.neutronstar.neutron.NeutronContract.TAG;
 import com.neutronstar.neutron.NeutronContract.USER;
+import com.neutronstar.neutron.model.FamilyMemberEntity;
 
 public class UserInfoActivity extends Activity {
 	private NeutronDbHelper ndb;
@@ -94,8 +96,16 @@ public class UserInfoActivity extends Activity {
 			tvId.setHint(getResources().getString(R.string.user_info_hint_id));
 			Log.i("TAG_ADD", "TAG_ADD");
 			break;
-		case MainTabFamily.TAG_QUERY:
-			Log.i("TAG_QUERY","TAG_QUERY");
+		case MainTabFamily.TAG_MODIFY:
+			FamilyMemberEntity fme = (FamilyMemberEntity) bl.getSerializable("family_member_entity");
+			((TextView)findViewById(R.id.user_info_title)).setText(fme.getName());
+			ivAvatar.setImageBitmap(fme.getAvatar());
+			tvName.setText(fme.getName());
+			tvGender.setText(fme.getGender()==0 ? getResources().getString(R.string.female):getResources().getString(R.string.male));
+			tvBirthday.setText(new SimpleDateFormat(getResources().getString(R.string.dateformat_birthday)).format(fme.getBirthday()));
+			tvRelation.setText(getResources().getStringArray(R.array.relations)[fme.getRelation()]);
+			tvUserType.setText("" + fme.getType());
+			tvId.setText(String.valueOf(fme.getId()));
 			break;
 		}
 		
@@ -337,7 +347,7 @@ public class UserInfoActivity extends Activity {
 		ContentValues cv = new ContentValues(); 
 		
 		String name = tvName.getText().toString();
-		String gender = tvGender.getText().toString();
+		int gender = tvGender.getText().toString().equals(getResources().getString(R.string.male))? 1:0;
 		String birthday = tvBirthday.getText().toString();
 		int relation = findRelation(tvRelation.getText().toString());
 						
@@ -353,7 +363,7 @@ public class UserInfoActivity extends Activity {
 		
 		bl.putInt("id", 4);
 		bl.putString("name", name);
-		bl.putString("gender", gender);
+		bl.putInt("gender", gender);
 		bl.putString("birthday", birthday);
 		bl.putInt("relation", relation);
 		bl.putParcelable("avatar", bitmap);
