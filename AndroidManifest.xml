@@ -168,7 +168,9 @@
             android:name="com.neutronstar.neutron.SignUpInfoActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
-        <activity android:name="Avatar" android:theme="@style/HeadScale" />
+        <activity 
+            android:name="com.neutronstar.neutron.Avatar" 
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
     </application>
 
 </manifest>

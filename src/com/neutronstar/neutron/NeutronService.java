@@ -55,6 +55,7 @@ public class NeutronService extends Service {
 	double currentAcceleration = 0;
 	float maxAcceleration = 0;
 	private Timer updateTimer;
+	private Timer uploadTimer;
 	private double lowAcc;
 	private final double FILTERING_VALUE = 0.8;
 
@@ -99,7 +100,8 @@ public class NeutronService extends Service {
 		SecureRandom random = new SecureRandom();
 		int d1 = random.nextInt(10) * 1000;
 		alAccData = new ArrayList<Serializable>();
-		updateTimer.scheduleAtFixedRate(new TimerTask() {
+		uploadTimer = new Timer("gForceUploadService");
+		uploadTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
