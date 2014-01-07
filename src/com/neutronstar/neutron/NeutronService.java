@@ -56,6 +56,7 @@ public class NeutronService extends Service {
 	float maxAcceleration = 0;
 	private Timer updateTimer;
 	private Timer uploadTimer;
+	private Timer deleteTimer;
 	private double lowAcc;
 	private final double FILTERING_VALUE = 0.8;
 
@@ -109,6 +110,17 @@ public class NeutronService extends Service {
 				// 先测试一分钟上传一次的情况
 			}
 		}, 0, 60000);
+		
+		deleteTimer = new Timer("gForceDeleteService");
+		deleteTimer.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				deleteAccelerationHistory();
+			}
+			
+		}, 0, 60000);
 	}
 
 	@Override
@@ -116,7 +128,20 @@ public class NeutronService extends Service {
 		super.onDestroy();
 		sensorManager.unregisterListener(sensorEventListener);
 	}
-
+	
+	private void deleteAccelerationHistory()
+	{
+		SimpleDateFormat sDateFormat = new SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss.SSS");
+		String date = sDateFormat.format(new java.util.Date());
+		
+		NeutronDbHelper ndb = NeutronDbHelper.GetInstance(this);
+		SQLiteDatabase db = ndb.getWritableDatabase();
+		String[] args = { "1" };
+		int delNum = db.delete(NeutronAcceleration.TABLE_NAME, "uploadtag=?", args);
+		Log.v("Delete Succeed", "delete " + delNum + " lines data.");
+	}
+	
 	private void refreshAccelerometer() {
 
 		sensorManager.registerListener(sensorEventListener, accelerometer,
