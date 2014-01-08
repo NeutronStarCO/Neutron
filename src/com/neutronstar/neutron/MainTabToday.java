@@ -34,11 +34,10 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.neutron.server.persistence.model.T_user;
+import com.neutronstar.neutron.NeutronContract.GENDER;
 import com.neutronstar.neutron.NeutronContract.ITEM;
 import com.neutronstar.neutron.NeutronContract.NeutronUser;
 import com.neutronstar.neutron.NeutronContract.TAG;
-import com.neutronstar.neutron.NeutronContract.USER;
 import com.neutronstar.neutron.model.BMIModel;
 import com.neutronstar.neutron.model.RMRModel;
 import com.neutronstar.neutron.model.User;
@@ -153,9 +152,9 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 		man_tab_today_name.setText(user.getName());
 		// ÐÔ±ð
 		ImageView man_tab_today_gender = (ImageView) findViewById(R.id.man_tab_today_gender);
-		if(user.getGender() == 1)
+		if(user.getGender() == GENDER.male)
 			man_tab_today_gender.setImageResource(R.drawable.sex_male);
-		else if(user.getGender() == 0)
+		else if(user.getGender() == GENDER.female)
 			man_tab_today_gender.setImageResource(R.drawable.sex_female);
 		else
 			man_tab_today_gender.setImageResource(R.drawable.sex_unknown);

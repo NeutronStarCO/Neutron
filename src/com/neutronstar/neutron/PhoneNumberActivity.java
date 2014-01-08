@@ -214,14 +214,8 @@ public class PhoneNumberActivity extends Activity {
 		        ObjectInputStream ois = new ObjectInputStream(urlConn.getInputStream());  
 		        paraList = (ArrayList<Serializable>)ois.readObject();
 		        state = (String)paraList.get(0);
-		        Log.d("GetPasscodeTask", state);
-		        Log.d("IDD", localUser.gettUserAreacode());
-		        Log.d("Phonenumber", localUser.gettUserPhonenumber());
 		        remoteUser = (T_user)paraList.get(1);
 		        passcode = remoteUser.gettUserPasscode();
-		        Log.d("passcode", passcode);
-//		        Log.d("IMEI", IMEI);
-//		        Log.d("IMSI", IMSI);
 		        
            } catch (Exception e) {
                e.printStackTrace();

@@ -14,6 +14,8 @@ public class FamilyMemberEntity implements Serializable{
 	private int id;
 	private String name;
 	private Date birthday;
+	private String IDD;
+	private String phoneNumber;
 	private int gender;
 	private int relation;
 	private byte[] bitmapBytes;
@@ -21,12 +23,15 @@ public class FamilyMemberEntity implements Serializable{
 	
 	public FamilyMemberEntity() {}
 
-	public FamilyMemberEntity(int id, String name, Date birthday, int gender, int relation, Bitmap avatar, int type) 
+
+	public FamilyMemberEntity(int id, String name, Date birthday, String IDD, String phoneNumber, int gender, int relation, Bitmap avatar, int type) 
 	{
 		super();
 		this.id = id;
 		this.name = name;
 		this.birthday = birthday;
+		this.IDD = IDD;
+		this.phoneNumber = phoneNumber;
 		this.gender = gender;
 		this.relation = relation;
 		ByteArrayOutputStream baops = new ByteArrayOutputStream();
@@ -41,6 +46,10 @@ public class FamilyMemberEntity implements Serializable{
 	public void setName(String name) { this.name = name; }
 	public Date getBirthday() { return this.birthday; }
 	public void setBirthday(Date birthday) { this.birthday = birthday; }
+	public String getIDD() { return this.IDD; }
+	public void setIDD(String IDD) {this.IDD = IDD; }
+	public String getPhoneNumber() { return this.phoneNumber; }
+	public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 	public int getGender() { return this.gender; }
 	public void setGender(int gender) {this.gender = gender; }
 	public int getRelation() { return this.relation; }

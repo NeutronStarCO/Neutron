@@ -28,6 +28,8 @@ public final class NeutronContract {
 		 public static final String COLUMN_NAME_NAME = "name";
 		 public static final String COLUMN_NAME_BIRTHDAY = "birthday";
 		 public static final String COLUMN_NAME_GENDER = "gender";
+		 public static final String COLUMN_NAME_IDD = "idd";
+		 public static final String COLUMN_NAME_PHONE_NUMBER = "phone_number";
 		 public static final String COLUMN_NAME_RELATION = "relation";
 		 public static final String COLUMN_NAME_TYPE = "type";
 		 public static final String COLUMN_NAME_AVATAR = "avatar";
@@ -98,8 +100,8 @@ public final class NeutronContract {
 		 public static final int brother = 11;
 		 public static final int friends = 12;	
 		 
-		 public static final int registered = 1;
-		 public static final int subregister = 2;
+		 public static final int registered = 0;
+		 public static final int subregister = 1;
 	 }
 	 
 	 public static abstract class CONSTANT 
@@ -113,6 +115,9 @@ public final class NeutronContract {
 	 {
 		 public static final int normal = 0;
 		 public static final int delete = 1;
+		 public static final int offered = 0;
+		 public static final int accepted = 1;
+		 public static final int rejected = 2;
 	 }
 	 
 	 public static abstract class GENDER
@@ -129,7 +134,7 @@ public final class NeutronContract {
 	 
 	 public static abstract class SERVER
 	 {
-		 public static final String Address = "http://www.rrd2mysql.com:12581/NeutronServer";
+		 public static final String Address = "http://219.141.181.131:12581/NeutronServer";
 		 public static final String DomainAddress = "http://www.rrd2mysql.com:12581/NeutronServer";
 		 public static final String PublicAddress = "http://219.141.181.131:12581/NeutronServer";
 		 public static final String InnerAddress = "http://172.20.8.183:12581/NeutronServer";

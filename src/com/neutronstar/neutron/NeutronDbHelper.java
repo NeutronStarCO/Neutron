@@ -66,6 +66,8 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
     	    NeutronUser.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
     	    NeutronUser.COLUMN_NAME_GENDER + INTEGER_TYPE + COMMA_SEP +
     	    NeutronUser.COLUMN_NAME_BIRTHDAY + TEXT_TYPE + COMMA_SEP +
+    	    NeutronUser.COLUMN_NAME_IDD + TEXT_TYPE + COMMA_SEP +
+    	    NeutronUser.COLUMN_NAME_PHONE_NUMBER + TEXT_TYPE + COMMA_SEP +
     	    NeutronUser.COLUMN_NAME_RELATION + INTEGER_TYPE + COMMA_SEP +
     	    NeutronUser.COLUMN_NAME_TYPE + INTEGER_TYPE + COMMA_SEP +
     	    NeutronUser.COLUMN_NAME_AVATAR + BLOG_TYPE + COMMA_SEP +
@@ -79,9 +81,6 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
     	    NeutronGroupTesting.COLUMN_NAME_DATETIME + TEXT_TYPE + COMMA_SEP +
     	    NeutronGroupTesting.COLUMN_NAME_TESTINGINST + TEXT_TYPE + COMMA_SEP +
     		NeutronGroupTesting.COLUMN_NAME_TAG + INTEGER_TYPE + " )";
-    
-    private static final String SQL_INSERT_TEST_USER =
-    	    "INSERT INTO " + NeutronUser.TABLE_NAME + " values (1, '郭成','male', '1980-04-20', 1, 1, 0)";
 
 	public NeutronDbHelper(Context context, String name, CursorFactory factory,
 			int version) {
@@ -110,37 +109,37 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
 		db.execSQL(SQL_CREATE_TABLE_USER);
 		db.execSQL(SQL_CREATE_TABLE_GROUPTESTING);
 		
-		// 添加一个初始化的用户
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Bitmap bitmap = ((BitmapDrawable) Appstart.instance.getResources().getDrawable(R.drawable.avatar_male)).getBitmap();
-		bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos); 
-		ContentValues cv = new ContentValues(); 
-		cv.put(NeutronUser.COLUMN_NAME_ID, 1);
-		cv.put(NeutronUser.COLUMN_NAME_NAME, "杰克·萨利");
-		cv.put(NeutronUser.COLUMN_NAME_GENDER, GENDER.male);
-		cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, "1980-04-20");
-		cv.put(NeutronUser.COLUMN_NAME_RELATION, USER.me);
-		cv.put(NeutronUser.COLUMN_NAME_TYPE, USER.registered);
-		cv.put(NeutronUser.COLUMN_NAME_AVATAR, baos.toByteArray());
-		cv.put(NeutronUser.COLUMN_NAME_PASSCODE, "123456");
-		cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.normal);
-		long result = db.insert(NeutronUser.TABLE_NAME, null, cv); 
-		
-		// 添加另一个初始化用户用于测试家庭成员功能
-		baos = new ByteArrayOutputStream();
-		bitmap = ((BitmapDrawable) Appstart.instance.getResources().getDrawable(R.drawable.avatar_female)).getBitmap();
-		bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos); 
-		cv = new ContentValues(); 
-		cv.put(NeutronUser.COLUMN_NAME_ID, 2);
-		cv.put(NeutronUser.COLUMN_NAME_NAME, "奈蒂莉");
-		cv.put(NeutronUser.COLUMN_NAME_GENDER, GENDER.female);
-		cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, "1983-01-15");
-		cv.put(NeutronUser.COLUMN_NAME_RELATION, USER.wife);
-		cv.put(NeutronUser.COLUMN_NAME_TYPE, USER.subregister);
-		cv.put(NeutronUser.COLUMN_NAME_AVATAR, baos.toByteArray());
-		cv.put(NeutronUser.COLUMN_NAME_PASSCODE, "123456");
-		cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.normal);
-		result = db.insert(NeutronUser.TABLE_NAME, null, cv); 
+//		// 添加一个初始化的用户
+//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//		Bitmap bitmap = ((BitmapDrawable) Appstart.instance.getResources().getDrawable(R.drawable.avatar_male)).getBitmap();
+//		bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos); 
+//		ContentValues cv = new ContentValues(); 
+//		cv.put(NeutronUser.COLUMN_NAME_ID, 1);
+//		cv.put(NeutronUser.COLUMN_NAME_NAME, "杰克·萨利");
+//		cv.put(NeutronUser.COLUMN_NAME_GENDER, GENDER.male);
+//		cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, "1980-04-20");
+//		cv.put(NeutronUser.COLUMN_NAME_RELATION, USER.me);
+//		cv.put(NeutronUser.COLUMN_NAME_TYPE, USER.registered);
+//		cv.put(NeutronUser.COLUMN_NAME_AVATAR, baos.toByteArray());
+//		cv.put(NeutronUser.COLUMN_NAME_PASSCODE, "123456");
+//		cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.normal);
+//		long result = db.insert(NeutronUser.TABLE_NAME, null, cv); 
+//		
+//		// 添加另一个初始化用户用于测试家庭成员功能
+//		baos = new ByteArrayOutputStream();
+//		bitmap = ((BitmapDrawable) Appstart.instance.getResources().getDrawable(R.drawable.avatar_female)).getBitmap();
+//		bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos); 
+//		cv = new ContentValues(); 
+//		cv.put(NeutronUser.COLUMN_NAME_ID, 2);
+//		cv.put(NeutronUser.COLUMN_NAME_NAME, "奈蒂莉");
+//		cv.put(NeutronUser.COLUMN_NAME_GENDER, GENDER.female);
+//		cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, "1983-01-15");
+//		cv.put(NeutronUser.COLUMN_NAME_RELATION, USER.wife);
+//		cv.put(NeutronUser.COLUMN_NAME_TYPE, USER.subregister);
+//		cv.put(NeutronUser.COLUMN_NAME_AVATAR, baos.toByteArray());
+//		cv.put(NeutronUser.COLUMN_NAME_PASSCODE, "123456");
+//		cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.normal);
+//		result = db.insert(NeutronUser.TABLE_NAME, null, cv); 
 	}
 
 	@Override

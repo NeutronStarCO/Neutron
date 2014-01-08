@@ -1,6 +1,5 @@
 package com.neutronstar.neutron;
 
-import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -14,8 +13,6 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -163,8 +160,7 @@ public class VarificationCodeActivity extends Activity {
 		        ObjectInputStream ois = new ObjectInputStream(urlConn.getInputStream());  
 		        paraList = (ArrayList<Serializable>)ois.readObject();
 		        state = (String)paraList.get(0);
-		        result = user.gettUserPasscode();
-		        Log.d("LoginTask---", state);	        
+		        result = user.gettUserPasscode();	        
            } catch (Exception e) {
                e.printStackTrace();
            }
@@ -175,7 +171,6 @@ public class VarificationCodeActivity extends Activity {
 		{
 			Intent intent = new Intent();
 			Bundle bundle  = new Bundle();
-			Log.d("LoginTask--onpost",result);
 			if(state.equals("ok"))
 			{
 				// 清除本地数据库数据，插入本地数据库用户
@@ -189,17 +184,16 @@ public class VarificationCodeActivity extends Activity {
 				cv.put(NeutronUser.COLUMN_NAME_NAME, user.gettUserName());
 				cv.put(NeutronUser.COLUMN_NAME_GENDER, user.gettUserGender());
 				cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, user.gettUserBirth());
+				cv.put(NeutronUser.COLUMN_NAME_IDD, user.gettUserAreacode());
+				cv.put(NeutronUser.COLUMN_NAME_PHONE_NUMBER, user.gettUserPhonenumber());
 				cv.put(NeutronUser.COLUMN_NAME_RELATION, USER.me);
 				cv.put(NeutronUser.COLUMN_NAME_TYPE, USER.registered);
 				cv.put(NeutronUser.COLUMN_NAME_PASSCODE, result);
 				cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.normal);
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				Bitmap bitmap = ((BitmapDrawable) Appstart.instance.getResources().getDrawable(R.drawable.avatar_male)).getBitmap();
-				bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos); 
-				cv.put(NeutronUser.COLUMN_NAME_AVATAR, baos.toByteArray());
+				cv.put(NeutronUser.COLUMN_NAME_AVATAR, user.gettUserPicture());
 				db.insert(NeutronUser.TABLE_NAME, null, cv); 
 				
-				bundle.putInt("userid", userid);
+				bundle.putInt("userid", user.gettUserId());
 				intent.putExtras(bl);
 				intent.setClass(VarificationCodeActivity.this, MainNeutron.class);
 				startActivityForResult(intent, 0);

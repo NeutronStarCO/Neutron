@@ -19,7 +19,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -32,11 +31,13 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.neutron.server.persistence.model.T_user;
+import com.neutronstar.neutron.NeutronContract.GENDER;
 import com.neutronstar.neutron.NeutronContract.NeutronGroupTesting;
 import com.neutronstar.neutron.NeutronContract.NeutronRecord;
 import com.neutronstar.neutron.NeutronContract.NeutronUser;
@@ -50,6 +51,7 @@ public class SignUpInfoActivity extends Activity {
 	private Bundle bl;
 	private Spinner spinner;
 	private ArrayAdapter<String> adapter;
+	private ImageView ivAvatar;
 	private TextView tvName;
 	private TextView tvBirthday;
 	private T_user user;
@@ -71,6 +73,7 @@ public class SignUpInfoActivity extends Activity {
 		tm = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
 		
 		spinner = (Spinner) findViewById(R.id.sign_up_info_spinner);
+		ivAvatar = (ImageView) findViewById(R.id.sign_up_info_avatar);
 		tvName = (TextView) findViewById(R.id.sign_up_info_name);
 		tvBirthday = (TextView) findViewById(R.id.sign_up_info_birthday);
 		adapter = new ArrayAdapter<String>(this, R.layout.simple_text_item, R.id.simple_text_item);
@@ -113,12 +116,20 @@ public class SignUpInfoActivity extends Activity {
 		else 
 			user.settUserName(tvName.getText().toString());
 		user.settUserBirth(dateFormat.format(c.getTime()));
-		user.settUserGender(spinner.getSelectedItemId()==0? 1:0);
+		user.settUserGender(spinner.getSelectedItemId() == GENDER.male? GENDER.male:GENDER.female);
 		user.settUserRegtag(USER.registered);
-		user.settUserDeltag("0");
+		user.settUserDeltag(String.valueOf(TAG.normal));
 		user.settUserImei(tm.getDeviceId());
 		user.settUserImsi(tm.getSubscriberId());
 		user.settUserRegdate(Calendar.getInstance().getTime());
+		ivAvatar.setDrawingCacheEnabled(true);
+		Bitmap bitmap = ivAvatar.getDrawingCache();
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+		ivAvatar.setDrawingCacheEnabled(false);
+		user.settUserPicture(baos.toByteArray());
+		user.settUserAvatar("PNG");
 		addNewUser("login", user);	
 	}
 	
@@ -209,19 +220,18 @@ public class SignUpInfoActivity extends Activity {
 				cv.put(NeutronUser.COLUMN_NAME_NAME, user.gettUserName());
 				cv.put(NeutronUser.COLUMN_NAME_GENDER, user.gettUserGender());
 				cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, user.gettUserBirth());
+				cv.put(NeutronUser.COLUMN_NAME_IDD, user.gettUserAreacode());
+				cv.put(NeutronUser.COLUMN_NAME_PHONE_NUMBER, user.gettUserPhonenumber());
 				cv.put(NeutronUser.COLUMN_NAME_RELATION, USER.me);
 				cv.put(NeutronUser.COLUMN_NAME_TYPE, USER.registered);
 				cv.put(NeutronUser.COLUMN_NAME_PASSCODE, user.gettUserPasscode());
 				cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.normal);
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				Bitmap bitmap = ((BitmapDrawable) Appstart.instance.getResources().getDrawable(R.drawable.avatar_male)).getBitmap();
-				bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos); 
-				cv.put(NeutronUser.COLUMN_NAME_AVATAR, baos.toByteArray());
+				cv.put(NeutronUser.COLUMN_NAME_AVATAR, user.gettUserPicture());
 				db.insert(NeutronUser.TABLE_NAME, null, cv); 
 				
 				intent.setClass(SignUpInfoActivity.this, MainNeutron.class);
 				bundle.putInt("userid", result);
-				intent.putExtras(bundle);		Log.d("post userid", ""+userid);
+				intent.putExtras(bundle);
 				startActivity(intent);
 				setResult(RESULT_FIRST_USER, new Intent());
 				finish();

@@ -1,58 +1,95 @@
 package com.neutronstar.neutron;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.text.TextUtils;
-import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.neutron.server.persistence.model.T_relation;
+import com.neutron.server.persistence.model.T_user;
 import com.neutronstar.neutron.NeutronContract.NeutronUser;
+import com.neutronstar.neutron.NeutronContract.SERVER;
 import com.neutronstar.neutron.NeutronContract.TAG;
 import com.neutronstar.neutron.NeutronContract.USER;
 import com.neutronstar.neutron.model.FamilyMemberEntity;
 
 public class UserInfoActivity extends Activity {
+	public static final int TAG_ADD_USER = 1;
+	public static final int TAG_MODIFY_USER = 2;
 	private NeutronDbHelper ndb;
 	private Intent intent;
 	private Bundle bl;
-	private int usage;
+	private int tag;
+	private T_user storedUser;
 	private ImageView ivAvatar;
 	private TextView tvName;
 	private TextView tvGender;
 	private TextView tvBirthday;
 	private TextView tvRelation;
 	private TextView tvUserType;
-	private TextView tvId;
+	private TextView tvIDD;
+	private TextView tvIDDName;
+	private TextView tvPhoneNumber;
 	private RelativeLayout rlChangeAvatar;
 	private RelativeLayout rlChangeName;
 	private RelativeLayout rlChangeGender;
 	private RelativeLayout rlChangeBirthday;
+	private Calendar c = Calendar.getInstance();
 	private RelativeLayout rlChangeRelation;
+	private RelativeLayout rlChangeUsertype;
+	private RelativeLayout rlChangeIDD;
+	private RelativeLayout rlChangePhoneNumber;
+	private Button btSave;
+	
+	private PopupWindow pwIDD;
 	
 	private static final int AVATAR_REQUEST_CODE = 1;
 	private static final int NAME_REQUEST_CODE = 2;
-	private static final int GENDER_REQUEST_CODE = 3;
-	private static final int BIRTHDAY_REQUEST_CODE = 4;
 	private static final int RELATION_REQUEST_CODE = 5;
+	private static final int PHONE_NUMBER_REQUEST_CODE = 6;
+	
 	private static final int IMAGE_REQUEST_CODE = 10;
 	private static final int CAMERA_REQUEST_CODE = 11;
 	private static final int RESIZE_REQUEST_CODE = 12;
@@ -69,34 +106,41 @@ public class UserInfoActivity extends Activity {
 		// 获得传递数据
 		intent = this.getIntent();
 		bl = intent.getExtras();
-		usage = bl.getInt("usage");
+		tag = bl.getInt("tag");
 		ivAvatar = (ImageView)findViewById(R.id.user_info_avatar_content);
 		tvName = (TextView)findViewById(R.id.user_info_name_content);
 		tvGender = (TextView)findViewById(R.id.user_info_gender_content);
 		tvBirthday = (TextView)findViewById(R.id.user_info_birthday_content);
 		tvRelation = (TextView)findViewById(R.id.user_info_relation_content);
 		tvUserType = (TextView)findViewById(R.id.user_info_usertype_content);
-		tvId = (TextView)findViewById(R.id.user_info_id_content);
+		tvIDD = (TextView)findViewById(R.id.user_info_idd_content);
+		tvIDDName = (TextView)findViewById(R.id.user_info_idd_name);
+		tvPhoneNumber = (TextView)findViewById(R.id.user_info_phonenumber_content);
+		rlChangeUsertype = (RelativeLayout)findViewById(R.id.user_change_usertype);
+		rlChangeIDD = (RelativeLayout)findViewById(R.id.user_change_idd);
+		rlChangePhoneNumber = (RelativeLayout)findViewById(R.id.user_change_phone_number);
 		rlChangeAvatar = (RelativeLayout)findViewById(R.id.user_change_avatar);
 		rlChangeName = (RelativeLayout)findViewById(R.id.user_change_name);
 		rlChangeGender = (RelativeLayout)findViewById(R.id.user_change_gender);
 		rlChangeBirthday = (RelativeLayout)findViewById(R.id.user_change_birthday);
 		rlChangeRelation = (RelativeLayout)findViewById(R.id.user_change_relation);
+		btSave = (Button)findViewById(R.id.user_info_save);
 		
 		// 初始化让界面成为新建立一个用户的形式
-		switch(usage)
+		switch(tag)
 		{
-		case MainTabFamily.TAG_ADD:
-			ivAvatar.setImageDrawable(getResources().getDrawable(R.drawable.xiaohei_big));
-			tvName.setHint(getResources().getString(R.string.user_info_hint_name));
-			tvGender.setHint(getResources().getString(R.string.user_info_hint_gender));
-			tvBirthday.setHint(getResources().getString(R.string.user_info_hint_birthday));
-			tvRelation.setHint(getResources().getString(R.string.user_info_hint_relation));
-			tvUserType.setHint(getResources().getString(R.string.user_info_hint_usertype));
-			tvId.setHint(getResources().getString(R.string.user_info_hint_id));
-			Log.i("TAG_ADD", "TAG_ADD");
+		case UserInfoActivity.TAG_ADD_USER:
+			rlChangeUsertype.setBackgroundResource(R.drawable.preference_single_item);
+			rlChangeIDD.setVisibility(View.GONE);
+			rlChangePhoneNumber.setVisibility(View.GONE);
+			rlChangeAvatar.setVisibility(View.GONE);
+			rlChangeName.setVisibility(View.GONE);
+			rlChangeGender.setVisibility(View.GONE);
+			rlChangeBirthday.setVisibility(View.GONE);
+			rlChangeRelation.setVisibility(View.GONE);
+			btSave.setEnabled(false);
 			break;
-		case MainTabFamily.TAG_MODIFY:
+		case UserInfoActivity.TAG_MODIFY_USER:
 			FamilyMemberEntity fme = (FamilyMemberEntity) bl.getSerializable("family_member_entity");
 			((TextView)findViewById(R.id.user_info_title)).setText(fme.getName());
 			ivAvatar.setImageBitmap(fme.getAvatar());
@@ -104,14 +148,15 @@ public class UserInfoActivity extends Activity {
 			tvGender.setText(fme.getGender()==0 ? getResources().getString(R.string.female):getResources().getString(R.string.male));
 			tvBirthday.setText(new SimpleDateFormat(getResources().getString(R.string.dateformat_birthday)).format(fme.getBirthday()));
 			tvRelation.setText(getResources().getStringArray(R.array.relations)[fme.getRelation()]);
-			tvUserType.setText("" + fme.getType());
-			tvId.setText(String.valueOf(fme.getId()));
+			tvUserType.setText(getResources().getStringArray(R.array.user_type)[fme.getType()]);
+			tvIDD.setText(fme.getIDD());
+			tvPhoneNumber.setText(fme.getPhoneNumber());
+			btSave.setEnabled(true);
 			break;
 		}
 		
 		ivAvatar.setOnClickListener(new View.OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				ivAvatar.setDrawingCacheEnabled(true);
@@ -126,77 +171,220 @@ public class UserInfoActivity extends Activity {
 			}
 		});
 		
-		rlChangeAvatar.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
+		rlChangeUsertype.setOnClickListener(new View.OnClickListener() {
+			String[] userType = getResources().getStringArray(R.array.user_type);
+			public void onClick(View arg0) 
+			{
+				int x = getWindowManager().getDefaultDisplay().getWidth() / 4;
+				int y = getWindowManager().getDefaultDisplay().getHeight() / 5;
+				
+				LinearLayout llIDD = (LinearLayout) LayoutInflater.from(UserInfoActivity.this).inflate(
+						R.layout.tab_today_dialog, null);
+				ListView lvIDD = (ListView) llIDD.findViewById(R.id.tab_today_dialog);
+				lvIDD.setAdapter(new ArrayAdapter<String>(UserInfoActivity.this,
+						R.layout.simple_text_item, R.id.simple_text_item, userType));
+				
+				pwIDD = new PopupWindow(UserInfoActivity.this);
+				pwIDD.setWidth(getWindowManager().getDefaultDisplay().getWidth() / 2);
+				pwIDD.setHeight(LayoutParams.WRAP_CONTENT);
+				pwIDD.setOutsideTouchable(true);
+				pwIDD.setFocusable(true);
+				pwIDD.setContentView(llIDD);
+
+				pwIDD.showAtLocation(findViewById(R.id.user_info_usertype_content), Gravity.LEFT | Gravity.TOP, x, y);
+				
+				lvIDD.setOnItemClickListener(new OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+							long arg3) {
+						tvUserType.setText(userType[arg2]);
+						switch(arg2){
+						case 0:
+							rlChangeUsertype.setBackgroundResource(R.drawable.preference_first_item);
+							rlChangeIDD.setVisibility(View.VISIBLE);
+							rlChangePhoneNumber.setVisibility(View.VISIBLE);
+							tvPhoneNumber.setText("");
+							rlChangeAvatar.setVisibility(View.GONE);
+							rlChangeName.setVisibility(View.GONE);
+							rlChangeGender.setVisibility(View.GONE);
+							rlChangeBirthday.setVisibility(View.GONE);
+							rlChangeRelation.setVisibility(View.GONE);	
+							btSave.setEnabled(false);
+							break;
+						case 1:
+							rlChangeUsertype.setBackgroundResource(R.drawable.preference_single_item);
+							rlChangeIDD.setVisibility(View.GONE);
+							rlChangePhoneNumber.setVisibility(View.GONE);
+							rlChangeAvatar.setVisibility(View.VISIBLE);
+							rlChangeAvatar.setClickable(true);
+							ivAvatar.setImageDrawable(getResources().getDrawable(R.drawable.andy_lau));
+							rlChangeName.setVisibility(View.VISIBLE);
+							rlChangeName.setClickable(true);
+							tvName.setText("");
+							rlChangeGender.setVisibility(View.VISIBLE);
+							rlChangeGender.setClickable(true);
+							tvGender.setText("");
+							rlChangeBirthday.setVisibility(View.VISIBLE);
+							tvBirthday.setText("");
+							rlChangeRelation.setVisibility(View.VISIBLE);
+							tvRelation.setText("");
+							btSave.setEnabled(false);
+							break;
+						}
+						pwIDD.dismiss();
+						pwIDD = null;
+					}
+				});					
+			}
+		});
+		
+		rlChangeIDD.setOnClickListener(new View.OnClickListener() {
+			String[] IDDCountry = getResources().getStringArray(R.array.idd_country);
+			String[] IDD = getResources().getStringArray(R.array.idd);
+			public void onClick(View view) 
+			{
+				int x = getWindowManager().getDefaultDisplay().getWidth() / 4;
+				int y = getWindowManager().getDefaultDisplay().getHeight() / 5;
+				
+				LinearLayout llIDD = (LinearLayout) LayoutInflater.from(UserInfoActivity.this).inflate(
+						R.layout.tab_today_dialog, null);
+				ListView lvIDD = (ListView) llIDD.findViewById(R.id.tab_today_dialog);
+				lvIDD.setAdapter(new ArrayAdapter<String>(UserInfoActivity.this,
+						R.layout.simple_text_item, R.id.simple_text_item, IDDCountry));
+				
+				pwIDD = new PopupWindow(UserInfoActivity.this);
+				pwIDD.setWidth(getWindowManager().getDefaultDisplay().getWidth() / 2);
+				pwIDD.setHeight(getWindowManager().getDefaultDisplay().getHeight() / 2);
+				pwIDD.setOutsideTouchable(true);
+				pwIDD.setFocusable(true);
+				pwIDD.setContentView(llIDD);
+
+				pwIDD.showAtLocation(findViewById(R.id.user_info_idd_content), Gravity.LEFT | Gravity.TOP, x, y);
+				
+				lvIDD.setOnItemClickListener(new OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+							long arg3) {
+						tvIDDName.setText(IDDCountry[arg2]);
+						tvIDD.setText(IDD[arg2]);
+						pwIDD.dismiss();
+						pwIDD = null;
+					}
+				});				
+			}
+		});
+				
+		rlChangePhoneNumber.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				Intent intent = new Intent(UserInfoActivity.this,ChangeText.class);
+				Bundle bundle = new Bundle();
+				bundle.putInt("tag", ChangeText.TAG_CHANGE_PHONE_NUMBER);
+				bundle.putString("text", tvPhoneNumber.getText() != null? tvPhoneNumber.getText().toString():"");
+				bundle.putString("idd", tvIDD.getText().toString());
+				intent.putExtras(bundle);
+				startActivityForResult(intent,PHONE_NUMBER_REQUEST_CODE);
+			}
+		});
+		
+		rlChangeAvatar.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
 				showDialog();
-//				Intent intent = new Intent(UserInfoActivity.this,ChangeAvatar.class);
-//				startActivityForResult(intent,1);
 			}
 		});
 		
 		rlChangeName.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent(UserInfoActivity.this,ChangeName.class);
-				Bundle bundle = new Bundle();
-				String name = "";
-				if (tvName.getText() != null)
-				{
-					name = tvName.getText().toString();
-				}	
-				bundle.putString("name", name);
+				Intent intent = new Intent(UserInfoActivity.this,ChangeText.class);
+				Bundle bundle = new Bundle();	
+				bundle.putString("text", tvName.getText() != null? tvName.getText().toString():"");
+				bundle.putInt("tag", ChangeText.TAG_CHANGE_NAME);
 				intent.putExtras(bundle);
 				startActivityForResult(intent,NAME_REQUEST_CODE);
 			}
 		});
+		
 		rlChangeGender.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
+			String[] gender = getResources().getStringArray(R.array.gender);
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent(UserInfoActivity.this,ChangeGender.class);
-				Bundle bundle = new Bundle();
-				String gender = tvGender.getText().toString();
-				bundle.putString("gender", gender);
-				intent.putExtras(bundle);
-				startActivityForResult(intent,GENDER_REQUEST_CODE);
+				int x = getWindowManager().getDefaultDisplay().getWidth() / 4;
+				int y = getWindowManager().getDefaultDisplay().getHeight() / 5;
+				
+				LinearLayout llIDD = (LinearLayout) LayoutInflater.from(UserInfoActivity.this).inflate(
+						R.layout.tab_today_dialog, null);
+				ListView lvIDD = (ListView) llIDD.findViewById(R.id.tab_today_dialog);
+				lvIDD.setAdapter(new ArrayAdapter<String>(UserInfoActivity.this,
+						R.layout.simple_text_item, R.id.simple_text_item, gender));
+				
+				pwIDD = new PopupWindow(UserInfoActivity.this);
+				pwIDD.setWidth(getWindowManager().getDefaultDisplay().getWidth() / 2);
+				pwIDD.setHeight(LayoutParams.WRAP_CONTENT);
+				pwIDD.setOutsideTouchable(true);
+				pwIDD.setFocusable(true);
+				pwIDD.setContentView(llIDD);
+
+				pwIDD.showAtLocation(findViewById(R.id.user_info_gender_content), Gravity.LEFT | Gravity.TOP, x, y);
+				
+				lvIDD.setOnItemClickListener(new OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+							long arg3) {
+						tvGender.setText(gender[arg2]);
+						pwIDD.dismiss();
+						pwIDD = null;
+					}
+				});				
 			}
 		});
+		
 		rlChangeBirthday.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent(UserInfoActivity.this,ChangeBirthday.class);
-				Bundle bundle = new Bundle();
-				String birthday = "";
-				if (!TextUtils.isEmpty(tvBirthday.getText()))
-				{
-					birthday = tvBirthday.getText().toString();
-				}				
-				bundle.putString("birthday", birthday);
-				intent.putExtras(bundle);
-				startActivityForResult(intent,BIRTHDAY_REQUEST_CODE);
+				new DatePickerDialog(UserInfoActivity.this, new DatePickerDialog.OnDateSetListener() {  					 
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) 
+                    {  
+                    	c.set(Calendar.YEAR, year);
+                    	c.set(Calendar.MONTH, monthOfYear);
+                    	c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    	tvBirthday.setText(new SimpleDateFormat(getResources().getString(R.string.dateformat_birthday)).format(c.getTime()));
+                    }  
+                }, 1961, 9, 27).show();				
 			}
 		});
-		rlChangeRelation.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
+		
+		rlChangeRelation.setOnClickListener(new View.OnClickListener() {			
+			String[] relations = getResources().getStringArray(R.array.relations);
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent(UserInfoActivity.this,ChangeRelation.class);
-				Bundle bundle = new Bundle();
-				String relation = tvRelation.getText().toString();
-				int position = findRelation(relation);
-				bundle.putString("relation", relation);
-				bundle.putInt("pos", position);
-				intent.putExtras(bundle);
-				startActivityForResult(intent,RELATION_REQUEST_CODE);				
+				int x = getWindowManager().getDefaultDisplay().getWidth() / 4;
+				int y = getWindowManager().getDefaultDisplay().getHeight() / 5;
+				
+				LinearLayout llIDD = (LinearLayout) LayoutInflater.from(UserInfoActivity.this).inflate(
+						R.layout.tab_today_dialog, null);
+				ListView lvIDD = (ListView) llIDD.findViewById(R.id.tab_today_dialog);
+				lvIDD.setAdapter(new ArrayAdapter<String>(UserInfoActivity.this,
+						R.layout.simple_text_item, R.id.simple_text_item, relations));
+				
+				pwIDD = new PopupWindow(UserInfoActivity.this);
+				pwIDD.setWidth(getWindowManager().getDefaultDisplay().getWidth() / 2);
+				pwIDD.setHeight(LayoutParams.WRAP_CONTENT);
+				pwIDD.setOutsideTouchable(true);
+				pwIDD.setFocusable(true);
+				pwIDD.setContentView(llIDD);
+
+				pwIDD.showAtLocation(findViewById(R.id.user_info_gender_content), Gravity.LEFT | Gravity.TOP, x, y);
+				
+				lvIDD.setOnItemClickListener(new OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+							long arg3) {
+						tvRelation.setText(arg2 !=0 ? relations[arg2]:"");
+						btSave.setEnabled(arg2 != 0);
+						pwIDD.dismiss();
+						pwIDD = null;
+					}
+				});					
 			}
 		});
 	}
@@ -293,19 +481,28 @@ public class UserInfoActivity extends Activity {
 			switch(requestCode)
 			{
 				case AVATAR_REQUEST_CODE:
-//					String result = data.getExtras().getString("");
+					break;			
+				case PHONE_NUMBER_REQUEST_CODE:
+					String changedPhoneNumber = data.getExtras().getString("text");
+					tvPhoneNumber.setText(changedPhoneNumber);
+					storedUser = (T_user)data.getExtras().getSerializable("user");
+					rlChangeAvatar.setVisibility(View.VISIBLE);
+					rlChangeAvatar.setClickable(false);
+					byte[] in = storedUser.gettUserPicture();
+					ivAvatar.setImageBitmap(BitmapFactory.decodeByteArray(in, 0, in.length));
+					rlChangeName.setVisibility(View.VISIBLE);
+					rlChangeName.setClickable(false);
+					tvName.setText(storedUser.gettUserName());
+					rlChangeGender.setVisibility(View.VISIBLE);
+					rlChangeGender.setClickable(false);
+					tvGender.setText(getResources().getStringArray(R.array.gender)[storedUser.gettUserGender()]);
+					rlChangeBirthday.setVisibility(View.GONE);
+					tvBirthday.setText(storedUser.gettUserBirth());
+					rlChangeRelation.setVisibility(View.VISIBLE);
 					break;
 				case NAME_REQUEST_CODE:
-					String changedName = data.getExtras().getString("name");
+					String changedName = data.getExtras().getString("text");
 					tvName.setText(changedName);
-					break;
-				case GENDER_REQUEST_CODE:
-					String changeGender = data.getExtras().getString("gender");
-					tvGender.setText(changeGender);
-					break;
-				case BIRTHDAY_REQUEST_CODE:
-					String changeBirthday = data.getExtras().getString("birthday");
-					tvBirthday.setText(changeBirthday);
 					break;
 				case RELATION_REQUEST_CODE:
 					String changeRelation = data.getExtras().getString("relation");
@@ -337,87 +534,41 @@ public class UserInfoActivity extends Activity {
 	
 	public void save(View v)
 	{
-		SQLiteDatabase db = ndb.getWritableDatabase();
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//		Bitmap bitmap = ((BitmapDrawable) MainNeutron.instance.getResources().getDrawable(R.drawable.avatar_male)).getBitmap();
-		ivAvatar.setDrawingCacheEnabled(true);
-		Bitmap bitmap = Bitmap.createBitmap(ivAvatar.getDrawingCache());
-		ivAvatar.setDrawingCacheEnabled(false);
-		bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos); 
-		ContentValues cv = new ContentValues(); 
-		
-		String name = tvName.getText().toString();
-		int gender = tvGender.getText().toString().equals(getResources().getString(R.string.male))? 1:0;
-		String birthday = tvBirthday.getText().toString();
-		int relation = findRelation(tvRelation.getText().toString());
-						
-		cv.put(NeutronUser.COLUMN_NAME_ID, 5);
-		cv.put(NeutronUser.COLUMN_NAME_NAME, name);
-		cv.put(NeutronUser.COLUMN_NAME_GENDER, gender);
-		cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, birthday);
-		cv.put(NeutronUser.COLUMN_NAME_RELATION, relation);
-		cv.put(NeutronUser.COLUMN_NAME_TYPE, USER.registered);
-		cv.put(NeutronUser.COLUMN_NAME_AVATAR, baos.toByteArray());
-		cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.normal);
-		long result = db.insert(NeutronUser.TABLE_NAME, null, cv); 
-		
-		bl.putInt("id", 4);
-		bl.putString("name", name);
-		bl.putInt("gender", gender);
-		bl.putString("birthday", birthday);
-		bl.putInt("relation", relation);
-		bl.putParcelable("avatar", bitmap);
-		bl.putInt("usertype", USER.registered);
-		intent.putExtras(bl);
-		UserInfoActivity.this.setResult(RESULT_OK, intent);
-		UserInfoActivity.this.finish();
-	}
-	
-	//return 关系的数值
-	public int findRelation(String relation) {
-		int result = 0;
-		if(relation.equals("兄弟"))
+		if(tvPhoneNumber.getText().length() == 0 
+			|| tvName.getText().length() == 0
+			|| tvGender.getText().length() == 0
+			|| tvBirthday.getText().length() == 0
+			|| tvRelation.getText().length() == 0)
 		{
-			result = USER.brother;
+			Toast.makeText(UserInfoActivity.this, "个人信息不全！", Toast.LENGTH_LONG).show();
 		}
-		else if (relation.equals("女儿"))
+		else
 		{
-			result = USER.daughter;
+			switch(tag)
+			{
+			case UserInfoActivity.TAG_ADD_USER:
+				int relation = Arrays.asList(getResources().getStringArray(R.array.relations)).indexOf(tvRelation.getText());
+				int userType = Arrays.asList(getResources().getStringArray(R.array.user_type)).indexOf(tvUserType.getText());
+				if(userType == USER.registered)
+				{
+					String strUrl = SERVER.Address + "/" + "relation";	
+			        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+			        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+			        if (networkInfo != null && networkInfo.isConnected()) {
+			            new AddNewRelationTask().execute(strUrl);
+			        } else {
+			        	Toast toast = Toast.makeText(this, "No network connection available.", Toast.LENGTH_LONG );
+						toast.show();
+			        }
+				}
+				
+				// 1、存储远程用户，更新远程t_user表和t_relation表
+				// 2、得到新增用户id，插入本地数据库
+				break;
+			case UserInfoActivity.TAG_MODIFY_USER:
+				break;
+			}	
 		}
-		else if(relation.equals("父亲"))
-		{
-			result = USER.father;
-		}
-		else if(relation.equals("朋友"))
-		{
-			result = USER.friends;
-		}
-		else if(relation.equals("奶奶"))
-		{
-			result = USER.grandma;
-		}
-		else if(relation.equals("爷爷"))
-		{
-			result = USER.grandpa;
-		}
-		else if(relation.equals("母亲"))
-		{
-			result = USER.mother;
-		}
-		else if(relation.equals("丈夫"))
-		{
-			result = USER.husband;
-		}
-		else if(relation.equals("姐妹"))
-		{
-			result = USER.sister;
-		}
-		else if(relation.equals("妻子"))
-		{
-			result = USER.wife;
-		}
-
-		return result;
 	}
 	
 	public void cancel_back(View v)
@@ -432,10 +583,81 @@ public class UserInfoActivity extends Activity {
 		startActivity(intent);
 	}
 	
-	
-	@Override
 	protected void onResume() {
 		super.onResume();
+	}
+	
+	private class AddNewRelationTask extends AsyncTask<String, Void, String> 
+	{
+		String state = "";
+		T_relation tRelation; 
+		int relation;
+		protected String doInBackground(String... params) {
+			String strUrl = params[0];
+			relation = Arrays.asList(getResources().getStringArray(R.array.relations)).indexOf(tvRelation.getText());
+			tRelation = new T_relation(); 
+			tRelation.settRelationMasterId(UserInfoActivity.this.getIntent().getExtras().getInt("userid"));
+			tRelation.settRelationSalveId(storedUser.gettUserId());
+			tRelation.settRelationRelation(relation);
+			tRelation.settRelationConfirmtag(String.valueOf(TAG.offered));
+			tRelation.settRelationDeltag(String.valueOf(TAG.normal));
+			try {
+				URL url = new URL(strUrl);
+			    HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+			    urlConn.setReadTimeout(10000 /* milliseconds */);
+			    urlConn.setConnectTimeout(15000 /* milliseconds */);
+			    urlConn.setDoInput(true);
+			    urlConn.setDoOutput(true);
+			    urlConn.setRequestMethod("POST");
+			    urlConn.setUseCaches(false);
+			    urlConn.setRequestProperty("Accept-Charset", "utf-8");  
+				urlConn.setRequestProperty("Content-Type", "application/x-java-serialized-object");
+				urlConn.connect();
+				OutputStream outStrm = urlConn.getOutputStream();  
+		        ObjectOutputStream oos = new ObjectOutputStream(outStrm);  
+		        
+		        ArrayList<Serializable> paraList = new ArrayList<Serializable>();
+		        paraList.add("add");
+		        paraList.add(tRelation);
+		        oos.writeObject(paraList);  
+		        oos.flush();  
+		        oos.close();  
+		  
+		        ObjectInputStream ois = new ObjectInputStream(urlConn.getInputStream());  
+		        paraList = (ArrayList<Serializable>)ois.readObject();
+		        state = (String)paraList.get(0);
+			} catch (Exception e) {
+	               e.printStackTrace();
+	           }
+			return null;
+		}
+		
+		
+		protected void onPostExecute(String result) 
+		{
+			if(state.equals("ok"))
+			{
+				SQLiteDatabase db = ndb.getWritableDatabase();
+				ContentValues cv = new ContentValues();
+				cv.put(NeutronUser.COLUMN_NAME_ID, storedUser.gettUserId());
+				cv.put(NeutronUser.COLUMN_NAME_NAME, storedUser.gettUserName());
+				cv.put(NeutronUser.COLUMN_NAME_GENDER, storedUser.gettUserGender());
+				cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, storedUser.gettUserBirth());
+				cv.put(NeutronUser.COLUMN_NAME_RELATION, relation);
+				cv.put(NeutronUser.COLUMN_NAME_IDD, storedUser.gettUserAreacode());
+				cv.put(NeutronUser.COLUMN_NAME_PHONE_NUMBER, storedUser.gettUserPhonenumber());
+				cv.put(NeutronUser.COLUMN_NAME_TYPE, storedUser.gettUserRegtag());
+				cv.put(NeutronUser.COLUMN_NAME_AVATAR, storedUser.gettUserPicture());
+				cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.normal);
+				db.insert(NeutronUser.TABLE_NAME, null, cv); 
+				bl.putInt("relation", relation);
+				bl.putSerializable("t_user", storedUser);
+				intent.putExtras(bl);
+				UserInfoActivity.this.setResult(RESULT_OK, intent);
+				UserInfoActivity.this.finish();
+			}
+		}
+		
 	}
 
 }
