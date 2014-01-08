@@ -37,6 +37,110 @@
 	           	android:layout_width="fill_parent"
 	           	android:layout_height="wrap_content"
 	           	android:orientation="vertical" >
+	           	
+       		    <RelativeLayout
+       		        android:id="@+id/user_change_usertype"
+           			android:layout_width="fill_parent"
+           			android:layout_height="wrap_content"
+           			android:layout_marginTop="14dp"
+           			android:gravity="center_vertical"
+           			android:clickable="true"
+           			android:background="@drawable/preference_first_item" >
+           			<TextView
+       					android:layout_width="wrap_content" 
+       					android:layout_height="wrap_content"
+       					android:padding="8dp" 
+       					android:text="@string/user_info_title_usertype"
+       					android:textSize="17sp"		
+						android:textColor="#000" />
+           			<TextView
+					    android:id="@+id/user_info_usertype_content" 
+	       				android:layout_width="wrap_content" 
+	       				android:layout_height="wrap_content"
+	       				android:layout_toLeftOf="@+id/user_info_usertype_tag"
+	       				android:layout_centerVertical="true"
+	       				android:padding="8dp" 
+	       				android:textSize="13sp"		
+						android:textColor="#666" />
+					<ImageView
+					    android:id="@+id/user_info_usertype_tag"
+           				android:layout_width="wrap_content"
+       					android:layout_height="wrap_content"        	     	
+       					android:scaleType="matrix"
+       					android:layout_centerVertical="true"
+       					android:layout_alignParentRight="true"
+       					android:src="@drawable/mm_submenu" />      					
+    			</RelativeLayout>
+    			<RelativeLayout
+     			    android:id="@+id/user_change_idd"
+	           		android:layout_width="fill_parent"
+	           		android:layout_height="wrap_content"
+	           		android:gravity="center_vertical"
+	           		android:clickable="true"
+	           		android:background="@drawable/preference_item" >
+	           		<TextView
+	           		    android:id="@+id/user_info_idd_name"
+	       				android:layout_width="wrap_content" 
+	       				android:layout_height="wrap_content"
+	       				android:padding="8dp" 
+	       				android:text="@string/china"
+	       				android:textSize="17sp"		
+						android:textColor="#000" />      
+					<TextView
+					    android:id="@+id/user_info_idd_content" 
+	       				android:layout_width="wrap_content" 
+	       				android:layout_height="wrap_content"
+	       				android:layout_toLeftOf="@+id/user_info_idd_tag"
+	       				android:layout_centerVertical="true"
+	       				android:padding="8dp" 
+	       				android:text="+86"
+	       				android:textSize="13sp"		
+						android:textColor="#666" />
+					<ImageView
+					    android:id="@+id/user_info_idd_tag"
+	           			android:layout_width="wrap_content"
+	       				android:layout_height="wrap_content"        	     	
+	       				android:scaleType="matrix"
+	       				android:layout_centerVertical="true"
+	       				android:layout_alignParentRight="true"
+	       				android:src="@drawable/mm_submenu" /> 					
+     			</RelativeLayout>
+    			<RelativeLayout
+    			    android:id="@+id/user_change_phone_number"
+           			android:layout_width="fill_parent"
+           			android:layout_height="wrap_content"
+           			android:gravity="center_vertical"
+           			android:clickable="true"
+           			android:background="@drawable/preference_last_item" >
+           			<TextView
+       					android:layout_width="wrap_content" 
+       					android:layout_height="wrap_content"
+       					android:padding="8dp" 
+       					android:text="@string/user_info_title_phone_number"
+       					android:textSize="17sp"		
+						android:textColor="#000" /> 			
+					<TextView
+					    android:id="@+id/user_info_phonenumber_content" 
+	       				android:layout_width="wrap_content" 
+	       				android:layout_height="wrap_content"
+	       				android:layout_toLeftOf="@+id/user_info_phonenumber_tag"
+	       				android:layout_centerVertical="true"
+	       				android:padding="8dp" 
+	       				android:textSize="13sp"		
+						android:textColor="#666" />
+					<ImageView
+					    android:id="@+id/user_info_phonenumber_tag"
+           				android:layout_width="wrap_content"
+       					android:layout_height="wrap_content"        	     	
+       					android:scaleType="matrix"
+       					android:layout_centerVertical="true"
+       					android:layout_alignParentRight="true"
+       					android:src="@drawable/mm_submenu" />      					
+    			</RelativeLayout>
+    				   		
+		    
+		    <!--   ********************************************************************   -->
+    			
            		<RelativeLayout
            		    android:id="@+id/user_change_avatar"
            			android:layout_width="fill_parent"
@@ -59,8 +163,7 @@
            			    android:layout_height="55dp" 
            			    android:layout_toLeftOf="@+id/user_info_avatar_tag"
            			    android:layout_centerVertical="true" 
-           			    android:paddingLeft="5dp" 
-           			    android:src="@drawable/james_cameron" 
+           			    android:paddingLeft="5dp"  
            			    android:onClick="avatar_enlarge" />
            			<ImageView
            			    android:id="@+id/user_info_avatar_tag"
@@ -94,7 +197,6 @@
 	       				android:layout_toLeftOf="@+id/user_info_name_tag"
 	       				android:layout_centerVertical="true"
 	       				android:padding="8dp" 
-	       				android:text="詹姆斯·卡梅隆"
 	       				android:textSize="13sp"		
 						android:textColor="#666" />
 					<ImageView
@@ -127,7 +229,6 @@
 	       				android:layout_toLeftOf="@+id/user_info_gender_tag"
 	       				android:layout_centerVertical="true"
 	       				android:padding="8dp" 
-	       				android:text="男"
 	       				android:textSize="13sp"		
 						android:textColor="#666" />
 					<ImageView
@@ -160,7 +261,6 @@
 	       				android:layout_toLeftOf="@+id/user_info_birthday_tag"
 	       				android:layout_centerVertical="true"
 	       				android:padding="8dp" 
-	       				android:text="1980-10-13"
 	       				android:textSize="13sp"		
 						android:textColor="#666" />
 					<ImageView
@@ -193,7 +293,6 @@
 	       				android:layout_toLeftOf="@+id/user_info_relation_tag"
 	       				android:layout_centerVertical="true"
 	       				android:padding="8dp" 
-	       				android:text="父亲"
 	       				android:textSize="13sp"		
 						android:textColor="#666" />
 					<ImageView
@@ -207,77 +306,12 @@
     			</RelativeLayout>
      				
      				<!--   ********************************************************************   -->
-     				
-    			<RelativeLayout
-           			android:layout_width="fill_parent"
-           			android:layout_height="wrap_content"
-           			android:layout_marginTop="14dp"
-           			android:gravity="center_vertical"
-           			android:clickable="true"
-           			android:background="@drawable/preference_first_item" >
-           			<TextView
-       					android:layout_width="wrap_content" 
-       					android:layout_height="wrap_content"
-       					android:padding="8dp" 
-       					android:text="@string/user_info_title_usertype"
-       					android:textSize="17sp"		
-						android:textColor="#000" />
-           			<TextView
-					    android:id="@+id/user_info_usertype_content" 
-	       				android:layout_width="wrap_content" 
-	       				android:layout_height="wrap_content"
-	       				android:layout_toLeftOf="@+id/user_info_usertype_tag"
-	       				android:layout_centerVertical="true"
-	       				android:padding="8dp" 
-	       				android:text="注册用户"
-	       				android:textSize="13sp"		
-						android:textColor="#666" />
-					<ImageView
-					    android:id="@+id/user_info_usertype_tag"
-           				android:layout_width="wrap_content"
-       					android:layout_height="wrap_content"        	     	
-       					android:scaleType="matrix"
-       					android:layout_centerVertical="true"
-       					android:layout_alignParentRight="true"
-       					android:src="@drawable/mm_submenu" />      					
-    			</RelativeLayout>
-    			<RelativeLayout
-           			android:layout_width="fill_parent"
-           			android:layout_height="wrap_content"
-           			android:gravity="center_vertical"
-           			android:clickable="true"
-           			android:background="@drawable/preference_last_item" >
-           			<TextView
-       					android:layout_width="wrap_content" 
-       					android:layout_height="wrap_content"
-       					android:padding="8dp" 
-       					android:text="@string/user_info_title_id"
-       					android:textSize="17sp"		
-						android:textColor="#000" /> 
-					<TextView
-					    android:id="@+id/user_info_id_content" 
-	       				android:layout_width="wrap_content" 
-	       				android:layout_height="wrap_content"
-	       				android:layout_toLeftOf="@+id/user_info_id_tag"
-	       				android:layout_centerVertical="true"
-	       				android:padding="8dp" 
-	       				android:text="18901398750"
-	       				android:textSize="13sp"		
-						android:textColor="#666" />
-					<ImageView
-					    android:id="@+id/user_info_id_tag"
-           				android:layout_width="wrap_content"
-       					android:layout_height="wrap_content"        	     	
-       					android:scaleType="matrix"
-       					android:layout_centerVertical="true"
-       					android:layout_alignParentRight="true"
-       					android:src="@drawable/mm_submenu" />      					
-    			</RelativeLayout>
-     				
+     				 				
 	   			<Button
+	   			    android:id="@+id/user_info_save"
 	   			    android:layout_width="fill_parent" 
 	   				android:layout_height="wrap_content"
-	   				android:layout_marginTop="14dp"
+	   				android:layout_marginTop="30dp"
 	   				android:layout_marginBottom="14dp"
 	   				android:layout_marginLeft="12dp"
 	   				android:layout_marginRight="12dp"

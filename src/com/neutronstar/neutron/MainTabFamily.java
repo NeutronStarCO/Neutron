@@ -51,6 +51,8 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 				NeutronUser.COLUMN_NAME_NAME,
 				NeutronUser.COLUMN_NAME_GENDER,
 				NeutronUser.COLUMN_NAME_BIRTHDAY,
+				NeutronUser.COLUMN_NAME_IDD,
+				NeutronUser.COLUMN_NAME_PHONE_NUMBER,
 				NeutronUser.COLUMN_NAME_RELATION,
 				NeutronUser.COLUMN_NAME_AVATAR,
 				NeutronUser.COLUMN_NAME_TYPE
@@ -82,6 +84,8 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
+					entity.setIDD(cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_IDD)));
+					entity.setPhoneNumber(cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_PHONE_NUMBER)));
 					entity.setRelation(cur.getInt(cur.getColumnIndex(NeutronUser.COLUMN_NAME_RELATION)));
 					entity.setType(cur.getInt(cur.getColumnIndex(NeutronUser.COLUMN_NAME_TYPE)));
 
@@ -97,7 +101,6 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 			@Override
 			public void onItemClick(AdapterView<?> parentView, View view,
 					int position, long rowCount) {
-				Log.d("--fmListView--", "OnItemClickListener");
 				Intent intent = new Intent(MainTabFamily.this, UserInfoActivity.class);
 				Bundle bl = new Bundle();
 				bl.putInt("usage", MainTabFamily.TAG_MODIFY);

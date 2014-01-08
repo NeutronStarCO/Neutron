@@ -21,6 +21,8 @@ public class User {
 	private int id;
 	private String name;
 	private Date birthday;
+	private String IDD;
+	private String phoneNumber;
 	private int gender;
 	private boolean hasUser = false;
 	private int relation;
@@ -39,6 +41,8 @@ public class User {
 			    NeutronUser.COLUMN_NAME_NAME,
 			    NeutronUser.COLUMN_NAME_GENDER,
 			    NeutronUser.COLUMN_NAME_BIRTHDAY,
+			    NeutronUser.COLUMN_NAME_IDD,
+			    NeutronUser.COLUMN_NAME_PHONE_NUMBER,
 			    NeutronUser.COLUMN_NAME_RELATION,
 			    NeutronUser.COLUMN_NAME_AVATAR,
 			    NeutronUser.COLUMN_NAME_TYPE
@@ -61,7 +65,9 @@ public class User {
 					id = cur.getInt(cur.getColumnIndex(NeutronUser.COLUMN_NAME_ID));
 					name = cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_NAME));
 					gender = cur.getInt(cur.getColumnIndex(NeutronUser.COLUMN_NAME_GENDER));
-					timestamp = cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_BIRTHDAY));
+					timestamp = cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_BIRTHDAY));					
+					IDD = cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_IDD));
+					phoneNumber = cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_PHONE_NUMBER));
 					relation = cur.getInt(cur.getColumnIndex(NeutronUser.COLUMN_NAME_RELATION));
 					byte[] in = cur.getBlob(cur.getColumnIndex(NeutronUser.COLUMN_NAME_AVATAR));
 					avatar = BitmapFactory.decodeByteArray(in, 0, in.length);
@@ -88,6 +94,8 @@ public class User {
 	public boolean isMale() {return gender==1? true:false;}
 	public int getGender() {return gender;}
 	public int getID(){return id;}
+	public String getIDD() {return IDD; }
+	public String getPhoneNumber() { return phoneNumber; }
 	public int getAge(){
 		Calendar cBirth =  Calendar.getInstance();
 		cBirth.setTime(birthday);
