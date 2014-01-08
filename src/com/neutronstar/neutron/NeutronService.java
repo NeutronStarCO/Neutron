@@ -14,6 +14,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Timer;
@@ -120,7 +121,7 @@ public class NeutronService extends Service {
 				deleteAccelerationHistory();
 			}
 			
-		}, 0, 60000);
+		}, 0, 3600000);
 	}
 
 	@Override
@@ -131,15 +132,23 @@ public class NeutronService extends Service {
 	
 	private void deleteAccelerationHistory()
 	{
+		//删除本地1天前的数据
 		SimpleDateFormat sDateFormat = new SimpleDateFormat(
 				"yyyy-MM-dd HH:mm:ss.SSS");
-		String date = sDateFormat.format(new java.util.Date());
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new java.util.Date());
+		cal.add(Calendar.DATE, -1);
+		String date = sDateFormat.format(cal.getTime());
 		
 		NeutronDbHelper ndb = NeutronDbHelper.GetInstance(this);
 		SQLiteDatabase db = ndb.getWritableDatabase();
-		String[] args = { "1" };
-		int delNum = db.delete(NeutronAcceleration.TABLE_NAME, "uploadtag=?", args);
-		Log.v("Delete Succeed", "delete " + delNum + " lines data.");
+		String[] args = { "1", date };
+		int delNum = db.delete(NeutronAcceleration.TABLE_NAME, "uploadtag=? and timestamp<?", args);
+		if(delNum >= 0)
+		{
+			Log.v("Delete Succeed", "delete " + delNum + " lines data.");
+		}		
 	}
 	
 	private void refreshAccelerometer() {
