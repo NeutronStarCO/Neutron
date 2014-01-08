@@ -110,7 +110,7 @@ public class NeutronService extends Service {
 				uploadAcceleration("data", alAccData);
 				// 先测试一分钟上传一次的情况
 			}
-		}, 0, 60000);
+		}, 0, 600000);
 		
 		deleteTimer = new Timer("gForceDeleteService");
 		deleteTimer.schedule(new TimerTask() {
