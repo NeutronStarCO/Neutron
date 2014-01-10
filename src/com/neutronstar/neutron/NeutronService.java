@@ -41,8 +41,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.neutron.server.persistence.model.T_accdata;
+import com.neutron.server.persistence.model.T_rmr;
 import com.neutron.server.persistence.model.T_user;
 import com.neutronstar.neutron.NeutronContract.NeutronAcceleration;
+import com.neutronstar.neutron.NeutronContract.NeutronRMRValue;
 import com.neutronstar.neutron.NeutronContract.NeutronUser;
 import com.neutronstar.neutron.NeutronContract.SERVER;
 import com.neutronstar.neutron.NeutronContract.TAG;
@@ -58,12 +60,16 @@ public class NeutronService extends Service {
 	private Timer updateTimer;
 	private Timer uploadTimer;
 	private Timer deleteTimer;
+	private Timer downloadRMRTimer;
 	private double lowAcc;
 	private final double FILTERING_VALUE = 0.8;
 
 	T_user localUser = null;
 	T_accdata accData = null;
+	T_rmr rmr = null;
 	ArrayList<Serializable> alAccData = null;
+	ArrayList<Serializable> alRMRValue = null;
+	int countRMR = 24;
 
 	public NeutronService() {
 		// TODO Auto-generated constructor stub
@@ -122,6 +128,17 @@ public class NeutronService extends Service {
 			}
 			
 		}, 0, 3600000);
+		
+		downloadRMRTimer = new Timer("gForceGetRMRService");
+		downloadRMRTimer.scheduleAtFixedRate(new TimerTask() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				downloadRMRValue("data", countRMR, alRMRValue);
+			}
+			
+		}, 0, 60000);
 	}
 
 	@Override
@@ -171,6 +188,110 @@ public class NeutronService extends Service {
 
 	}
 
+	
+	private void downloadRMRValue(String strServlet,
+			int countRMR, ArrayList<Serializable> alRMRValue) 
+	{
+		String strUrl = SERVER.Address + "/" + strServlet;
+		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+		if (networkInfo != null && networkInfo.isConnected()) {
+			new DownloadRMRValueTask().execute(strUrl);
+		} else {
+			Looper.prepare();
+			Toast toast = Toast.makeText(this,
+					"No network connection available.", Toast.LENGTH_LONG);
+			toast.show();
+			Looper.loop();
+		}
+	}
+	
+	private class DownloadRMRValueTask extends
+			AsyncTask<String, Void, String> {
+
+		@Override
+		protected String doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			String strUrl = params[0];
+			String result = "error";
+			alRMRValue = null;
+			try {
+				URL url = new URL(strUrl);
+				HttpURLConnection urlConn = (HttpURLConnection) url
+						.openConnection();
+				urlConn.setReadTimeout(10000 /* milliseconds */);
+				urlConn.setConnectTimeout(15000 /* milliseconds */);
+				urlConn.setDoInput(true);
+				urlConn.setDoOutput(true);
+				urlConn.setRequestMethod("POST");
+				urlConn.setUseCaches(false);
+				urlConn.setRequestProperty("Content-Type",
+						"application/x-java-serialized-object");
+				urlConn.connect();
+				OutputStream outStrm = urlConn.getOutputStream();
+				ObjectOutputStream oos = new ObjectOutputStream(outStrm);
+
+				ArrayList<Serializable> paraList = new ArrayList<Serializable>();
+				paraList.add("getrmrbynum");
+				paraList.add(localUser.gettUserId());
+				paraList.add(countRMR);
+				oos.writeObject(paraList);
+				oos.flush();
+				oos.close();
+
+				ObjectInputStream ois = new ObjectInputStream(
+						urlConn.getInputStream());
+				paraList = (ArrayList<Serializable>) ois.readObject();
+				result = (String) paraList.get(0);
+				alRMRValue = new ArrayList<Serializable>((ArrayList<Serializable>)paraList.get(1));
+				Log.d("result", result);
+
+			} catch (Exception e) {
+				Log.d("exception", e.getMessage());
+			}
+			return result;
+		}
+		
+		
+		@Override
+		protected void onPostExecute(String result) {
+			if (result.equals("ok")) {
+				SimpleDateFormat sDateFormat = new SimpleDateFormat(
+						"yyyy-MM-dd HH:mm:ss.SSS");
+				NeutronDbHelper ndb = NeutronDbHelper
+						.GetInstance(NeutronService.this);
+				SQLiteDatabase db = ndb.getWritableDatabase();
+				ContentValues cv = new ContentValues();
+				if(alRMRValue != null)
+				{
+					
+					Iterator iterator = alRMRValue.iterator();
+					while(iterator.hasNext())
+					{
+						String date = sDateFormat.format(((T_rmr)iterator).gettRmrDatetime());
+						cv.put(NeutronRMRValue.COLUMN_NAME_RMRVALUE, ((T_rmr)iterator).gettRmrValue());
+						cv.put(NeutronRMRValue.COLUMN_NAME_DATESTAMP, date);
+					}
+					db.insert(NeutronRMRValue.TABLE_NAME, null, cv);
+					//
+					Toast toast = Toast.makeText(NeutronService.this,
+							"Download RMRValue Succeed.", Toast.LENGTH_LONG);
+					toast.show();
+				}
+				else
+				{
+					Toast toast = Toast.makeText(NeutronService.this,
+							"Download RMRValue Succeed, but no update.", Toast.LENGTH_LONG);
+					toast.show();
+				}
+			} else {
+				Toast toast = Toast.makeText(NeutronService.this,
+						"Download RMRValue Failed.", Toast.LENGTH_LONG);
+				toast.show();
+			}
+		}
+	}
+	
 	private void uploadAcceleration(String strServlet,
 			ArrayList<Serializable> alAccData) {
 

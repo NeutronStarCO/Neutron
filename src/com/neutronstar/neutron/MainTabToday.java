@@ -371,6 +371,10 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 
 	}
 	
+	private String getLocalData() {
+		return null;
+	}
+	
 	public class WebAppInterface {
 		Context mContext;
 		/** Instantiate the interface and set the context */
@@ -379,7 +383,8 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 		}
 
 		public String getHourData(String toast) {
-			return getRemoteData();
+			return getLocalData();
+			//			return getRemoteData();
 		}
 	}
 	

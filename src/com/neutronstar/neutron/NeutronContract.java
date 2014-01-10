@@ -21,6 +21,14 @@ public final class NeutronContract {
 		 public static final String COLUMN_NAME_DATESTAMP = "datestamp";
 	 }
 	 
+	 public static abstract class NeutronRMRValue implements BaseColumns
+	 {
+		 public static final String TABLE_NAME = "t_rmrvalue";
+		 public static final String COLUMN_NAME_RMRVALUE = "rmrvalue";
+		 public static final String COLUMN_NAME_DATESTAMP = "datestamp";
+		 public static final String COLUMN_NAME_TAG = "tag";
+	 }
+	 
 	 public static abstract class NeutronUser implements BaseColumns 
 	 {
 		 public static final String TABLE_NAME = "t_user";
@@ -129,7 +137,7 @@ public final class NeutronContract {
 	 
 	 public static abstract class SERVER
 	 {
-		 public static final String Address = "http://www.rrd2mysql.com:12581/NeutronServer";
+		 public static final String Address = "http://172.20.8.183:12581/NeutronServer";
 		 public static final String DomainAddress = "http://www.rrd2mysql.com:12581/NeutronServer";
 		 public static final String PublicAddress = "http://219.141.181.131:12581/NeutronServer";
 		 public static final String InnerAddress = "http://172.20.8.183:12581/NeutronServer";

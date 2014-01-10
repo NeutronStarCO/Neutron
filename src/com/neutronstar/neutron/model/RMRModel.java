@@ -1,17 +1,23 @@
 package com.neutronstar.neutron.model;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Looper;
+import android.widget.Toast;
 
+import com.neutron.server.persistence.model.T_accdata;
 import com.neutronstar.neutron.NeutronContract.CONSTANT;
 import com.neutronstar.neutron.NeutronContract.NeutronAcceleration;
 import com.neutronstar.neutron.NeutronContract.NeutronRMRIndex;
+import com.neutronstar.neutron.NeutronContract.NeutronRMRValue;
 import com.neutronstar.neutron.NeutronDbHelper;
 
 public class RMRModel {
@@ -186,37 +192,71 @@ public class RMRModel {
 
 	}
 
+	
 	public double[] getCurrentHourCosts(Context context) {
 		NeutronDbHelper ndb = NeutronDbHelper.GetInstance(context);
-		SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		String today = sDateFormat.format(new java.util.Date());
 		SQLiteDatabase db = ndb.getReadableDatabase();
-		String sql = "select total(" +NeutronAcceleration.COLUMN_NAME_ACCELERATION+ "/(" + 
-				NeutronAcceleration.COLUMN_NAME_ACCELERATION + "+ 4)), CAST(strftime('%H',"+
-				NeutronAcceleration.COLUMN_NAME_TIMESTAMP + ") AS INTEGER) from " + NeutronAcceleration.TABLE_NAME	+ " where date("+ 
-				NeutronAcceleration.COLUMN_NAME_TIMESTAMP + ")=date('" + 
-				today + "')group by strftime('%Y%m%d %H', " +
-				NeutronAcceleration.COLUMN_NAME_TIMESTAMP + ")  order by CAST(strftime('%H',"+
-				NeutronAcceleration.COLUMN_NAME_TIMESTAMP + ") AS INTEGER)";
-		Cursor cur = db.rawQuery(sql, null);
+		String[] projection = { NeutronRMRValue.COLUMN_NAME_RMRVALUE,
+				NeutronRMRValue.COLUMN_NAME_DATESTAMP };
+		String selection = " LIMIT " + 24 ;
+		Cursor cur = db.query(NeutronRMRValue.TABLE_NAME, // The table to
+																// query
+				projection, // The columns to return
+				selection, // The columns for the WHERE clause selection
+				null, // The values for the WHERE clause selectionArgs
+				null, // don't group the rows
+				null, // don't filter by row groups
+				null // The sort order
+				);
 		sumHour = new double[24];
-		if (cur != null) {
+		if (cur != null) 
+		{
 			if (cur.moveToFirst()) {
 				do {
-					sumHour[cur.getInt(1)] = cur.getDouble(0) * 500 * weight
-							/ CONSTANT.TypicalWeight * 5 / 3600;
+					sumHour[cur.getInt(1)] = cur.getDouble(0) ;
 				} while (cur.moveToNext());
+			} 
+		}
+		else{
+			
+			for (int i = 0; i < 24; ++i) {
+				sumHour[i] = 0;
 			}
 		}
-		for (int i = 0; i < (new java.util.Date().getHours()); i++) {
-			sumHour[i] += getRMRPerHour();
-		}
-		for (int i = (new java.util.Date().getHours()); i < 24; i++) {
-			sumHour[i] = 0;
-		}
 		return sumHour;
-
 	}
+	
+//	public double[] getCurrentHourCosts(Context context) {
+//		NeutronDbHelper ndb = NeutronDbHelper.GetInstance(context);
+//		SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//		String today = sDateFormat.format(new java.util.Date());
+//		SQLiteDatabase db = ndb.getReadableDatabase();
+//		String sql = "select total(" +NeutronAcceleration.COLUMN_NAME_ACCELERATION+ "/(" + 
+//				NeutronAcceleration.COLUMN_NAME_ACCELERATION + "+ 4)), CAST(strftime('%H',"+
+//				NeutronAcceleration.COLUMN_NAME_TIMESTAMP + ") AS INTEGER) from " + NeutronAcceleration.TABLE_NAME	+ " where date("+ 
+//				NeutronAcceleration.COLUMN_NAME_TIMESTAMP + ")=date('" + 
+//				today + "')group by strftime('%Y%m%d %H', " +
+//				NeutronAcceleration.COLUMN_NAME_TIMESTAMP + ")  order by CAST(strftime('%H',"+
+//				NeutronAcceleration.COLUMN_NAME_TIMESTAMP + ") AS INTEGER)";
+//		Cursor cur = db.rawQuery(sql, null);
+//		sumHour = new double[24];
+//		if (cur != null) {
+//			if (cur.moveToFirst()) {
+//				do {
+//					sumHour[cur.getInt(1)] = cur.getDouble(0) * 500 * weight
+//							/ CONSTANT.TypicalWeight * 5 / 3600;
+//				} while (cur.moveToNext());
+//			}
+//		}
+//		for (int i = 0; i < (new java.util.Date().getHours()); i++) {
+//			sumHour[i] += getRMRPerHour();
+//		}
+//		for (int i = (new java.util.Date().getHours()); i < 24; i++) {
+//			sumHour[i] = 0;
+//		}
+//		return sumHour;
+//
+//	}
 
 
 }
