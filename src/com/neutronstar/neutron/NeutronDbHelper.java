@@ -27,12 +27,12 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
 	public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "NEUTRON";
     
-    private static final String REAL_TYPE = " REAL";
-    private static final String TEXT_TYPE = " TEXT";
-    private static final String INTEGER_TYPE = " INTEGER";
-    private static final String BLOG_TYPE = " BLOB";
+    private static final String REAL_TYPE = " REAL ";
+    private static final String TEXT_TYPE = " TEXT ";
+    private static final String INTEGER_TYPE = " INTEGER ";
+    private static final String BLOG_TYPE = " BLOB ";
     private static final String COMMA_SEP = ",";
-    private static final String UNIQUE = "UNIQUE";
+    private static final String UNIQUE = " UNIQUE ";
 
     private static final String SQL_CREATE_TABLE_ACCELERATION =
     	    "CREATE TABLE IF NOT EXISTS " + NeutronAcceleration.TABLE_NAME + " (" +

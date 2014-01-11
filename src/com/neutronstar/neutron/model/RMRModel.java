@@ -198,22 +198,27 @@ public class RMRModel {
 		SQLiteDatabase db = ndb.getReadableDatabase();
 		String[] projection = { NeutronRMRValue.COLUMN_NAME_RMRVALUE,
 				NeutronRMRValue.COLUMN_NAME_DATESTAMP };
-		String selection = " LIMIT " + 24 ;
+		String limit = "" + 24 ;
+		String order = NeutronRMRValue.COLUMN_NAME_DATESTAMP + " desc";
 		Cursor cur = db.query(NeutronRMRValue.TABLE_NAME, // The table to
 																// query
 				projection, // The columns to return
-				selection, // The columns for the WHERE clause selection
+				null, // The columns for the WHERE clause selection
 				null, // The values for the WHERE clause selectionArgs
 				null, // don't group the rows
 				null, // don't filter by row groups
-				null // The sort order
+				order, // The sort order
+				limit
 				);
 		sumHour = new double[24];
+		int h = 0;
 		if (cur != null) 
 		{
 			if (cur.moveToFirst()) {
 				do {
-					sumHour[cur.getInt(1)] = cur.getDouble(0) ;
+					sumHour[h] = cur.getDouble(cur
+							.getColumnIndex(NeutronRMRValue.COLUMN_NAME_RMRVALUE)) ;
+					++ h;
 				} while (cur.moveToNext());
 			} 
 		}
@@ -222,6 +227,10 @@ public class RMRModel {
 			for (int i = 0; i < 24; ++i) {
 				sumHour[i] = 0;
 			}
+		}
+		for(;h < 24; ++h) 
+		{
+			sumHour[h] = 0;
 		}
 		return sumHour;
 	}

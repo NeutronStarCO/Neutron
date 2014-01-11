@@ -20,11 +20,13 @@ import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -68,7 +70,7 @@ public class NeutronService extends Service {
 	T_accdata accData = null;
 	T_rmr rmr = null;
 	ArrayList<Serializable> alAccData = null;
-	ArrayList<Serializable> alRMRValue = null;
+	ArrayList<T_rmr> alRMRValue = null;
 	int countRMR = 24;
 
 	public NeutronService() {
@@ -147,6 +149,7 @@ public class NeutronService extends Service {
 		sensorManager.unregisterListener(sensorEventListener);
 	}
 	
+	@SuppressLint("SimpleDateFormat")
 	private void deleteAccelerationHistory()
 	{
 		//删除本地1天前的数据
@@ -190,7 +193,7 @@ public class NeutronService extends Service {
 
 	
 	private void downloadRMRValue(String strServlet,
-			int countRMR, ArrayList<Serializable> alRMRValue) 
+			int countRMR, ArrayList<T_rmr> alRMRValue) 
 	{
 		String strUrl = SERVER.Address + "/" + strServlet;
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
@@ -214,7 +217,6 @@ public class NeutronService extends Service {
 			// TODO Auto-generated method stub
 			String strUrl = params[0];
 			String result = "error";
-			alRMRValue = null;
 			try {
 				URL url = new URL(strUrl);
 				HttpURLConnection urlConn = (HttpURLConnection) url
@@ -243,11 +245,14 @@ public class NeutronService extends Service {
 						urlConn.getInputStream());
 				paraList = (ArrayList<Serializable>) ois.readObject();
 				result = (String) paraList.get(0);
-				alRMRValue = new ArrayList<Serializable>((ArrayList<Serializable>)paraList.get(1));
-				Log.d("result", result);
+				if(result.equals("ok"))
+				{
+					alRMRValue = new ArrayList<T_rmr>((ArrayList<T_rmr>)paraList.get(1));
+				}
+				Log.v("result", result);
 
 			} catch (Exception e) {
-				Log.d("exception", e.getMessage());
+				Log.v("exception", e.getMessage());
 			}
 			return result;
 		}
@@ -261,18 +266,24 @@ public class NeutronService extends Service {
 				NeutronDbHelper ndb = NeutronDbHelper
 						.GetInstance(NeutronService.this);
 				SQLiteDatabase db = ndb.getWritableDatabase();
-				ContentValues cv = new ContentValues();
+				db.beginTransaction();
 				if(alRMRValue != null)
 				{
 					
-					Iterator iterator = alRMRValue.iterator();
+					Iterator<T_rmr> iterator = alRMRValue.iterator();
 					while(iterator.hasNext())
 					{
-						String date = sDateFormat.format(((T_rmr)iterator).gettRmrDatetime());
-						cv.put(NeutronRMRValue.COLUMN_NAME_RMRVALUE, ((T_rmr)iterator).gettRmrValue());
+						T_rmr r = iterator.next();
+						String date = sDateFormat.format(r.gettRmrDatetime());
+						double rmrValue = 80 + r.gettRmrValue();
+						ContentValues cv = new ContentValues();
+						cv.put(NeutronRMRValue.COLUMN_NAME_RMRVALUE, rmrValue);
 						cv.put(NeutronRMRValue.COLUMN_NAME_DATESTAMP, date);
+						db.insertWithOnConflict(NeutronRMRValue.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_IGNORE);
 					}
-					db.insert(NeutronRMRValue.TABLE_NAME, null, cv);
+					alRMRValue = null;
+					db.setTransactionSuccessful();
+					db.endTransaction();
 					//
 					Toast toast = Toast.makeText(NeutronService.this,
 							"Download RMRValue Succeed.", Toast.LENGTH_LONG);
@@ -302,6 +313,7 @@ public class NeutronService extends Service {
 				NeutronAcceleration.COLUMN_NAME_TIMESTAMP };
 		String selection = "" + NeutronAcceleration.COLUMN_NAME_UPLOADTAG + "="
 				+ 0;
+		String limit = "" + 1000;
 		Cursor cur = db.query(NeutronAcceleration.TABLE_NAME, // The table to
 																// query
 				projection, // The columns to return
@@ -309,7 +321,8 @@ public class NeutronService extends Service {
 				null, // The values for the WHERE clause selectionArgs
 				null, // don't group the rows
 				null, // don't filter by row groups
-				null // The sort order
+				null, // The sort order
+				limit
 				);
 
 		accData = null;
