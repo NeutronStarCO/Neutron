@@ -355,7 +355,22 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 //        return super.onKeyDown(keyCode, event);  
 //    }  
 	
-	private String getRemoteData() {
+//	private String getRemoteData() {
+//		try {
+//			double sumHour[] = rmrModel.getCurrentHourCosts(this);
+//			JSONArray jadata = new JSONArray();
+//			for (int i = 0; i < 24; i++) {
+//				jadata.put(sumHour[i]);
+//			}
+//			return jadata.toString();
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//		return null;
+//
+//	}
+	
+	private String getLocalData() {
 		try {
 			double sumHour[] = rmrModel.getCurrentHourCosts(this);
 			JSONArray jadata = new JSONArray();
@@ -367,7 +382,6 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 			e.printStackTrace();
 		}
 		return null;
-
 	}
 	
 	public class WebAppInterface {
@@ -378,7 +392,8 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 		}
 
 		public String getHourData(String toast) {
-			return getRemoteData();
+			return getLocalData();
+			//			return getRemoteData();
 		}
 	}
 	

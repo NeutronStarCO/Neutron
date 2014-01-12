@@ -16,6 +16,7 @@ import com.neutronstar.neutron.NeutronContract.GENDER;
 import com.neutronstar.neutron.NeutronContract.NeutronAcceleration;
 import com.neutronstar.neutron.NeutronContract.NeutronGroupTesting;
 import com.neutronstar.neutron.NeutronContract.NeutronRMRIndex;
+import com.neutronstar.neutron.NeutronContract.NeutronRMRValue;
 import com.neutronstar.neutron.NeutronContract.NeutronRecord;
 import com.neutronstar.neutron.NeutronContract.NeutronUser;
 import com.neutronstar.neutron.NeutronContract.TAG;
@@ -23,14 +24,15 @@ import com.neutronstar.neutron.NeutronContract.USER;
 
 public class NeutronDbHelper extends SQLiteOpenHelper {
 	public static NeutronDbHelper mInstance = null;
-	public static final int DATABASE_VERSION = 2;
+	public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "NEUTRON";
     
-    private static final String REAL_TYPE = " REAL";
-    private static final String TEXT_TYPE = " TEXT";
-    private static final String INTEGER_TYPE = " INTEGER";
-    private static final String BLOG_TYPE = " BLOB";
+    private static final String REAL_TYPE = " REAL ";
+    private static final String TEXT_TYPE = " TEXT ";
+    private static final String INTEGER_TYPE = " INTEGER ";
+    private static final String BLOG_TYPE = " BLOB ";
     private static final String COMMA_SEP = ",";
+    private static final String UNIQUE = " UNIQUE ";
 
     private static final String SQL_CREATE_TABLE_ACCELERATION =
     	    "CREATE TABLE IF NOT EXISTS " + NeutronAcceleration.TABLE_NAME + " (" +
@@ -48,7 +50,13 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_TABLE_RMR_INDEX = 
     		"CREATE TABLE IF NOT EXISTS " + NeutronRMRIndex.TABLE_NAME + " ("+ 
     		NeutronRMRIndex.COLUMN_NAME_RMRINDEX + REAL_TYPE + COMMA_SEP +  
-    		NeutronRMRIndex.COLUMN_NAME_DATESTAMP + TEXT_TYPE+")";
+    		NeutronRMRIndex.COLUMN_NAME_DATESTAMP + TEXT_TYPE + " )";
+    
+    private static final String SQL_CREATE_TABLE_RMR_VALUE = 
+    		"CREATE TABLE IF NOT EXISTS " + NeutronRMRValue.TABLE_NAME + " (" +
+    		NeutronRMRValue.COLUMN_NAME_RMRVALUE + REAL_TYPE + COMMA_SEP +
+    		NeutronRMRValue.COLUMN_NAME_DATESTAMP + TEXT_TYPE + UNIQUE + COMMA_SEP +
+    		NeutronRMRValue.COLUMN_NAME_TAG + INTEGER_TYPE + " )";
 
     private static final String SQL_CREATE_TABLE_RECORD =
     	    "CREATE TABLE IF NOT EXISTS " + NeutronRecord.TABLE_NAME + " (" +
@@ -102,9 +110,9 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(SQL_DEL_TABLE_ACCELERATION);
 		db.execSQL(SQL_CREATE_TABLE_ACCELERATION);
 		db.execSQL(SQL_CREATE_TABLE_RMR_INDEX);
+		db.execSQL(SQL_CREATE_TABLE_RMR_VALUE);
 		db.execSQL(SQL_CREATE_TABLE_RECORD);
 		db.execSQL(SQL_CREATE_TABLE_USER);
 		db.execSQL(SQL_CREATE_TABLE_GROUPTESTING);
@@ -144,10 +152,11 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		if (!checkColumnExist(db, NeutronAcceleration.TABLE_NAME, NeutronAcceleration.COLUMN_NAME_UPLOADTAG))
-		{
-			db.execSQL(SQL_ALTER_TABLE_ACCELERATION);
-		}
+//		if (!checkColumnExist(db, NeutronAcceleration.TABLE_NAME, NeutronAcceleration.COLUMN_NAME_UPLOADTAG))
+//		{
+//			db.execSQL(SQL_ALTER_TABLE_ACCELERATION);
+//		}
+		
 /*		db.execSQL("ALTER TABLE "+ NeutronRecord.TABLE_NAME + " RENAME TO "+ NeutronRecord.TABLE_NAME + "temp");
 		db.execSQL(SQL_CREATE_TABLE_RECORD);
 		db.execSQL("INSERT INTO " + NeutronRecord.TABLE_NAME + " SELECT " + 

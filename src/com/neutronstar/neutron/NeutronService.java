@@ -20,11 +20,13 @@ import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -41,8 +43,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.neutron.server.persistence.model.T_accdata;
+import com.neutron.server.persistence.model.T_rmr;
 import com.neutron.server.persistence.model.T_user;
 import com.neutronstar.neutron.NeutronContract.NeutronAcceleration;
+import com.neutronstar.neutron.NeutronContract.NeutronRMRValue;
 import com.neutronstar.neutron.NeutronContract.NeutronUser;
 import com.neutronstar.neutron.NeutronContract.SERVER;
 import com.neutronstar.neutron.NeutronContract.TAG;
@@ -58,12 +62,16 @@ public class NeutronService extends Service {
 	private Timer updateTimer;
 	private Timer uploadTimer;
 	private Timer deleteTimer;
+	private Timer downloadRMRTimer;
 	private double lowAcc;
 	private final double FILTERING_VALUE = 0.8;
 
 	T_user localUser = null;
 	T_accdata accData = null;
+	T_rmr rmr = null;
 	ArrayList<Serializable> alAccData = null;
+	ArrayList<T_rmr> alRMRValue = null;
+	int countRMR = 24;
 
 	public NeutronService() {
 		// TODO Auto-generated constructor stub
@@ -122,6 +130,17 @@ public class NeutronService extends Service {
 			}
 			
 		}, 0, 3600000);
+		
+		downloadRMRTimer = new Timer("gForceGetRMRService");
+		downloadRMRTimer.scheduleAtFixedRate(new TimerTask() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				downloadRMRValue("data", countRMR, alRMRValue);
+			}
+			
+		}, 0, 60000);
 	}
 
 	@Override
@@ -130,6 +149,7 @@ public class NeutronService extends Service {
 		sensorManager.unregisterListener(sensorEventListener);
 	}
 	
+	@SuppressLint("SimpleDateFormat")
 	private void deleteAccelerationHistory()
 	{
 		//删除本地1天前的数据
@@ -171,6 +191,118 @@ public class NeutronService extends Service {
 
 	}
 
+	
+	private void downloadRMRValue(String strServlet,
+			int countRMR, ArrayList<T_rmr> alRMRValue) 
+	{
+		String strUrl = SERVER.Address + "/" + strServlet;
+		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+		if (networkInfo != null && networkInfo.isConnected()) {
+			new DownloadRMRValueTask().execute(strUrl);
+		} else {
+			Looper.prepare();
+			Toast toast = Toast.makeText(this,
+					"No network connection available.", Toast.LENGTH_LONG);
+			toast.show();
+			Looper.loop();
+		}
+	}
+	
+	private class DownloadRMRValueTask extends
+			AsyncTask<String, Void, String> {
+
+		@Override
+		protected String doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			String strUrl = params[0];
+			String result = "error";
+			try {
+				URL url = new URL(strUrl);
+				HttpURLConnection urlConn = (HttpURLConnection) url
+						.openConnection();
+				urlConn.setReadTimeout(10000 /* milliseconds */);
+				urlConn.setConnectTimeout(15000 /* milliseconds */);
+				urlConn.setDoInput(true);
+				urlConn.setDoOutput(true);
+				urlConn.setRequestMethod("POST");
+				urlConn.setUseCaches(false);
+				urlConn.setRequestProperty("Content-Type",
+						"application/x-java-serialized-object");
+				urlConn.connect();
+				OutputStream outStrm = urlConn.getOutputStream();
+				ObjectOutputStream oos = new ObjectOutputStream(outStrm);
+
+				ArrayList<Serializable> paraList = new ArrayList<Serializable>();
+				paraList.add("getrmrbynum");
+				paraList.add(localUser.gettUserId());
+				paraList.add(countRMR);
+				oos.writeObject(paraList);
+				oos.flush();
+				oos.close();
+
+				ObjectInputStream ois = new ObjectInputStream(
+						urlConn.getInputStream());
+				paraList = (ArrayList<Serializable>) ois.readObject();
+				result = (String) paraList.get(0);
+				if(result.equals("ok"))
+				{
+					alRMRValue = new ArrayList<T_rmr>((ArrayList<T_rmr>)paraList.get(1));
+				}
+				Log.v("result", result);
+
+			} catch (Exception e) {
+				Log.v("exception", e.getMessage());
+			}
+			return result;
+		}
+		
+		
+		@Override
+		protected void onPostExecute(String result) {
+			if (result.equals("ok")) {
+				SimpleDateFormat sDateFormat = new SimpleDateFormat(
+						"yyyy-MM-dd HH:mm:ss.SSS");
+				NeutronDbHelper ndb = NeutronDbHelper
+						.GetInstance(NeutronService.this);
+				SQLiteDatabase db = ndb.getWritableDatabase();
+				db.beginTransaction();
+				if(alRMRValue != null)
+				{
+					
+					Iterator<T_rmr> iterator = alRMRValue.iterator();
+					while(iterator.hasNext())
+					{
+						T_rmr r = iterator.next();
+						String date = sDateFormat.format(r.gettRmrDatetime());
+						double rmrValue = 80 + r.gettRmrValue();
+						ContentValues cv = new ContentValues();
+						cv.put(NeutronRMRValue.COLUMN_NAME_RMRVALUE, rmrValue);
+						cv.put(NeutronRMRValue.COLUMN_NAME_DATESTAMP, date);
+						db.insertWithOnConflict(NeutronRMRValue.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_IGNORE);
+					}
+					alRMRValue = null;
+					db.setTransactionSuccessful();
+					db.endTransaction();
+					//
+					Toast toast = Toast.makeText(NeutronService.this,
+							"Download RMRValue Succeed.", Toast.LENGTH_LONG);
+					toast.show();
+				}
+				else
+				{
+					Toast toast = Toast.makeText(NeutronService.this,
+							"Download RMRValue Succeed, but no update.", Toast.LENGTH_LONG);
+					toast.show();
+				}
+			} else {
+				Toast toast = Toast.makeText(NeutronService.this,
+						"Download RMRValue Failed.", Toast.LENGTH_LONG);
+				toast.show();
+			}
+		}
+	}
+	
 	private void uploadAcceleration(String strServlet,
 			ArrayList<Serializable> alAccData) {
 
@@ -181,6 +313,7 @@ public class NeutronService extends Service {
 				NeutronAcceleration.COLUMN_NAME_TIMESTAMP };
 		String selection = "" + NeutronAcceleration.COLUMN_NAME_UPLOADTAG + "="
 				+ 0;
+		String limit = "" + 1000;
 		Cursor cur = db.query(NeutronAcceleration.TABLE_NAME, // The table to
 																// query
 				projection, // The columns to return
@@ -188,7 +321,8 @@ public class NeutronService extends Service {
 				null, // The values for the WHERE clause selectionArgs
 				null, // don't group the rows
 				null, // don't filter by row groups
-				null // The sort order
+				null, // The sort order
+				limit
 				);
 
 		accData = null;

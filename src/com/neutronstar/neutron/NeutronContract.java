@@ -21,6 +21,14 @@ public final class NeutronContract {
 		 public static final String COLUMN_NAME_DATESTAMP = "datestamp";
 	 }
 	 
+	 public static abstract class NeutronRMRValue implements BaseColumns
+	 {
+		 public static final String TABLE_NAME = "t_rmrvalue";
+		 public static final String COLUMN_NAME_RMRVALUE = "rmrvalue";
+		 public static final String COLUMN_NAME_DATESTAMP = "datestamp";
+		 public static final String COLUMN_NAME_TAG = "tag";
+	 }
+	 
 	 public static abstract class NeutronUser implements BaseColumns 
 	 {
 		 public static final String TABLE_NAME = "t_user";
