@@ -54,6 +54,7 @@
     
     <!-- 日期格式 -->
     <string name="dateformat_birthday">"yyyy年MM月dd日"</string>
+    <string name="dateformat_birthday_in_database">"yyyy-MM-dd"</string>
     
     <!-- 用户类型 -->
     <string-array name="user_type">
