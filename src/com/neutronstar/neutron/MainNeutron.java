@@ -9,14 +9,10 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
 import android.view.Display;
-import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.WindowManager.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
@@ -105,12 +101,12 @@ public class MainNeutron extends Activity  {
 		final ArrayList<View> views = new ArrayList<View>();
 //		views.add(view_tab_today);
 		Intent intent = this.getIntent();
-		Log.d("-----", "" + intent.getExtras().getInt("userid"));
 		intent.setClass(this, MainTabToday.class);
-		Log.d("-----", "" + intent.getExtras().getInt("userid"));
 		views.add(manager.startActivity("MainTabToday", intent).getDecorView());
-//		views.add(manager.startActivity("MainTabToday", new Intent(this, MainTabToday.class)).getDecorView());
-		views.add(manager.startActivity("MainTabFamily", new Intent(this, MainTabFamily.class)).getDecorView());
+		
+		Intent intentFamily = new Intent(this.getIntent());
+		intentFamily.setClass(this, MainTabFamily.class);
+		views.add(manager.startActivity("MainTabFamily", intentFamily).getDecorView());
 //		views.add(view2);
 		views.add(view3);
 		views.add(view4);
@@ -146,7 +142,10 @@ public class MainNeutron extends Activity  {
 
 		mTabPager.setAdapter(mPagerAdapter);
 		mTabPager.setCurrentItem(0);
-		manager.startActivity("MainTabToday", new Intent(this, MainTabToday.class)); 
+//		manager.startActivity("MainTabToday", new Intent(this, MainTabToday.class)); 
+		Intent intentToday = this.getIntent();
+		intentToday.setClass(this, MainTabToday.class);
+		manager.startActivity("MainTabToday", intentToday); 
 	}
 
 	

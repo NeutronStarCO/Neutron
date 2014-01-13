@@ -123,6 +123,9 @@ public final class NeutronContract {
 	 {
 		 public static final int normal = 0;
 		 public static final int delete = 1;
+		 public static final int offered = 0;
+		 public static final int accepted = 1;
+		 public static final int rejected = 2;
 	 }
 	 
 	 public static abstract class GENDER

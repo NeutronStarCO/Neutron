@@ -370,7 +370,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 //
 //	}
 	
-	private String getLocalData() {
+	private String getLocalData() { 
 		try {
 			double sumHour[] = rmrModel.getCurrentHourCosts(this);
 			JSONArray jadata = new JSONArray();

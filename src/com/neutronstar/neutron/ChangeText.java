@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -76,7 +75,12 @@ public class ChangeText extends Activity {
 	public void save(View v) {
 		switch(tag){
 		case TAG_CHANGE_NAME:
-			
+			Intent intent = new Intent();
+			Bundle bl = new Bundle();
+			bl.putString("text", etText.getText().toString());
+			intent.putExtras(bl);
+			ChangeText.this.setResult(RESULT_OK,intent);
+			ChangeText.this.finish();
 			break;
 		case TAG_CHANGE_PHONE_NUMBER:
 			String strUrl = SERVER.Address + "/" + "login";	
@@ -125,8 +129,6 @@ public class ChangeText extends Activity {
 	    		.andTUserAreacodeEqualTo(bl.getString("idd"))
 	    		.andTUserPhonenumberEqualTo(etText.getText().toString());				
 		        paraList.add(userExample);
-		        Log.d("idd", "--"+ bl.getString("idd"));
-		        Log.d("phone", "--"+ etText.getText().toString());
 		        oos.writeObject(paraList);  
 		        oos.flush();  
 		        oos.close();  
@@ -135,7 +137,6 @@ public class ChangeText extends Activity {
 		        paraList = (ArrayList<Serializable>)ois.readObject();
 		        state = (String)paraList.get(0);
 		        users = (ArrayList<T_user>) paraList.get(1);
-		        Log.d("phone0", "--"+ users.get(0).gettUserPhonenumber());
             } catch (Exception e) {
                 return "Unable to retrieve web page. URL may be invalid.";
             }
@@ -144,7 +145,7 @@ public class ChangeText extends Activity {
 		
 		protected void onPostExecute(String result) 
 		{
-			if(state.equals("ok"))	// 已存在用户登录成功，转入主页面
+			if(state.equals("ok"))
 			{	
 				if(users.size() == 1)
 				{
@@ -164,12 +165,7 @@ public class ChangeText extends Activity {
 			} 	
 			else // 没有正常返回，退出或者重新连接	
 			{	
-				Log.d("state", "sss"+ state);
-				Intent intent = new Intent(ChangeText.this, ConfirmationDialogActivity.class);
-				Bundle bl = new Bundle();
-				bl.putInt("tag", ConfirmationDialogActivity.TAG_CONNECT_FAILED);
-				intent.putExtras(bl);
-				startActivityForResult(intent, 1);
+				Toast.makeText(ChangeText.this,	"No ok returned.", Toast.LENGTH_LONG).show();
 			}
 		}
 		

@@ -22,7 +22,7 @@ import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
-import android.content.ContentValues;
+import android.content.ContentValues; 
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;

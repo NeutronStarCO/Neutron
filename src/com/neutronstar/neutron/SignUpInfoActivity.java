@@ -116,9 +116,9 @@ public class SignUpInfoActivity extends Activity {
 		else 
 			user.settUserName(tvName.getText().toString());
 		user.settUserBirth(dateFormat.format(c.getTime()));
-		user.settUserGender(spinner.getSelectedItemId()==GENDER.male? GENDER.male:GENDER.female);
+		user.settUserGender(spinner.getSelectedItemId() == GENDER.male? GENDER.male:GENDER.female);
 		user.settUserRegtag(USER.registered);
-		user.settUserDeltag("0");
+		user.settUserDeltag(String.valueOf(TAG.normal));
 		user.settUserImei(tm.getDeviceId());
 		user.settUserImsi(tm.getSubscriberId());
 		user.settUserRegdate(Calendar.getInstance().getTime());
