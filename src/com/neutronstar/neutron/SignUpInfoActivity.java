@@ -24,7 +24,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.widget.AdapterView;
@@ -193,9 +192,7 @@ public class SignUpInfoActivity extends Activity {
 		        ObjectInputStream ois = new ObjectInputStream(urlConn.getInputStream());  
 		        paraList = (ArrayList<Serializable>)ois.readObject();
 		        state = (String)paraList.get(0);
-		        Log.d("AddNewUserTask", state);
 		        userid = (Integer)paraList.get(1);
-		        Log.d("userid", ""+userid);
 		        
            } catch (Exception e) {
                e.printStackTrace();
@@ -223,6 +220,7 @@ public class SignUpInfoActivity extends Activity {
 				cv.put(NeutronUser.COLUMN_NAME_IDD, user.gettUserAreacode());
 				cv.put(NeutronUser.COLUMN_NAME_PHONE_NUMBER, user.gettUserPhonenumber());
 				cv.put(NeutronUser.COLUMN_NAME_RELATION, USER.me);
+				cv.put(NeutronUser.COLUNM_NAME_RELATION_TAG, TAG.accepted);
 				cv.put(NeutronUser.COLUMN_NAME_TYPE, USER.registered);
 				cv.put(NeutronUser.COLUMN_NAME_PASSCODE, user.gettUserPasscode());
 				cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.normal);

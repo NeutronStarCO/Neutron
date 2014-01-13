@@ -30,6 +30,14 @@
                 android:text="郭成"
                 android:textColor="#000" />
             <TextView
+                android:id="@+id/family_member_relation_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/family_member_gender"             
+                android:padding="14dp"
+                android:text=""
+                android:textColor="#666" />
+            <TextView
                 android:id="@+id/family_member_gender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -47,15 +55,15 @@
                 android:text="1980年4月20日"
                 android:textColor="#666" />
 
-                <TextView
-                    android:id="@+id/family_member_relation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/family_member_birthday"
-                    android:layout_alignParentRight="true"
-                    android:padding="7dp"
-                    android:text="我"
-                    android:textColor="#666" />
+             <TextView
+                 android:id="@+id/family_member_relation"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignBottom="@+id/family_member_birthday"
+                 android:layout_alignParentRight="true"
+                 android:padding="7dp"
+                 android:text="我"
+                 android:textColor="#666" />
             
         </RelativeLayout>
 

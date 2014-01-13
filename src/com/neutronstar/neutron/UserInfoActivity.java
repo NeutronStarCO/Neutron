@@ -1,5 +1,6 @@
 package com.neutronstar.neutron;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -48,8 +49,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.neutron.server.persistence.model.T_user;
 import com.neutron.server.persistence.model.T_relation;
+import com.neutron.server.persistence.model.T_user;
 import com.neutronstar.neutron.NeutronContract.NeutronUser;
 import com.neutronstar.neutron.NeutronContract.SERVER;
 import com.neutronstar.neutron.NeutronContract.TAG;
@@ -535,7 +536,8 @@ public class UserInfoActivity extends Activity {
 	
 	public void save(View v)
 	{
-		if(tvPhoneNumber.getText().length() == 0 
+		int usertype = Arrays.asList(getResources().getStringArray(R.array.user_type)).indexOf(tvUserType.getText());
+		if((usertype == USER.registered && tvPhoneNumber.getText().length() == 0)
 			|| tvName.getText().length() == 0
 			|| tvGender.getText().length() == 0
 			|| tvBirthday.getText().length() == 0
@@ -545,15 +547,18 @@ public class UserInfoActivity extends Activity {
 		}
 		else
 		{
-			switch(tag)
+			switch(tag) 
 			{
 			case UserInfoActivity.TAG_ADD_USER:
+				int id = -1;
+				if(usertype == USER.registered)
+					id = storedUser.gettUserId();
 				// 如果本地已经存在则不能保存			
 				SQLiteDatabase db = ndb.getReadableDatabase();
 				String[] projection = {
 					    NeutronUser.COLUMN_NAME_ID
 					    };
-				String selection = "" + NeutronUser.COLUMN_NAME_ID + "=" + storedUser.gettUserId()
+				String selection = "" + NeutronUser.COLUMN_NAME_ID + "=" + id
 						+ " AND " + NeutronUser.COLUMN_NAME_TAG + "=" + TAG.normal;
 				Cursor cur = db.query(
 						NeutronUser.TABLE_NAME,  // The table to query
@@ -568,28 +573,30 @@ public class UserInfoActivity extends Activity {
 					if (cur.moveToFirst()) {
 						Toast.makeText(UserInfoActivity.this, "家人已经存在了哦！", Toast.LENGTH_LONG).show();
 					}
-				}else
-				{
-					int relation = Arrays.asList(getResources().getStringArray(R.array.relations)).indexOf(tvRelation.getText());
-					int userType = Arrays.asList(getResources().getStringArray(R.array.user_type)).indexOf(tvUserType.getText());
-					NetworkInfo networkInfo = ((ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
-			        if (networkInfo != null && networkInfo.isConnected()) 
-			        {
-			        	if(userType == USER.registered)
-			        	{
-			        		new AddNewRelationTask().execute(SERVER.Address + "/" + "relation");
-			        	}
-			        	else
-			        	{
-			        		new AddNewUserTask().execute(SERVER.Address + "/" + "login");
-			        	}
-			        	
-			        } else 
-			        {
-			        	Toast.makeText(this, "No network connection available.", Toast.LENGTH_LONG ).show();
-			        }
-					
-				}								
+					else
+					{
+						int relation = Arrays.asList(getResources().getStringArray(R.array.relations)).indexOf(tvRelation.getText());
+						int userType = Arrays.asList(getResources().getStringArray(R.array.user_type)).indexOf(tvUserType.getText());
+						NetworkInfo networkInfo = ((ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+				        if (networkInfo != null && networkInfo.isConnected()) 
+				        {
+				        	if(userType == USER.registered)
+				        	{
+				        		new AddNewRelationTask().execute(SERVER.Address + "/" + "relation", String.valueOf(storedUser.gettUserId()) );
+				        	}
+				        	else
+				        	{
+				        		new AddNewUserTask().execute(SERVER.Address + "/" + "login"
+				        				);
+				        	}
+				        	
+				        } else 
+				        {
+				        	Toast.makeText(this, "No network connection available.", Toast.LENGTH_LONG ).show();
+				        }
+						
+					}
+				}
 				// 1、存储远程用户，更新远程t_user表和t_relation表
 				// 2、得到新增用户id，插入本地数据库
 				break;
@@ -622,14 +629,21 @@ public class UserInfoActivity extends Activity {
 		String state = "";
 		T_relation tRelation; 
 		int relation;
+		int slaveId;
+		int type;
 		protected String doInBackground(String... params) {
 			String strUrl = params[0];
+			type = Arrays.asList(getResources().getStringArray(R.array.user_type)).indexOf(tvUserType.getText());
 			relation = Arrays.asList(getResources().getStringArray(R.array.relations)).indexOf(tvRelation.getText());
 			tRelation = new T_relation(); 
 			tRelation.settRelationMasterId(UserInfoActivity.this.getIntent().getExtras().getInt("userid"));
-			tRelation.settRelationSalveId(storedUser.gettUserId());
+			slaveId = Integer.valueOf(params[1]);
+			tRelation.settRelationSalveId(slaveId);
 			tRelation.settRelationRelation(relation);
-			tRelation.settRelationConfirmtag(String.valueOf(TAG.offered));
+			if(type == USER.subregister)
+				tRelation.settRelationConfirmtag(String.valueOf(TAG.accepted));
+			else
+				tRelation.settRelationConfirmtag(String.valueOf(TAG.offered));
 			tRelation.settRelationDeltag(String.valueOf(TAG.normal));
 			try {
 				URL url = new URL(strUrl);
@@ -665,23 +679,58 @@ public class UserInfoActivity extends Activity {
 		
 		protected void onPostExecute(String result) 
 		{
+			T_user user = new T_user();
 			if(state.equals("ok"))
 			{
-				SQLiteDatabase db = ndb.getWritableDatabase();
-				ContentValues cv = new ContentValues();
-				cv.put(NeutronUser.COLUMN_NAME_ID, storedUser.gettUserId());
-				cv.put(NeutronUser.COLUMN_NAME_NAME, storedUser.gettUserName());
-				cv.put(NeutronUser.COLUMN_NAME_GENDER, storedUser.gettUserGender());
-				cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, storedUser.gettUserBirth());
-				cv.put(NeutronUser.COLUMN_NAME_RELATION, relation);
-				cv.put(NeutronUser.COLUMN_NAME_IDD, storedUser.gettUserAreacode());
-				cv.put(NeutronUser.COLUMN_NAME_PHONE_NUMBER, storedUser.gettUserPhonenumber());
-				cv.put(NeutronUser.COLUMN_NAME_TYPE, storedUser.gettUserRegtag());
-				cv.put(NeutronUser.COLUMN_NAME_AVATAR, storedUser.gettUserPicture());
-				cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.normal);
-				db.insert(NeutronUser.TABLE_NAME, null, cv); 
+				if(type == USER.registered)
+				{
+					SQLiteDatabase db = ndb.getWritableDatabase();
+					ContentValues cv = new ContentValues();
+					cv.put(NeutronUser.COLUMN_NAME_ID, storedUser.gettUserId());
+					cv.put(NeutronUser.COLUMN_NAME_NAME, storedUser.gettUserName());
+					cv.put(NeutronUser.COLUMN_NAME_GENDER, storedUser.gettUserGender());
+					cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, storedUser.gettUserBirth());
+					cv.put(NeutronUser.COLUMN_NAME_RELATION, relation);
+					cv.put(NeutronUser.COLUNM_NAME_RELATION_TAG, TAG.offered);
+					cv.put(NeutronUser.COLUMN_NAME_IDD, storedUser.gettUserAreacode());
+					cv.put(NeutronUser.COLUMN_NAME_PHONE_NUMBER, storedUser.gettUserPhonenumber());
+					cv.put(NeutronUser.COLUMN_NAME_TYPE, storedUser.gettUserRegtag());
+					cv.put(NeutronUser.COLUMN_NAME_AVATAR, storedUser.gettUserPicture());
+					cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.normal);
+					db.insert(NeutronUser.TABLE_NAME, null, cv); 
+					user = storedUser;
+					bl.putInt("relation_tag", TAG.offered);
+				}
+				else
+				{
+					SQLiteDatabase db = ndb.getWritableDatabase();
+					ContentValues cv = new ContentValues();
+					cv.put(NeutronUser.COLUMN_NAME_ID, slaveId);
+					cv.put(NeutronUser.COLUMN_NAME_NAME, tvName.getText().toString());					
+					cv.put(NeutronUser.COLUMN_NAME_GENDER, Arrays.asList(getResources().getStringArray(R.array.gender)).indexOf(tvGender.getText()));
+					cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, new SimpleDateFormat(getResources().getString(R.string.dateformat_birthday_in_database)).format(c.getTime()));
+					cv.put(NeutronUser.COLUMN_NAME_RELATION, relation);
+					cv.put(NeutronUser.COLUNM_NAME_RELATION_TAG, TAG.accepted);
+					cv.put(NeutronUser.COLUMN_NAME_TYPE, USER.subregister);
+					ivAvatar.setDrawingCacheEnabled(true);
+					Bitmap bitmap = ivAvatar.getDrawingCache();			
+					ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+					ivAvatar.setDrawingCacheEnabled(false);
+					cv.put(NeutronUser.COLUMN_NAME_AVATAR, baos.toByteArray());
+					cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.normal);
+					db.insert(NeutronUser.TABLE_NAME, null, cv); 
+					user.settUserId(slaveId);
+					user.settUserName(tvName.getText().toString());
+					user.settUserGender(Arrays.asList(getResources().getStringArray(R.array.gender)).indexOf(tvGender.getText()));
+					user.settUserBirth(new SimpleDateFormat(getResources().getString(R.string.dateformat_birthday_in_database)).format(c.getTime()));
+					user.settUserRegtag(USER.subregister);
+					user.settUserPicture(baos.toByteArray());
+					user.settUserDeltag(String.valueOf(TAG.normal));
+					bl.putInt("relation_tag", TAG.accepted);
+				}
 				bl.putInt("relation", relation);
-				bl.putSerializable("t_user", storedUser);
+				bl.putSerializable("t_user", user);
 				intent.putExtras(bl);
 				UserInfoActivity.this.setResult(RESULT_OK, intent);
 				UserInfoActivity.this.finish();
@@ -693,17 +742,23 @@ public class UserInfoActivity extends Activity {
 	private class AddNewUserTask extends AsyncTask<String, Void, String> 
 	{
 		String state = "";
-		T_relation tRelation; 
-		int relation;
+		int userid = 0;
+		T_user tUser; 
 		protected String doInBackground(String... params) {
 			String strUrl = params[0];
-			relation = Arrays.asList(getResources().getStringArray(R.array.relations)).indexOf(tvRelation.getText());
-			tRelation = new T_relation(); 
-			tRelation.settRelationMasterId(UserInfoActivity.this.getIntent().getExtras().getInt("userid"));
-			tRelation.settRelationSalveId(storedUser.gettUserId());
-			tRelation.settRelationRelation(relation);
-			tRelation.settRelationConfirmtag(String.valueOf(TAG.offered));
-			tRelation.settRelationDeltag(String.valueOf(TAG.normal));
+			tUser = new T_user(); 
+			tUser.settUserName(tvName.getText().toString());
+			tUser.settUserGender(Arrays.asList(getResources().getStringArray(R.array.gender)).indexOf(tvGender.getText()));
+			tUser.settUserBirth(new SimpleDateFormat(getResources().getString(R.string.dateformat_birthday_in_database)).format(c.getTime()));
+			tUser.settUserRegtag(USER.subregister);
+			ivAvatar.setDrawingCacheEnabled(true);
+			Bitmap bitmap = ivAvatar.getDrawingCache();			
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+			ivAvatar.setDrawingCacheEnabled(false);
+			tUser.settUserPicture(baos.toByteArray());
+			tUser.settUserAvatar("PNG");
+			
 			try {
 				URL url = new URL(strUrl);
 			    HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
@@ -721,7 +776,7 @@ public class UserInfoActivity extends Activity {
 		        
 		        ArrayList<Serializable> paraList = new ArrayList<Serializable>();
 		        paraList.add("add");
-		        paraList.add(tRelation);
+		        paraList.add(tUser);
 		        oos.writeObject(paraList);  
 		        oos.flush();  
 		        oos.close();  
@@ -729,6 +784,7 @@ public class UserInfoActivity extends Activity {
 		        ObjectInputStream ois = new ObjectInputStream(urlConn.getInputStream());  
 		        paraList = (ArrayList<Serializable>)ois.readObject();
 		        state = (String)paraList.get(0);
+		        userid = (Integer)paraList.get(1);
 			} catch (Exception e) {
 	               e.printStackTrace();
 	           }
@@ -740,24 +796,8 @@ public class UserInfoActivity extends Activity {
 		{
 			if(state.equals("ok"))
 			{
-				SQLiteDatabase db = ndb.getWritableDatabase();
-				ContentValues cv = new ContentValues();
-				cv.put(NeutronUser.COLUMN_NAME_ID, storedUser.gettUserId());
-				cv.put(NeutronUser.COLUMN_NAME_NAME, storedUser.gettUserName());
-				cv.put(NeutronUser.COLUMN_NAME_GENDER, storedUser.gettUserGender());
-				cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, storedUser.gettUserBirth());
-				cv.put(NeutronUser.COLUMN_NAME_RELATION, relation);
-				cv.put(NeutronUser.COLUMN_NAME_IDD, storedUser.gettUserAreacode());
-				cv.put(NeutronUser.COLUMN_NAME_PHONE_NUMBER, storedUser.gettUserPhonenumber());
-				cv.put(NeutronUser.COLUMN_NAME_TYPE, storedUser.gettUserRegtag());
-				cv.put(NeutronUser.COLUMN_NAME_AVATAR, storedUser.gettUserPicture());
-				cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.normal);
-				db.insert(NeutronUser.TABLE_NAME, null, cv); 
-				bl.putInt("relation", relation);
-				bl.putSerializable("t_user", storedUser);
-				intent.putExtras(bl);
-				UserInfoActivity.this.setResult(RESULT_OK, intent);
-				UserInfoActivity.this.finish();
+				// 插入关系数据
+				new AddNewRelationTask().execute(SERVER.Address + "/" + "relation", String.valueOf(userid));
 			}
 		}
 		

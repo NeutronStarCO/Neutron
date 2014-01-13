@@ -39,6 +39,7 @@ public final class NeutronContract {
 		 public static final String COLUMN_NAME_IDD = "idd";
 		 public static final String COLUMN_NAME_PHONE_NUMBER = "phone_number";
 		 public static final String COLUMN_NAME_RELATION = "relation";
+		 public static final String COLUNM_NAME_RELATION_TAG = "relation_tag";
 		 public static final String COLUMN_NAME_TYPE = "type";
 		 public static final String COLUMN_NAME_AVATAR = "avatar";
 		 public static final String COLUMN_NAME_PASSCODE = "passcode";

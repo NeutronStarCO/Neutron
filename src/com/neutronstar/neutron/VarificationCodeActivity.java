@@ -187,6 +187,7 @@ public class VarificationCodeActivity extends Activity {
 				cv.put(NeutronUser.COLUMN_NAME_IDD, user.gettUserAreacode());
 				cv.put(NeutronUser.COLUMN_NAME_PHONE_NUMBER, user.gettUserPhonenumber());
 				cv.put(NeutronUser.COLUMN_NAME_RELATION, USER.me);
+				cv.put(NeutronUser.COLUNM_NAME_RELATION_TAG, TAG.accepted);
 				cv.put(NeutronUser.COLUMN_NAME_TYPE, USER.registered);
 				cv.put(NeutronUser.COLUMN_NAME_PASSCODE, result);
 				cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.normal);

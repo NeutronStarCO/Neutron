@@ -53,6 +53,7 @@ public class FamilyMemberEntityAdapter extends BaseAdapter {
 			viewHolder.tvName = (TextView) convertView.findViewById(R.id.family_member_name);
 			viewHolder.tvBirthday = (TextView) convertView.findViewById(R.id.family_member_birthday);
 			viewHolder.tvRelation = (TextView) convertView.findViewById(R.id.family_member_relation);
+			viewHolder.tvRelationTag = (TextView) convertView.findViewById(R.id.family_member_relation_tag);
 			convertView.setTag(viewHolder);
 		}else
 			viewHolder = (ViewHolder) convertView.getTag();
@@ -61,6 +62,7 @@ public class FamilyMemberEntityAdapter extends BaseAdapter {
 		viewHolder.tvName.setText(entity.getName());
 		viewHolder.tvBirthday.setText(new SimpleDateFormat(MainNeutron.instance.getResources().getString(R.string.dateformat_birthday)).format(entity.getBirthday()));
 		viewHolder.tvRelation.setText(MainNeutron.instance.getResources().getStringArray(R.array.relations)[entity.getRelation()]);
+		viewHolder.tvRelationTag.setText(entity.getRelationTag() == com.neutronstar.neutron.NeutronContract.TAG.offered ? MainNeutron.instance.getResources().getString(R.string.waiting_for_confirm):"");
 		return convertView;
 	}
 
@@ -69,5 +71,6 @@ public class FamilyMemberEntityAdapter extends BaseAdapter {
 		public TextView tvName;
 		public TextView tvBirthday;
 		public TextView tvRelation;
+		public TextView tvRelationTag;
 	}
 }

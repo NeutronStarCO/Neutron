@@ -54,6 +54,7 @@
     
     <!-- 日期格式 -->
     <string name="dateformat_birthday">"yyyy年MM月dd日"</string>
+    <string name="dateformat_birthday_in_database">"yyyy-MM-dd"</string>
     
     <!-- 用户类型 -->
     <string-array name="user_type">
@@ -84,6 +85,8 @@
     <string name="birthday">生日</string>
     <string name="gender">性别</string>
     <string name="china">中国</string>
+    
+    <string name="waiting_for_confirm">等待家人确认</string>
     
 
     <string-array name="new_record_height">
@@ -195,6 +198,7 @@
         <item>兄弟</item>
         <item>朋友</item>
     </string-array>
+    
 
     <string name="user_info_title">添加家庭成员</string>
     <string name="user_info_title_avatar">头像</string>

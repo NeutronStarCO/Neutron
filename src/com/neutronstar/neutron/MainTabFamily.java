@@ -55,6 +55,7 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 				NeutronUser.COLUMN_NAME_IDD,
 				NeutronUser.COLUMN_NAME_PHONE_NUMBER,
 				NeutronUser.COLUMN_NAME_RELATION,
+				NeutronUser.COLUNM_NAME_RELATION_TAG,
 				NeutronUser.COLUMN_NAME_AVATAR,
 				NeutronUser.COLUMN_NAME_TYPE
 			    };
@@ -88,6 +89,7 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 					entity.setIDD(cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_IDD)));
 					entity.setPhoneNumber(cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_PHONE_NUMBER)));
 					entity.setRelation(cur.getInt(cur.getColumnIndex(NeutronUser.COLUMN_NAME_RELATION)));
+					entity.setRelationTag(cur.getInt(cur.getColumnIndex(NeutronUser.COLUNM_NAME_RELATION_TAG)));
 					entity.setType(cur.getInt(cur.getColumnIndex(NeutronUser.COLUMN_NAME_TYPE)));
 
 					fmDataArrays.add(entity);
@@ -161,6 +163,7 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 					e.printStackTrace();
 				}
 				entity.setRelation(bl.getInt("relation"));
+				entity.setRelationTag(bl.getInt("relation_tag"));
 				entity.setIDD(user.gettUserAreacode());
 				entity.setPhoneNumber(user.gettUserPhonenumber());
 				entity.setType(user.gettUserRegtag());

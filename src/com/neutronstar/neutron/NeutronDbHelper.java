@@ -77,6 +77,7 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
     	    NeutronUser.COLUMN_NAME_IDD + TEXT_TYPE + COMMA_SEP +
     	    NeutronUser.COLUMN_NAME_PHONE_NUMBER + TEXT_TYPE + COMMA_SEP +
     	    NeutronUser.COLUMN_NAME_RELATION + INTEGER_TYPE + COMMA_SEP +
+    	    NeutronUser.COLUNM_NAME_RELATION_TAG + INTEGER_TYPE + COMMA_SEP +
     	    NeutronUser.COLUMN_NAME_TYPE + INTEGER_TYPE + COMMA_SEP +
     	    NeutronUser.COLUMN_NAME_AVATAR + BLOG_TYPE + COMMA_SEP +
     	    NeutronUser.COLUMN_NAME_PASSCODE + TEXT_TYPE + COMMA_SEP +

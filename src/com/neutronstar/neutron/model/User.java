@@ -26,6 +26,7 @@ public class User {
 	private int gender;
 	private boolean hasUser = false;
 	private int relation;
+	private int relationTag;
 	private Bitmap avatar;
 	private int type;
 	
@@ -44,6 +45,7 @@ public class User {
 			    NeutronUser.COLUMN_NAME_IDD,
 			    NeutronUser.COLUMN_NAME_PHONE_NUMBER,
 			    NeutronUser.COLUMN_NAME_RELATION,
+			    NeutronUser.COLUNM_NAME_RELATION_TAG,
 			    NeutronUser.COLUMN_NAME_AVATAR,
 			    NeutronUser.COLUMN_NAME_TYPE
 			    };
@@ -69,6 +71,7 @@ public class User {
 					IDD = cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_IDD));
 					phoneNumber = cur.getString(cur.getColumnIndex(NeutronUser.COLUMN_NAME_PHONE_NUMBER));
 					relation = cur.getInt(cur.getColumnIndex(NeutronUser.COLUMN_NAME_RELATION));
+					relationTag = cur.getInt(cur.getColumnIndex(NeutronUser.COLUNM_NAME_RELATION_TAG));
 					byte[] in = cur.getBlob(cur.getColumnIndex(NeutronUser.COLUMN_NAME_AVATAR));
 					avatar = BitmapFactory.decodeByteArray(in, 0, in.length);
 					type = cur.getInt(cur.getColumnIndex(NeutronUser.COLUMN_NAME_TYPE));
@@ -107,6 +110,7 @@ public class User {
 	}
 
 	public int getRelation(){return relation;}
+	public int getRelationTag() {return relationTag;}
 	public Bitmap getAvatar() { return avatar; }
 	public int getType(){return type;}
 
