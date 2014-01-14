@@ -1,14 +1,9 @@
 package com.neutronstar.neutron;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
-
-import com.neutronstar.neutron.NeutronContract.NeutronUser;
-import com.neutronstar.neutron.NeutronContract.TAG;
 
 public class DeleteActivity extends Activity {
 	private NeutronDbHelper ndb;
@@ -34,13 +29,6 @@ public class DeleteActivity extends Activity {
 
 	public void deleteButton(View view)
 	{
-		SQLiteDatabase db = ndb.getWritableDatabase();
-		ContentValues cv = new ContentValues();
-		cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.delete);
-		String whereClause = NeutronUser.COLUMN_NAME_ID +"=? AND " + NeutronUser.COLUMN_NAME_NAME + "=?";
-		String[] whereArgs = { String.valueOf(id), name };  
-		db.update(NeutronUser.TABLE_NAME, cv, whereClause, whereArgs);
-		
 		Bundle bl= new Bundle();
 		bl.putInt("position", position);
 		Intent intent = this.getIntent();

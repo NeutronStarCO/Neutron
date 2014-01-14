@@ -23,7 +23,7 @@ import android.content.SharedPreferences.Editor;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
 /**
- * 该类定义了微博授权时所需要的参数。
+ * 璇ョ被瀹氫箟浜嗗井鍗氭巿鏉冩椂鎵�闇�瑕佺殑鍙傛暟銆�
  * 
  * @author SINA
  * @since 2013-10-07
@@ -36,10 +36,10 @@ public class AccessTokenKeeper {
     private static final String KEY_EXPIRES_IN    = "expires_in";
     
     /**
-     * 保存 Token 对象到 SharedPreferences。
+     * 淇濆瓨 Token 瀵硅薄鍒� SharedPreferences銆�
      * 
-     * @param context 应用程序上下文环境
-     * @param token   Token 对象
+     * @param context 搴旂敤绋嬪簭涓婁笅鏂囩幆澧�
+     * @param token   Token 瀵硅薄
      */
     public static void writeAccessToken(Context context, Oauth2AccessToken token) {
         if (null == context || null == token) {
@@ -55,11 +55,11 @@ public class AccessTokenKeeper {
     }
 
     /**
-     * 从 SharedPreferences 读取 Token 信息。
+     * 浠� SharedPreferences 璇诲彇 Token 淇℃伅銆�
      * 
-     * @param context 应用程序上下文环境
+     * @param context 搴旂敤绋嬪簭涓婁笅鏂囩幆澧�
      * 
-     * @return 返回 Token 对象
+     * @return 杩斿洖 Token 瀵硅薄
      */
     public static Oauth2AccessToken readAccessToken(Context context) {
         if (null == context) {
@@ -75,9 +75,9 @@ public class AccessTokenKeeper {
     }
 
     /**
-     * 清空 SharedPreferences 中 Token信息。
+     * 娓呯┖ SharedPreferences 涓� Token淇℃伅銆�
      * 
-     * @param context 应用程序上下文环境
+     * @param context 搴旂敤绋嬪簭涓婁笅鏂囩幆澧�
      */
     public static void clear(Context context) {
         if (null == context) {

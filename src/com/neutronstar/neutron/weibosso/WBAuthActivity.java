@@ -36,23 +36,23 @@ import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.sina.weibo.sdk.exception.WeiboException;
 
 /**
- * 该类主要演示如何进行授权、SSO登陆〄1�7
+ * 璇ョ被涓昏婕旂ず濡備綍杩涜鎺堟潈銆丼SO鐧婚檰銆�
  * 
  * @author SINA
  * @since 2013-09-29
  */
 public class WBAuthActivity extends Activity {
 
-    /** 显示认证后的信息，如 AccessToken */
+    /** 鏄剧ず璁よ瘉鍚庣殑淇℃伅锛屽 AccessToken */
     private TextView mTokenText;
     
-    /** 微博 Web 授权类，提供登陆等功胄1�7  */
+    /** 寰崥 Web 鎺堟潈绫伙紝鎻愪緵鐧婚檰绛夊姛鑳�  */
     private WeiboAuth mWeiboAuth;
     
-    /** 封装亄1�7 "access_token"＄1�7"expires_in"＄1�7"refresh_token"，并提供了他们的管理功能  */
+    /** 灏佽浜� "access_token"锛�"expires_in"锛�"refresh_token"锛屽苟鎻愪緵浜嗕粬浠殑绠＄悊鍔熻兘  */
     private Oauth2AccessToken mAccessToken;
 
-    /** 注意：SsoHandler 仅当 SDK 支持 SSO 时有敄1�7 */
+    /** 娉ㄦ剰锛歋soHandler 浠呭綋 SDK 鏀寔 SSO 鏃舵湁鏁� */
     private SsoHandler mSsoHandler;
 
     /**
@@ -63,24 +63,24 @@ public class WBAuthActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
         
-        // 获取 Token View，并让提礄1�7 View 的内容可滚动（小屏幕可能显示不全＄1�7
+        // 鑾峰彇 Token View锛屽苟璁╂彁绀� View 鐨勫唴瀹瑰彲婊氬姩锛堝皬灞忓箷鍙兘鏄剧ず涓嶅叏锛�
         mTokenText = (TextView) findViewById(R.id.token_text_view);
         TextView hintView = (TextView) findViewById(R.id.obtain_token_hint);
         hintView.setMovementMethod(new ScrollingMovementMethod());
 
-        // 创建微博实例
+        // 鍒涘缓寰崥瀹炰緥
         mWeiboAuth = new WeiboAuth(this, Constants.APP_KEY, Constants.REDIRECT_URL, Constants.SCOPE);
         
-        // 通过应用签名信息获取 Token
+        // 閫氳繃搴旂敤绛惧悕淇℃伅鑾峰彇 Token
         findViewById(R.id.obtain_token_via_signature).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 mWeiboAuth.anthorize(new AuthListener());
-                // 或�1�7�使用：mWeiboAuth.authorize(new AuthListener(), Weibo.OBTAIN_AUTH_TOKEN);
+                // 鎴栬�呬娇鐢細mWeiboAuth.authorize(new AuthListener(), Weibo.OBTAIN_AUTH_TOKEN);
             }
         });
         
-        // 通过单点登录 (SSO) 获取 Token
+        // 閫氳繃鍗曠偣鐧诲綍 (SSO) 鑾峰彇 Token
         findViewById(R.id.obtain_token_via_sso).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +90,7 @@ public class WBAuthActivity extends Activity {
         });
         
         //del by yy
-        // 通过 Code 获取 Token
+        // 閫氳繃 Code 鑾峰彇 Token
 //        findViewById(R.id.obtain_token_via_code).setOnClickListener(new OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -98,8 +98,8 @@ public class WBAuthActivity extends Activity {
 //            }
 //        });
 
-        // 仄1�7 SharedPreferences 中读取上次已保存奄1�7 AccessToken 等信息，
-        // 第一次启动本应用，AccessToken 不可甄1�7
+        // 浠� SharedPreferences 涓鍙栦笂娆″凡淇濆瓨濂� AccessToken 绛変俊鎭紝
+        // 绗竴娆″惎鍔ㄦ湰搴旂敤锛孉ccessToken 涓嶅彲鐢�
         mAccessToken = AccessTokenKeeper.readAccessToken(this);
         if (mAccessToken.isSessionValid()) {
             updateTokenView(true);
@@ -107,7 +107,7 @@ public class WBAuthActivity extends Activity {
     }
 
     /**
-     * 彄1�7 SSO 授权 Activity 逄1�7出时，该函数被调用�1�7�1�7
+     * 褰� SSO 鎺堟潈 Activity 閫�鍑烘椂锛岃鍑芥暟琚皟鐢ㄣ��
      * 
      * @see {@link Activity#onActivityResult}
      */
@@ -115,36 +115,36 @@ public class WBAuthActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         
-        // SSO 授权回调
-        // 重要：发资1�7 SSO 登陆的1�7 Activity 必须重写 onActivityResult
+        // SSO 鎺堟潈鍥炶皟
+        // 閲嶈锛氬彂璧� SSO 鐧婚檰鐨� Activity 蹇呴』閲嶅啓 onActivityResult
         if (mSsoHandler != null) {
             mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
         }
     }
 
     /**
-     * 微博认证授权回调类�1�7�1�7
-     * 1. SSO 授权时，霄1�7要在 {@link #onActivityResult} 中调甄1�7 {@link SsoHandler#authorizeCallBack} 后，
-     *    该回调才会被执行〄1�7
-     * 2. 靄1�7 SSO 授权时，当授权结束后，该回调就会被执行�1�7�1�7
-     * 当授权成功后，请保存评1�7 access_token、expires_in、uid 等信息到 SharedPreferences 中�1�7�1�7
+     * 寰崥璁よ瘉鎺堟潈鍥炶皟绫汇��
+     * 1. SSO 鎺堟潈鏃讹紝闇�瑕佸湪 {@link #onActivityResult} 涓皟鐢� {@link SsoHandler#authorizeCallBack} 鍚庯紝
+     *    璇ュ洖璋冩墠浼氳鎵ц銆�
+     * 2. 闈� SSO 鎺堟潈鏃讹紝褰撴巿鏉冪粨鏉熷悗锛岃鍥炶皟灏变細琚墽琛屻��
+     * 褰撴巿鏉冩垚鍔熷悗锛岃淇濆瓨璇� access_token銆乪xpires_in銆乽id 绛変俊鎭埌 SharedPreferences 涓��
      */
     class AuthListener implements WeiboAuthListener {
         
         @Override
         public void onComplete(Bundle values) {
-            // 仄1�7 Bundle 中解构1�7 Token
+            // 浠� Bundle 涓В鏋� Token
             mAccessToken = Oauth2AccessToken.parseAccessToken(values);
             if (mAccessToken.isSessionValid()) {
-                // 显示 Token
+                // 鏄剧ず Token
                 updateTokenView(false);
                 
-                // 保存 Token 刄1�7 SharedPreferences
+                // 淇濆瓨 Token 鍒� SharedPreferences
                 AccessTokenKeeper.writeAccessToken(WBAuthActivity.this, mAccessToken);
                 Toast.makeText(WBAuthActivity.this, 
                         R.string.weibosdk_demo_toast_auth_success, Toast.LENGTH_SHORT).show();
             } else {
-                // 当您注册的应用程序签名不正确时，就会收到 Code，请确保签名正确
+                // 褰撴偍娉ㄥ唽鐨勫簲鐢ㄧ▼搴忕鍚嶄笉姝ｇ‘鏃讹紝灏变細鏀跺埌 Code锛岃纭繚绛惧悕姝ｇ‘
                 String code = values.getString("code");
                 String message = getString(R.string.weibosdk_demo_toast_auth_failed);
                 if (!TextUtils.isEmpty(code)) {
@@ -168,9 +168,9 @@ public class WBAuthActivity extends Activity {
     }
     
     /**
-     * 显示当前 Token 信息〄1�7
+     * 鏄剧ず褰撳墠 Token 淇℃伅銆�
      * 
-     * @param hasExisted 配置文件中是否已存在 token 信息并且合法
+     * @param hasExisted 閰嶇疆鏂囦欢涓槸鍚﹀凡瀛樺湪 token 淇℃伅骞朵笖鍚堟硶
      */
     private void updateTokenView(boolean hasExisted) {
         String date = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(

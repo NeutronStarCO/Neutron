@@ -32,6 +32,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,6 +85,8 @@ public class UserInfoActivity extends Activity {
 	private RelativeLayout rlChangeIDD;
 	private RelativeLayout rlChangePhoneNumber;
 	private Button btSave;
+	private FamilyMemberEntity fme;
+	private FamilyMemberEntity afterModified;
 	
 	private PopupWindow pwIDD;
 	
@@ -97,15 +100,15 @@ public class UserInfoActivity extends Activity {
 	private static final int RESIZE_REQUEST_CODE = 12;
 	
 	private static final String IMAGE_FILE_NAME = "header.jpg";
-	private String[] items = new String[] {"—°‘Ò±æµÿÕº∆¨", "≈ƒ’’"};
+	private String[] items = new String[] {"ÈÄâÊã©Êú¨Âú∞ÂõæÁâá", "ÊãçÁÖß"};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_info);
-		// ≥ı ºªØ ˝æ›ø‚π§æﬂ
+		// ÂàùÂßãÂåñÊï∞ÊçÆÂ∫ìÂ∑•ÂÖ∑
 		ndb = NeutronDbHelper.GetInstance(this);
-		// ªÒµ√¥´µ› ˝æ›
+		// Ëé∑Âæó‰º†ÈÄíÊï∞ÊçÆ
 		intent = this.getIntent();
 		bl = intent.getExtras();
 		tag = bl.getInt("tag");
@@ -128,7 +131,7 @@ public class UserInfoActivity extends Activity {
 		rlChangeRelation = (RelativeLayout)findViewById(R.id.user_change_relation);
 		btSave = (Button)findViewById(R.id.user_info_save);
 		
-		// ≥ı ºªØ»√ΩÁ√Ê≥…Œ™–¬Ω®¡¢“ª∏ˆ”√ªßµƒ–Œ Ω
+		// ÂàùÂßãÂåñËÆ©ÁïåÈù¢Êàê‰∏∫Êñ∞Âª∫Á´ã‰∏Ä‰∏™Áî®Êà∑ÁöÑÂΩ¢Âºè
 		switch(tag)
 		{
 		case UserInfoActivity.TAG_ADD_USER:
@@ -143,17 +146,41 @@ public class UserInfoActivity extends Activity {
 			btSave.setEnabled(false);
 			break;
 		case UserInfoActivity.TAG_MODIFY_USER:
-			FamilyMemberEntity fme = (FamilyMemberEntity) bl.getSerializable("family_member_entity");
+			fme = (FamilyMemberEntity) bl.getSerializable("family_member_entity");
 			((TextView)findViewById(R.id.user_info_title)).setText(fme.getName());
+			tvUserType.setText(getResources().getStringArray(R.array.user_type)[fme.getType()]);
+			tvIDD.setText(fme.getIDD());
+			tvPhoneNumber.setText(fme.getPhoneNumber());
 			ivAvatar.setImageBitmap(fme.getAvatar());
 			tvName.setText(fme.getName());
 			tvGender.setText(fme.getGender()==0 ? getResources().getString(R.string.female):getResources().getString(R.string.male));
 			tvBirthday.setText(new SimpleDateFormat(getResources().getString(R.string.dateformat_birthday)).format(fme.getBirthday()));
 			tvRelation.setText(getResources().getStringArray(R.array.relations)[fme.getRelation()]);
-			tvUserType.setText(getResources().getStringArray(R.array.user_type)[fme.getType()]);
-			tvIDD.setText(fme.getIDD());
-			tvPhoneNumber.setText(fme.getPhoneNumber());
-			btSave.setEnabled(true);
+			if(fme.getType() == USER.registered && fme.getRelation() == USER.me)
+			{				
+				rlChangeUsertype.setEnabled(false);
+				rlChangeIDD.setEnabled(false);
+				rlChangePhoneNumber.setEnabled(false);
+				rlChangeRelation.setEnabled(false);
+			}
+			else if(fme.getType() == USER.registered && fme.getRelation() != USER.me)
+			{
+				rlChangeUsertype.setEnabled(false);
+				rlChangeIDD.setEnabled(false);
+				rlChangePhoneNumber.setEnabled(false);
+				rlChangeAvatar.setEnabled(false);
+				rlChangeName.setEnabled(false);
+				rlChangeGender.setEnabled(false);
+				rlChangeBirthday.setEnabled(false);
+				btSave.setEnabled(false);
+			}
+			else if(fme.getType() == USER.subregister)
+			{
+				rlChangeUsertype.setBackgroundResource(R.drawable.preference_single_item);
+				rlChangeUsertype.setEnabled(false);
+				rlChangeIDD.setVisibility(View.GONE);
+				rlChangePhoneNumber.setVisibility(View.GONE);
+			}
 			break;
 		}
 		
@@ -201,39 +228,45 @@ public class UserInfoActivity extends Activity {
 					public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 							long arg3) {
 						tvUserType.setText(userType[arg2]);
-						switch(arg2){
-						case 0:
-							rlChangeUsertype.setBackgroundResource(R.drawable.preference_first_item);
-							rlChangeIDD.setVisibility(View.VISIBLE);
-							rlChangePhoneNumber.setVisibility(View.VISIBLE);
-							tvPhoneNumber.setText("");
-							rlChangeAvatar.setVisibility(View.GONE);
-							rlChangeName.setVisibility(View.GONE);
-							rlChangeGender.setVisibility(View.GONE);
-							rlChangeBirthday.setVisibility(View.GONE);
-							rlChangeRelation.setVisibility(View.GONE);	
-							btSave.setEnabled(false);
+						switch(tag){
+						case UserInfoActivity.TAG_ADD_USER:
+							switch(arg2){
+							case 0:
+								rlChangeUsertype.setBackgroundResource(R.drawable.preference_first_item);
+								rlChangeIDD.setVisibility(View.VISIBLE);
+								rlChangePhoneNumber.setVisibility(View.VISIBLE);
+								tvPhoneNumber.setText("");
+								rlChangeAvatar.setVisibility(View.GONE);
+								rlChangeName.setVisibility(View.GONE);
+								rlChangeGender.setVisibility(View.GONE);
+								rlChangeBirthday.setVisibility(View.GONE);
+								rlChangeRelation.setVisibility(View.GONE);	
+								btSave.setEnabled(false);
+								break;
+							case 1:
+								rlChangeUsertype.setBackgroundResource(R.drawable.preference_single_item);
+								rlChangeIDD.setVisibility(View.GONE);
+								rlChangePhoneNumber.setVisibility(View.GONE);
+								rlChangeAvatar.setVisibility(View.VISIBLE);
+								rlChangeAvatar.setClickable(true);
+								ivAvatar.setImageDrawable(getResources().getDrawable(R.drawable.andy_lau));
+								rlChangeName.setVisibility(View.VISIBLE);
+								rlChangeName.setClickable(true);
+								tvName.setText("");
+								rlChangeGender.setVisibility(View.VISIBLE);
+								rlChangeGender.setClickable(true);
+								tvGender.setText("");
+								rlChangeBirthday.setVisibility(View.VISIBLE);
+								tvBirthday.setText("");
+								rlChangeRelation.setVisibility(View.VISIBLE);
+								tvRelation.setText("");
+								btSave.setEnabled(false);
+								break;
+							}
 							break;
-						case 1:
-							rlChangeUsertype.setBackgroundResource(R.drawable.preference_single_item);
-							rlChangeIDD.setVisibility(View.GONE);
-							rlChangePhoneNumber.setVisibility(View.GONE);
-							rlChangeAvatar.setVisibility(View.VISIBLE);
-							rlChangeAvatar.setClickable(true);
-							ivAvatar.setImageDrawable(getResources().getDrawable(R.drawable.andy_lau));
-							rlChangeName.setVisibility(View.VISIBLE);
-							rlChangeName.setClickable(true);
-							tvName.setText("");
-							rlChangeGender.setVisibility(View.VISIBLE);
-							rlChangeGender.setClickable(true);
-							tvGender.setText("");
-							rlChangeBirthday.setVisibility(View.VISIBLE);
-							tvBirthday.setText("");
-							rlChangeRelation.setVisibility(View.VISIBLE);
-							tvRelation.setText("");
-							btSave.setEnabled(false);
+						case UserInfoActivity.TAG_MODIFY_USER:
 							break;
-						}
+						}						
 						pwIDD.dismiss();
 						pwIDD = null;
 					}
@@ -393,7 +426,7 @@ public class UserInfoActivity extends Activity {
 	
 	private void showDialog() {
 		// TODO Auto-generated method stub
-		new AlertDialog.Builder(this).setTitle("∏¸ªªÕ∑œÒ").setItems(items, new DialogInterface.OnClickListener() {
+		new AlertDialog.Builder(this).setTitle("Êõ¥Êç¢Â§¥ÂÉè").setItems(items, new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -416,12 +449,12 @@ public class UserInfoActivity extends Activity {
 					} 
 					else 
 					{
-						Toast.makeText(UserInfoActivity.this, "«Î≤Â»Îsdø®", Toast.LENGTH_LONG).show();
+						Toast.makeText(UserInfoActivity.this, "ËØ∑ÊèíÂÖ•sdÂç°", Toast.LENGTH_LONG).show();
 					}
 					break;
 				}
 			}
-		}).setNegativeButton("»°œ˚", new DialogInterface.OnClickListener() {
+		}).setNegativeButton("ÂèñÊ∂à", new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -520,7 +553,7 @@ public class UserInfoActivity extends Activity {
 					}
 					else
 					{
-						Toast.makeText(UserInfoActivity.this, "Œ¥’“µΩ¥Ê¥¢ø®", Toast.LENGTH_LONG).show();
+						Toast.makeText(UserInfoActivity.this, "Êú™ÊâæÂà∞Â≠òÂÇ®Âç°", Toast.LENGTH_LONG).show();
 					}
 					break;
 				case RESIZE_REQUEST_CODE:
@@ -543,7 +576,7 @@ public class UserInfoActivity extends Activity {
 			|| tvBirthday.getText().length() == 0
 			|| tvRelation.getText().length() == 0)
 		{
-			Toast.makeText(UserInfoActivity.this, "∏ˆ»À–≈œ¢≤ª»´£°", Toast.LENGTH_LONG).show();
+			Toast.makeText(UserInfoActivity.this, "‰∏™‰∫∫‰ø°ÊÅØ‰∏çÂÖ®ÔºÅ", Toast.LENGTH_LONG).show();
 		}
 		else
 		{
@@ -553,7 +586,7 @@ public class UserInfoActivity extends Activity {
 				int id = -1;
 				if(usertype == USER.registered)
 					id = storedUser.gettUserId();
-				// »Áπ˚±æµÿ“—æ≠¥Ê‘⁄‘Ú≤ªƒ‹±£¥Ê			
+				// Â¶ÇÊûúÊú¨Âú∞Â∑≤ÁªèÂ≠òÂú®Âàô‰∏çËÉΩ‰øùÂ≠ò			
 				SQLiteDatabase db = ndb.getReadableDatabase();
 				String[] projection = {
 					    NeutronUser.COLUMN_NAME_ID
@@ -571,7 +604,7 @@ public class UserInfoActivity extends Activity {
 					    );
 				if (cur != null) {
 					if (cur.moveToFirst()) {
-						Toast.makeText(UserInfoActivity.this, "º“»À“—æ≠¥Ê‘⁄¡À≈∂£°", Toast.LENGTH_LONG).show();
+						Toast.makeText(UserInfoActivity.this, "ÂÆ∂‰∫∫Â∑≤ÁªèÂ≠òÂú®‰∫ÜÂì¶ÔºÅ", Toast.LENGTH_LONG).show();
 					}
 					else
 					{
@@ -597,10 +630,45 @@ public class UserInfoActivity extends Activity {
 						
 					}
 				}
-				// 1°¢¥Ê¥¢‘∂≥Ã”√ªß£¨∏¸–¬‘∂≥Ãt_user±Ì∫Õt_relation±Ì
-				// 2°¢µ√µΩ–¬‘ˆ”√ªßid£¨≤Â»Î±æµÿ ˝æ›ø‚
+				// 1„ÄÅÂ≠òÂÇ®ËøúÁ®ãÁî®Êà∑ÔºåÊõ¥Êñ∞ËøúÁ®ãt_userË°®Âíåt_relationË°®
+				// 2„ÄÅÂæóÂà∞Êñ∞Â¢ûÁî®Êà∑idÔºåÊèíÂÖ•Êú¨Âú∞Êï∞ÊçÆÂ∫ì
 				break;
 			case UserInfoActivity.TAG_MODIFY_USER:
+				afterModified = fme;
+				afterModified.setType(Arrays.asList(getResources().getStringArray(R.array.user_type)).indexOf(tvUserType.getText()));
+				afterModified.setIDD(tvIDD.getText().toString());
+				afterModified.setPhoneNumber(tvPhoneNumber.getText().toString());
+				ivAvatar.setDrawingCacheEnabled(true);
+				Bitmap bitmap = ivAvatar.getDrawingCache();	
+				afterModified.setAvatar(bitmap);
+				ivAvatar.setDrawingCacheEnabled(false);				
+				afterModified.setName(tvName.getText().toString());
+				afterModified.setGender(Arrays.asList(getResources().getStringArray(R.array.gender)).indexOf(tvGender.getText()));
+				afterModified.setBirthday(c.getTime());
+				afterModified.setRelation(Arrays.asList(getResources().getStringArray(R.array.relations)).indexOf(tvRelation.getText()));
+				new UpdateRelationTask().execute(SERVER.Address + "/" + "relation");
+//				if( fme.getType() == afterModified.getType()
+//						&& fme.getIDD().equals(afterModified.getIDD())
+//						&& fme.getPhoneNumber().equals(afterModified.getPhoneNumber())
+//						&& fme.getAvatar().equals(afterModified.getAvatar())
+//						&& fme.getName().equals(afterModified.getName())
+//						&& fme.getGender() == afterModified.getGender()
+//						&& fme.getBirthday().equals(afterModified.getBirthday())
+//						&& fme.getRelation() == afterModified.getRelation()
+//						)
+//				{
+//					Log.d("Completely the same", "-------");
+//					bl.putSerializable("fme_after_modified", fme);
+//					intent.putExtras(bl);
+//					UserInfoActivity.this.setResult(RESULT_OK, intent);
+//					UserInfoActivity.this.finish();
+//					return ;
+//				}
+//				if(fme.getRelation() != afterModified.getRelation())
+//				{
+//					new UpdateRelationTask().execute(SERVER.Address + "/" + "relation");
+//				}
+				
 				break;
 			}	
 		}
@@ -796,11 +864,153 @@ public class UserInfoActivity extends Activity {
 		{
 			if(state.equals("ok"))
 			{
-				// ≤Â»Îπÿœµ ˝æ›
+				// ÊèíÂÖ•ÂÖ≥Á≥ªÊï∞ÊçÆ
 				new AddNewRelationTask().execute(SERVER.Address + "/" + "relation", String.valueOf(userid));
 			}
+		}		
+	}
+	
+	private class UpdateRelationTask extends AsyncTask<String, Void, String> 
+	{
+		String state = "";
+		T_relation tRelation; 
+		protected String doInBackground(String... params) {
+			String strUrl = params[0];
+			tRelation = new T_relation(); 
+			tRelation.settRelationMasterId(UserInfoActivity.this.getIntent().getExtras().getInt("userid"));
+			tRelation.settRelationSalveId(afterModified.getId());
+			tRelation.settRelationRelation(afterModified.getRelation());
+			tRelation.settRelationConfirmtag(String.valueOf(afterModified.getRelationTag()));
+			tRelation.settRelationDeltag(String.valueOf(TAG.normal));
+			try {
+				URL url = new URL(strUrl);
+			    HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+			    urlConn.setReadTimeout(10000 /* milliseconds */);
+			    urlConn.setConnectTimeout(15000 /* milliseconds */);
+			    urlConn.setDoInput(true);
+			    urlConn.setDoOutput(true);
+			    urlConn.setRequestMethod("POST");
+			    urlConn.setUseCaches(false);
+			    urlConn.setRequestProperty("Accept-Charset", "utf-8");  
+				urlConn.setRequestProperty("Content-Type", "application/x-java-serialized-object");
+				urlConn.connect();
+				OutputStream outStrm = urlConn.getOutputStream();  
+		        ObjectOutputStream oos = new ObjectOutputStream(outStrm);  
+		        
+		        ArrayList<Serializable> paraList = new ArrayList<Serializable>();
+		        paraList.add("updateWithMS");
+		        paraList.add(tRelation);
+		        oos.writeObject(paraList);  
+		        oos.flush();  
+		        oos.close();  
+		  
+		        ObjectInputStream ois = new ObjectInputStream(urlConn.getInputStream());  
+		        paraList = (ArrayList<Serializable>)ois.readObject();
+		        state = (String)paraList.get(0);
+			} catch (Exception e) {
+	               e.printStackTrace();
+	           }
+			return null;
 		}
 		
+		
+		protected void onPostExecute(String result) 
+		{
+			T_user user = new T_user();
+			if(state.equals("ok"))
+			{			
+				SQLiteDatabase db = ndb.getWritableDatabase();
+				ContentValues cv = new ContentValues();				
+				cv.put(NeutronUser.COLUMN_NAME_RELATION, afterModified.getRelation());
+				String whereClause = NeutronUser.COLUMN_NAME_ID + "=?";
+				String[] whereArgs = {String.valueOf(afterModified.getId())};
+				db.update(NeutronUser.TABLE_NAME, cv, whereClause, whereArgs);
+
+				new UpdateUserTask().execute(SERVER.Address + "/" + "login");
+			}
+		}	
+	}
+	
+	private class UpdateUserTask extends AsyncTask<String, Void, String> 
+	{
+		String state = "";
+		T_user tUser; 
+		protected String doInBackground(String... params) {
+			String strUrl = params[0];
+			tUser = new T_user(); 
+			tUser.settUserId(afterModified.getId());
+			tUser.settUserName(afterModified.getName());
+			tUser.settUserGender(afterModified.getGender());
+			tUser.settUserBirth(new SimpleDateFormat(getResources().getString(R.string.dateformat_birthday_in_database)).format(afterModified.getBirthday()));
+			tUser.settUserRegtag(afterModified.getType());
+			ivAvatar.setDrawingCacheEnabled(true);
+			Bitmap bitmap = ivAvatar.getDrawingCache();			
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+			ivAvatar.setDrawingCacheEnabled(false);
+			tUser.settUserPicture(baos.toByteArray());
+			tUser.settUserAvatar("PNG");
+			tUser.settUserDeltag(String.valueOf(TAG.normal));
+			
+			try {
+				URL url = new URL(strUrl);
+			    HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+			    urlConn.setReadTimeout(10000 /* milliseconds */);
+			    urlConn.setConnectTimeout(15000 /* milliseconds */);
+			    urlConn.setDoInput(true);
+			    urlConn.setDoOutput(true);
+			    urlConn.setRequestMethod("POST");
+			    urlConn.setUseCaches(false);
+			    urlConn.setRequestProperty("Accept-Charset", "utf-8");  
+				urlConn.setRequestProperty("Content-Type", "application/x-java-serialized-object");
+				urlConn.connect();
+				OutputStream outStrm = urlConn.getOutputStream();  
+		        ObjectOutputStream oos = new ObjectOutputStream(outStrm);  
+		        
+		        ArrayList<Serializable> paraList = new ArrayList<Serializable>();
+		        paraList.add("updateWithBlob");
+		        paraList.add(tUser);
+		        oos.writeObject(paraList);  
+		        oos.flush();  
+		        oos.close();  
+		  
+		        ObjectInputStream ois = new ObjectInputStream(urlConn.getInputStream());  
+		        paraList = (ArrayList<Serializable>)ois.readObject();
+		        state = (String)paraList.get(0);
+			} catch (Exception e) {
+	               e.printStackTrace();
+	           }
+			return null;
+		}
+		
+		
+		protected void onPostExecute(String result) 
+		{
+			T_user user = new T_user();
+			if(state.equals("ok"))
+			{			
+				SQLiteDatabase db = ndb.getWritableDatabase();
+				ContentValues cv = new ContentValues();
+				cv.put(NeutronUser.COLUMN_NAME_NAME, afterModified.getName());					
+				cv.put(NeutronUser.COLUMN_NAME_GENDER, afterModified.getGender());
+				cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, new SimpleDateFormat(getResources().getString(R.string.dateformat_birthday_in_database)).format(afterModified.getBirthday()));
+				cv.put(NeutronUser.COLUMN_NAME_RELATION, afterModified.getRelation());
+				ivAvatar.setDrawingCacheEnabled(true);
+				Bitmap bitmap = ivAvatar.getDrawingCache();			
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+				ivAvatar.setDrawingCacheEnabled(false);
+				cv.put(NeutronUser.COLUMN_NAME_AVATAR, baos.toByteArray());
+				String whereClause = NeutronUser.COLUMN_NAME_ID + "=?";
+				String[] whereArgs = {String.valueOf(afterModified.getId())};
+				db.update(NeutronUser.TABLE_NAME, cv, whereClause, whereArgs); 				
+
+				bl.putSerializable("fme_after_modified", afterModified);
+				intent.putExtras(bl);
+				UserInfoActivity.this.setResult(RESULT_OK, intent);
+				UserInfoActivity.this.finish();
+			}
+		}	
 	}
 
 }

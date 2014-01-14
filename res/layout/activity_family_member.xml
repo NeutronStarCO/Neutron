@@ -18,7 +18,7 @@
 		        android:layout_height="55dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:paddingLeft="5dp"
+				android:layout_marginLeft="5dp"
                 android:src="@drawable/xiaohei" />
 
             <TextView
@@ -28,15 +28,7 @@
                 android:layout_toRightOf="@id/family_member_head"
                 android:padding="7dp"
                 android:text="郭成"
-                android:textColor="#000" />
-            <TextView
-                android:id="@+id/family_member_relation_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@id/family_member_gender"             
-                android:padding="14dp"
-                android:text=""
-                android:textColor="#666" />
+                android:textColor="#000" />            
             <TextView
                 android:id="@+id/family_member_gender"
                 android:layout_width="wrap_content"
@@ -44,6 +36,14 @@
                 android:layout_alignParentRight="true"
                 android:padding="7dp"
                 android:text="男"
+                android:textColor="#666" />
+            <TextView
+                android:id="@+id/family_member_relation_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/family_member_gender"             
+                android:padding="14dp"
+                android:text=""
                 android:textColor="#666" />
              <TextView
                 android:id="@+id/family_member_birthday"

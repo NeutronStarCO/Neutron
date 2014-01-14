@@ -79,7 +79,7 @@ public class AddChooseActivity extends Activity {
 				} 
 			else{
 				Bundle bundle = data.getExtras(); 
-				// ��ȡ���ص���ݣ���ת��ΪBitmapͼƬ��ʽ 
+				// 锟斤拷取锟斤拷锟截碉拷锟斤拷荩锟斤拷锟阶拷锟轿狟itmap图片锟斤拷式 
 				Bitmap bitmap = (Bitmap) bundle.get("data");
 				FileOutputStream b = null; 
 				String str = null; 
@@ -106,7 +106,7 @@ public class AddChooseActivity extends Activity {
 				try 
 				{ 
 					b = new FileOutputStream(fileName); 
-					bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// �����д���ļ� 
+					bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 锟斤拷锟斤拷锟叫达拷锟斤拷募锟� 
 				} catch (FileNotFoundException e) 
 				{ 
 					e.printStackTrace(); 

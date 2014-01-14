@@ -16,8 +16,8 @@ import android.widget.ListView;
 
 /**
  * 
- * @author geniuseoe2012 ¸ü¶à¾«²Ê£¬Çë¹Ø×¢ÎÒµÄCSDN²©¿Íhttp://blog.csdn.net/geniuseoe2012
- *         android¿ª·¢½»Á÷Èº£º200102476
+ * @author geniuseoe2012 æ›´å¤šç²¾å½©ï¼Œè¯·å…³æ³¨æˆ‘çš„CSDNåšå®¢http://blog.csdn.net/geniuseoe2012
+ *         androidå¼€å‘äº¤æµç¾¤ï¼š200102476
  */
 public class ChatActivity extends Activity implements OnClickListener {
 	/** Called when the activity is first created. */
@@ -32,7 +32,7 @@ public class ChatActivity extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.chat_xiaohei);
-		// Æô¶¯activityÊ±²»×Ô¶¯µ¯³öÈí¼üÅÌ
+		// å¯åŠ¨activityæ—¶ä¸è‡ªåŠ¨å¼¹å‡ºè½¯é”®ç›˜
 		getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		initView();
@@ -50,8 +50,8 @@ public class ChatActivity extends Activity implements OnClickListener {
 		mEditTextContent = (EditText) findViewById(R.id.et_sendmessage);
 	}
 
-	private String[] msgArray = new String[] { "ÓĞ´óÂğ", "ÓĞ£¡ÄãÄØ£¿", "ÎÒÒ²ÓĞ", "ÄÇÉÏ°É",
-			"´ò°¡£¡Äã·Å´ó°¡", "ÄãtmÕ¦²»·Å´óÄØ£¿Áô´óÇÀÈËÍ·ÄÇ£¡CaoµÄ¡£Äã¸ö²Ëb", "2B²»½âÊÍ", "Äá¹ö....", };
+	private String[] msgArray = new String[] { "æœ‰å¤§å—", "æœ‰ï¼ä½ å‘¢ï¼Ÿ", "æˆ‘ä¹Ÿæœ‰", "é‚£ä¸Šå§",
+			"æ‰“å•Šï¼ä½ æ”¾å¤§å•Š", "ä½ tmå’‹ä¸æ”¾å¤§å‘¢ï¼Ÿç•™å¤§æŠ¢äººå¤´é‚£ï¼Caoçš„ã€‚ä½ ä¸ªèœb", "2Bä¸è§£é‡Š", "å°¼æ»š....", };
 
 	private String[] dataArray = new String[] { "2012-09-01 18:00",
 			"2012-09-01 18:10", "2012-09-01 18:11", "2012-09-01 18:20",
@@ -64,10 +64,10 @@ public class ChatActivity extends Activity implements OnClickListener {
 			ChatMsgEntity entity = new ChatMsgEntity();
 			entity.setDate(dataArray[i]);
 			if (i % 2 == 0) {
-				entity.setName("Ğ¡ºÚ");
+				entity.setName("å°é»‘");
 				entity.setMsgType(true);
 			} else {
-				entity.setName("ÈËÂí");
+				entity.setName("äººé©¬");
 				entity.setMsgType(false);
 			}
 
@@ -98,7 +98,7 @@ public class ChatActivity extends Activity implements OnClickListener {
 		if (contString.length() > 0) {
 			ChatMsgEntity entity = new ChatMsgEntity();
 			entity.setDate(getDate());
-			entity.setName("ÈËÂí");
+			entity.setName("äººé©¬");
 			entity.setMsgType(false);
 			entity.setText(contString);
 
@@ -127,7 +127,7 @@ public class ChatActivity extends Activity implements OnClickListener {
 		return sbBuffer.toString();
 	}
 
-	public void head_xiaohei(View v) { // ±êÌâÀ¸ ·µ»Ø°´Å¥
+	public void head_xiaohei(View v) { // æ ‡é¢˜æ  è¿”å›æŒ‰é’®
 		Intent intent = new Intent(ChatActivity.this, InfoXiaohei.class);
 		startActivity(intent);
 	}

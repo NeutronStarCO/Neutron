@@ -88,12 +88,12 @@ public class PhoneNumberActivity extends Activity {
 	{
 		if(!cbTerms.isChecked())
 		{
-			Toast toast = Toast.makeText(this, "Äú»¹Ã»ÓĞÍ¬ÒâÓÃ»§Ğ­Òé", Toast.LENGTH_LONG );
+			Toast toast = Toast.makeText(this, "æ‚¨è¿˜æ²¡æœ‰åŒæ„ç”¨æˆ·åè®®", Toast.LENGTH_LONG );
 			toast.show();
 		}
 		else if(tvPhoneNumber.getText().length() <= 8)
 		{
-			Toast toast = Toast.makeText(this, "ÄãÈ·ĞÅÄúµÄÊÖ»úºÅÂëÉÙÓÚ8Î»Âğ£¿", Toast.LENGTH_LONG );
+			Toast toast = Toast.makeText(this, "ä½ ç¡®ä¿¡æ‚¨çš„æ‰‹æœºå·ç å°‘äº8ä½å—ï¼Ÿ", Toast.LENGTH_LONG );
 			toast.show();
 		}
 		else
@@ -234,8 +234,8 @@ public class PhoneNumberActivity extends Activity {
 				case TAG_LOGIN:
 					new AlertDialog.Builder(PhoneNumberActivity.this)
                     .setIcon(getResources().getDrawable(R.drawable.login_error_icon))
-                    .setTitle("µç»°ºÅÂë´íÎó")
-                    .setMessage("ÄúÊäÈëµÄºÅÂëÉĞÎ´×¢²á£¬ÇëÈ·ÈÏºÅÂëºóÔÙ»ñÈ¡ÑéÖ¤Âë£¡")
+                    .setTitle("ç”µè¯å·ç é”™è¯¯")
+                    .setMessage("æ‚¨è¾“å…¥çš„å·ç å°šæœªæ³¨å†Œï¼Œè¯·ç¡®è®¤å·ç åå†è·å–éªŒè¯ç ï¼")
                     .create().show();
 					break;
 				case TAG_SIGN_IN:
@@ -270,8 +270,8 @@ public class PhoneNumberActivity extends Activity {
 					{
 						new AlertDialog.Builder(PhoneNumberActivity.this)
 	                    .setIcon(getResources().getDrawable(R.drawable.login_error_icon))
-	                    .setTitle("Éè±¸²»¶Ô")
-	                    .setMessage("ÄúÎ´Ê¹ÓÃ×¢²áµÄµç»°»òsim¿¨À´µÇÂ¼×¢²áÓÃ»§£¡")
+	                    .setTitle("è®¾å¤‡ä¸å¯¹")
+	                    .setMessage("æ‚¨æœªä½¿ç”¨æ³¨å†Œçš„ç”µè¯æˆ–simå¡æ¥ç™»å½•æ³¨å†Œç”¨æˆ·ï¼")
 	                    .create().show();
 					}
 					
@@ -279,8 +279,8 @@ public class PhoneNumberActivity extends Activity {
 				case TAG_SIGN_IN:
 					new AlertDialog.Builder(PhoneNumberActivity.this)
                     .setIcon(getResources().getDrawable(R.drawable.login_error_icon))
-                    .setTitle("µç»°ºÅÂë´íÎó")
-                    .setMessage("ÄúÊäÈëµÄºÅÂëÒÑ¾­×¢²á£¬ÇëÈ·ÈÏºÅÂëºóÔÙ»ñÈ¡ÑéÖ¤Âë£¡")
+                    .setTitle("ç”µè¯å·ç é”™è¯¯")
+                    .setMessage("æ‚¨è¾“å…¥çš„å·ç å·²ç»æ³¨å†Œï¼Œè¯·ç¡®è®¤å·ç åå†è·å–éªŒè¯ç ï¼")
                     .create().show();
 					break;
 				}

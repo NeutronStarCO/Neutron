@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -22,7 +24,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.neutron.server.persistence.model.T_relation;
+import com.neutron.server.persistence.model.T_relationExample;
 import com.neutron.server.persistence.model.T_user;
+import com.neutron.server.persistence.model.T_userExample;
 import com.neutronstar.neutron.NeutronContract.NeutronGroupTesting;
 import com.neutronstar.neutron.NeutronContract.NeutronRecord;
 import com.neutronstar.neutron.NeutronContract.NeutronUser;
@@ -43,6 +48,9 @@ public class VarificationCodeActivity extends Activity {
 	private int userid;
 	private EditText etVarificationCode;
 	private T_user user;
+	private T_userExample uerEx;
+	private ArrayList<T_relation> alRelation;
+	private ArrayList<T_user> alUser;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -98,7 +106,7 @@ public class VarificationCodeActivity extends Activity {
 		}
 		else
 		{
-			Toast toast = Toast.makeText(this, "—È÷§¬Î¥ÌŒÛ£°", Toast.LENGTH_LONG );
+			Toast toast = Toast.makeText(this, "È™åËØÅÁ†ÅÈîôËØØÔºÅ", Toast.LENGTH_LONG );
 			toast.show();
 		}		
 	}
@@ -123,8 +131,7 @@ public class VarificationCodeActivity extends Activity {
         if (networkInfo != null && networkInfo.isConnected()) {
             new LoginTask().execute(strUrl);
         } else {
-        	Toast toast = Toast.makeText(this, "No network connection available.", Toast.LENGTH_LONG );
-			toast.show();
+        	Toast.makeText(this, "No network connection available.", Toast.LENGTH_LONG ).show();
         }
 	}
 	
@@ -169,11 +176,9 @@ public class VarificationCodeActivity extends Activity {
 		
 		protected void onPostExecute(String result) 
 		{
-			Intent intent = new Intent();
-			Bundle bundle  = new Bundle();
 			if(state.equals("ok"))
 			{
-				// «Â≥˝±æµÿ ˝æ›ø‚ ˝æ›£¨≤Â»Î±æµÿ ˝æ›ø‚”√ªß
+				// Ê∏ÖÈô§Êú¨Âú∞Êï∞ÊçÆÂ∫ìÊï∞ÊçÆÔºåÊèíÂÖ•Êú¨Âú∞Êï∞ÊçÆÂ∫ìÁî®Êà∑
 				SQLiteDatabase db = ndb.getWritableDatabase();
 				db.execSQL("Delete from " + NeutronUser.TABLE_NAME);
 				db.execSQL("Delete from " + NeutronRecord.TABLE_NAME);
@@ -194,12 +199,10 @@ public class VarificationCodeActivity extends Activity {
 				cv.put(NeutronUser.COLUMN_NAME_AVATAR, user.gettUserPicture());
 				db.insert(NeutronUser.TABLE_NAME, null, cv); 
 				
-				bundle.putInt("userid", user.gettUserId());
-				intent.putExtras(bl);
-				intent.setClass(VarificationCodeActivity.this, MainNeutron.class);
-				startActivityForResult(intent, 0);
-				setResult(RESULT_FIRST_USER, new Intent());
-				finish();
+				// 1„ÄÅÊü•ËøúÁ®ãÂÖ≥Á≥ªË°®ÔºåÂæóÂà∞ÊâÄÊúâÂØπÂ∫îÂÖ≥Á≥ª
+				new getRelationTask().execute(SERVER.Address + "/" + "relation");
+				
+				// 2„ÄÅÁî±ÂÖ≥Á≥ªÊü•ÊâÄÊúâÂØπÂ∫îÔºåÊèíÂÖ•Êú¨Âú∞Êï∞ÊçÆÂ∫ì			
 			}
 			else
 			{
@@ -208,6 +211,146 @@ public class VarificationCodeActivity extends Activity {
                 .setTitle("OOPS")
                 .setMessage("We cannot login the user for you!")
                 .create().show();
+			}
+		}
+	}
+	
+	private class getRelationTask extends AsyncTask<String, Void, String> 
+	{
+		String state = "";
+		T_relationExample tRelationEx;
+		protected String doInBackground(String... params) {
+			String strUrl = params[0];
+			tRelationEx = new T_relationExample();
+			tRelationEx.createCriteria()
+				.andTRelationMasterIdEqualTo(user.gettUserId())
+				.andTRelationDeltagEqualTo(String.valueOf(TAG.normal));
+			try {
+				URL url = new URL(strUrl);
+			    HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+			    urlConn.setReadTimeout(10000 /* milliseconds */);
+			    urlConn.setConnectTimeout(15000 /* milliseconds */);
+			    urlConn.setDoInput(true);
+			    urlConn.setDoOutput(true);
+			    urlConn.setRequestMethod("POST");
+			    urlConn.setUseCaches(false);
+				urlConn.setRequestProperty("Content-Type", "application/x-java-serialized-object");
+				urlConn.connect();
+				OutputStream outStrm = urlConn.getOutputStream();  
+		        ObjectOutputStream oos = new ObjectOutputStream(outStrm);  
+		        
+		        ArrayList<Serializable> paraList = new ArrayList<Serializable>();
+		        paraList.add("queryWithCriteria");
+		        paraList.add(tRelationEx);
+		        oos.writeObject(paraList);  
+		        oos.flush();  
+		        oos.close();  
+		  
+		        ObjectInputStream ois = new ObjectInputStream(urlConn.getInputStream());  
+		        paraList = (ArrayList<Serializable>)ois.readObject();
+		        state = (String)paraList.get(0);
+		        alRelation = (ArrayList<T_relation>) paraList.get(1);	
+		        Log.d("alRelation.size", "" + alRelation.size());
+           } catch (Exception e) {
+               e.printStackTrace();
+           }
+			return null;
+		}
+		
+		protected void onPostExecute(String result) 
+		{
+			if(state.equals("ok"))
+			{
+				uerEx = new T_userExample();
+				List<Integer> listInt = new ArrayList<Integer>();
+				Iterator<T_relation> iterator = alRelation.iterator();
+				while(iterator.hasNext())
+				{
+					listInt.add(iterator.next().gettRelationSalveId());
+				}
+				uerEx.createCriteria().andTUserIdIn(listInt).andTUserDeltagEqualTo(String.valueOf(TAG.normal));
+				new getUserListTask().execute(SERVER.Address + "/" + "login");
+			}
+		}
+	}
+	
+	private class getUserListTask extends AsyncTask<String, Void, String> 
+	{
+		String state = "";
+		protected String doInBackground(String... params) {
+			String strUrl = params[0];
+			try {
+				URL url = new URL(strUrl);
+			    HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+			    urlConn.setReadTimeout(10000 /* milliseconds */);
+			    urlConn.setConnectTimeout(15000 /* milliseconds */);
+			    urlConn.setDoInput(true);
+			    urlConn.setDoOutput(true);
+			    urlConn.setRequestMethod("POST");
+			    urlConn.setUseCaches(false);
+				urlConn.setRequestProperty("Content-Type", "application/x-java-serialized-object");
+				urlConn.connect();
+				OutputStream outStrm = urlConn.getOutputStream();  
+		        ObjectOutputStream oos = new ObjectOutputStream(outStrm);  
+		        
+		        ArrayList<Serializable> paraList = new ArrayList<Serializable>();
+		        paraList.add("queryWithCriteria");
+		        paraList.add(uerEx);
+		        oos.writeObject(paraList);  
+		        oos.flush();  
+		        oos.close();  
+		  
+		        ObjectInputStream ois = new ObjectInputStream(urlConn.getInputStream());  
+		        paraList = (ArrayList<Serializable>)ois.readObject();
+		        state = (String)paraList.get(0);
+		        alUser = (ArrayList<T_user>) paraList.get(1);	  
+		        Log.d("alUser.size", "" + alUser.size());
+           } catch (Exception e) {
+               e.printStackTrace();
+           }
+			return null;
+		}
+		
+		protected void onPostExecute(String result) 
+		{
+			if(state.equals("ok"))
+			{
+				Intent intent = new Intent();
+				Bundle bundle  = new Bundle();
+				Iterator<T_user> iteratorUser = alUser.iterator();
+				while(iteratorUser.hasNext())
+				{
+					T_user tempUser = iteratorUser.next();
+					SQLiteDatabase db = ndb.getWritableDatabase();					
+					ContentValues cv = new ContentValues(); 
+					cv.put(NeutronUser.COLUMN_NAME_ID, tempUser.gettUserId());
+					cv.put(NeutronUser.COLUMN_NAME_NAME, tempUser.gettUserName());
+					cv.put(NeutronUser.COLUMN_NAME_GENDER, tempUser.gettUserGender());
+					cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, tempUser.gettUserBirth());
+					cv.put(NeutronUser.COLUMN_NAME_IDD, tempUser.gettUserAreacode());
+					cv.put(NeutronUser.COLUMN_NAME_PHONE_NUMBER, tempUser.gettUserPhonenumber());
+					cv.put(NeutronUser.COLUMN_NAME_TYPE, tempUser.gettUserRegtag());
+					cv.put(NeutronUser.COLUMN_NAME_TAG, tempUser.gettUserDeltag());
+					cv.put(NeutronUser.COLUMN_NAME_AVATAR, tempUser.gettUserPicture());
+					Iterator<T_relation> iteratorRelation = alRelation.iterator();
+					while(iteratorRelation.hasNext())
+					{
+						T_relation tempRelation = iteratorRelation.next();
+						if(tempRelation.gettRelationSalveId().equals(tempUser.gettUserId()))
+						{
+							cv.put(NeutronUser.COLUMN_NAME_RELATION, tempRelation.gettRelationRelation());
+							cv.put(NeutronUser.COLUNM_NAME_RELATION_TAG, tempRelation.gettRelationConfirmtag());
+						}
+					}					
+					db.insert(NeutronUser.TABLE_NAME, null, cv); 
+				}
+				
+				bundle.putInt("userid", user.gettUserId());
+				intent.putExtras(bl);
+				intent.setClass(VarificationCodeActivity.this, MainNeutron.class);
+				startActivityForResult(intent, 0);
+				setResult(RESULT_FIRST_USER, new Intent());
+				finish();
 			}
 		}
 	}

@@ -110,7 +110,7 @@ public class SignUpInfoActivity extends Activity {
 		if(tvName.length() == 0)
 		{
 			user.settUserName(tvName.getHint().toString());
-			Toast.makeText(this, "ºÃ°É£¬ÄãÒ²½ĞÁõµÂ»ª£¬ËãÄãºİ£¬»¶Ó­Äú£¡", Toast.LENGTH_LONG ).show();
+			Toast.makeText(this, "å¥½å§ï¼Œä½ ä¹Ÿå«åˆ˜å¾·åï¼Œç®—ä½ ç‹ ï¼Œæ¬¢è¿æ‚¨ï¼", Toast.LENGTH_LONG ).show();
 		}			
 		else 
 			user.settUserName(tvName.getText().toString());
@@ -206,12 +206,12 @@ public class SignUpInfoActivity extends Activity {
 			Bundle bundle  = new Bundle();
 			if(state.equals("ok"))
 			{
-				// Çå³ı±¾µØÊı¾İ±íÊı¾İ
+				// æ¸…é™¤æœ¬åœ°æ•°æ®è¡¨æ•°æ®
 				SQLiteDatabase db = ndb.getWritableDatabase();
 				db.execSQL("Delete from " + NeutronUser.TABLE_NAME);
 				db.execSQL("Delete from " + NeutronRecord.TABLE_NAME);
 				db.execSQL("Delete from " + NeutronGroupTesting.TABLE_NAME);
-				// ²åÈëĞÂÊı¾İ
+				// æ’å…¥æ–°æ•°æ®
 				ContentValues cv = new ContentValues(); 
 				cv.put(NeutronUser.COLUMN_NAME_ID, result);
 				cv.put(NeutronUser.COLUMN_NAME_NAME, user.gettUserName());

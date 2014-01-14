@@ -33,7 +33,7 @@ public class ShakeActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.shake_activity);
-		// drawerSet ();//ÉèÖÃ drawer¼àÌı ÇĞ»» °´Å¥µÄ·½Ïò
+		// drawerSet ();//è®¾ç½® drawerç›‘å¬ åˆ‡æ¢ æŒ‰é’®çš„æ–¹å‘
 
 		mVibrator = (Vibrator) getApplication().getSystemService(
 				VIBRATOR_SERVICE);
@@ -58,7 +58,7 @@ public class ShakeActivity extends Activity {
 				mTitle.startAnimation(titleup);
 			}
 		});
-		/* Éè¶¨SlidingDrawer±»¹Ø±ÕµÄÊÂ¼ş´¦Àí */
+		/* è®¾å®šSlidingDrawerè¢«å…³é—­çš„äº‹ä»¶å¤„ç† */
 		mDrawer.setOnDrawerCloseListener(new OnDrawerCloseListener() {
 			public void onDrawerClosed() {
 				mDrawerBtn.setBackgroundDrawable(getResources().getDrawable(
@@ -78,19 +78,19 @@ public class ShakeActivity extends Activity {
 		mShakeListener.setOnShakeListener(new OnShakeListener() {
 			public void onShake() {
 				// Toast.makeText(getApplicationContext(),
-				// "±§Ç¸£¬ÔİÊ±Ã»ÓĞÕÒµ½ÔÚÍ¬Ò»Ê±¿ÌÒ¡Ò»Ò¡µÄÈË¡£\nÔÙÊÔÒ»´Î°É£¡", Toast.LENGTH_SHORT).show();
-				startAnim(); // ¿ªÊ¼ Ò¡Ò»Ò¡ÊÖÕÆ¶¯»­
+				// "æŠ±æ­‰ï¼Œæš‚æ—¶æ²¡æœ‰æ‰¾åˆ°åœ¨åŒä¸€æ—¶åˆ»æ‘‡ä¸€æ‘‡çš„äººã€‚\nå†è¯•ä¸€æ¬¡å§ï¼", Toast.LENGTH_SHORT).show();
+				startAnim(); // å¼€å§‹ æ‘‡ä¸€æ‘‡æ‰‹æŒåŠ¨ç”»
 				mShakeListener.stop();
-				startVibrato(); // ¿ªÊ¼ Õğ¶¯
+				startVibrato(); // å¼€å§‹ éœ‡åŠ¨
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
 						// Toast.makeText(getApplicationContext(),
-						// "±§Ç¸£¬ÔİÊ±Ã»ÓĞÕÒµ½\nÔÚÍ¬Ò»Ê±¿ÌÒ¡Ò»Ò¡µÄÈË¡£\nÔÙÊÔÒ»´Î°É£¡",
+						// "æŠ±æ­‰ï¼Œæš‚æ—¶æ²¡æœ‰æ‰¾åˆ°\nåœ¨åŒä¸€æ—¶åˆ»æ‘‡ä¸€æ‘‡çš„äººã€‚\nå†è¯•ä¸€æ¬¡å§ï¼",
 						// 500).setGravity(Gravity.CENTER,0,0).show();
 						Toast mtoast;
 						mtoast = Toast.makeText(getApplicationContext(),
-								"±§Ç¸£¬ÔİÊ±Ã»ÓĞÕÒµ½\nÔÚÍ¬Ò»Ê±¿ÌÒ¡Ò»Ò¡µÄÈË¡£\nÔÙÊÔÒ»´Î°É£¡", 10);
+								"æŠ±æ­‰ï¼Œæš‚æ—¶æ²¡æœ‰æ‰¾åˆ°\nåœ¨åŒä¸€æ—¶åˆ»æ‘‡ä¸€æ‘‡çš„äººã€‚\nå†è¯•ä¸€æ¬¡å§ï¼", 10);
 						// mtoast.setGravity(Gravity.CENTER, 0, 0);
 						mtoast.show();
 						mVibrator.cancel();
@@ -101,7 +101,7 @@ public class ShakeActivity extends Activity {
 		});
 	}
 
-	public void startAnim() { // ¶¨ÒåÒ¡Ò»Ò¡¶¯»­¶¯»­
+	public void startAnim() { // å®šä¹‰æ‘‡ä¸€æ‘‡åŠ¨ç”»åŠ¨ç”»
 		AnimationSet animup = new AnimationSet(true);
 		TranslateAnimation mytranslateanimup0 = new TranslateAnimation(
 				Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f,
@@ -135,16 +135,16 @@ public class ShakeActivity extends Activity {
 		mImgDn.startAnimation(animdn);
 	}
 
-	public void startVibrato() { // ¶¨ÒåÕğ¶¯
-		mVibrator.vibrate(new long[] { 500, 200, 500, 200 }, -1); // µÚÒ»¸ö£û£ıÀïÃæÊÇ½Ú×àÊı×é£¬
-																	// µÚ¶ş¸ö²ÎÊıÊÇÖØ¸´´ÎÊı£¬-1Îª²»ÖØ¸´£¬·Ç-1¶íÈÕ´ÓpatternµÄÖ¸¶¨ÏÂ±ê¿ªÊ¼ÖØ¸´
+	public void startVibrato() { // å®šä¹‰éœ‡åŠ¨
+		mVibrator.vibrate(new long[] { 500, 200, 500, 200 }, -1); // ç¬¬ä¸€ä¸ªï½›ï½é‡Œé¢æ˜¯èŠ‚å¥æ•°ç»„ï¼Œ
+																	// ç¬¬äºŒä¸ªå‚æ•°æ˜¯é‡å¤æ¬¡æ•°ï¼Œ-1ä¸ºä¸é‡å¤ï¼Œé-1ä¿„æ—¥ä»patternçš„æŒ‡å®šä¸‹æ ‡å¼€å§‹é‡å¤
 	}
 
-	public void shake_activity_back(View v) { // ±êÌâÀ¸ ·µ»Ø°´Å¥
+	public void shake_activity_back(View v) { // æ ‡é¢˜æ  è¿”å›æŒ‰é’®
 		this.finish();
 	}
 
-	public void linshi(View v) { // ±êÌâÀ¸
+	public void linshi(View v) { // æ ‡é¢˜æ 
 		startAnim();
 	}
 

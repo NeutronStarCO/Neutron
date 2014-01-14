@@ -75,15 +75,15 @@ public final class NeutronContract {
 		 public static final int weight = 1;
 		 public static final int height = 2;
 		 
-		 public static final int B_WBC	= 3;		// °×Ï¸°û¼ÆÊı
-		 public static final int B_RBC	= 4;		// ºìÏ¸°û¼ÆÊı
-		 public static final int B_HGB	= 5;		// Ñªºìµ°°×
-		 public static final int B_HCT	= 6;		// ÑªÏ¸°ûÑ¹»ı
-		 public static final int B_PLT	= 7;		// ÑªĞ¡°å
-		 public static final int B_PCT	= 8;		// ÑªĞ¡°åÑ¹»ı
+		 public static final int B_WBC	= 3;		// ç™½ç»†èƒè®¡æ•°
+		 public static final int B_RBC	= 4;		// çº¢ç»†èƒè®¡æ•°
+		 public static final int B_HGB	= 5;		// è¡€çº¢è›‹ç™½
+		 public static final int B_HCT	= 6;		// è¡€ç»†èƒå‹ç§¯
+		 public static final int B_PLT	= 7;		// è¡€å°æ¿
+		 public static final int B_PCT	= 8;		// è¡€å°æ¿å‹ç§¯
 		 
-		 public static final int U_SG	= 15;		// Äò±ÈÖØ
-		 public static final int U_PH	= 16;		// ÄòËá¼î¶È
+		 public static final int U_SG	= 15;		// å°¿æ¯”é‡
+		 public static final int U_PH	= 16;		// å°¿é…¸ç¢±åº¦
 		 
 		 public static final int BP_X	= 17;
 		 public static final int BP_Y	= 18;

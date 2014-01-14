@@ -1,16 +1,24 @@
 package com.neutronstar.neutron;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,9 +28,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
+import com.neutron.server.persistence.model.T_relation;
 import com.neutron.server.persistence.model.T_user;
 import com.neutronstar.neutron.NeutronContract.NeutronUser;
+import com.neutronstar.neutron.NeutronContract.SERVER;
 import com.neutronstar.neutron.NeutronContract.TAG;
+import com.neutronstar.neutron.NeutronContract.USER;
 import com.neutronstar.neutron.model.FamilyMemberEntity;
 import com.neutronstar.neutron.model.FamilyMemberEntityAdapter;
 
@@ -36,6 +47,8 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 	private ListView fmListView;
 	private FamilyMemberEntityAdapter fmAdapter;
 	private List<FamilyMemberEntity> fmDataArrays = new ArrayList<FamilyMemberEntity>();
+	private int deletePos;
+	private int modifyPos;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -104,10 +117,12 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 			@Override
 			public void onItemClick(AdapterView<?> parentView, View view,
 					int position, long rowCount) {
+				modifyPos = position;
 				Intent intent =  
 						new Intent(MainTabFamily.this, UserInfoActivity.class);
 				Bundle bl = new Bundle();
 				bl.putInt("tag", UserInfoActivity.TAG_MODIFY_USER);
+				bl.putInt("userid", MainTabFamily.this.getIntent().getExtras().getInt("userid"));
 				bl.putSerializable("family_member_entity", fmDataArrays.get(position));
 				intent.putExtras(bl);
 				getParent().startActivityForResult(intent,MainTabFamily.TAG_MODIFY);
@@ -136,7 +151,6 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 		Bundle bl = new Bundle();
 		bl.putInt("tag", UserInfoActivity.TAG_ADD_USER);
 		bl.putInt("userid", this.getIntent().getExtras().getInt("userid"));
-		Log.d("MainTabFamily--", "" + this.getIntent().getExtras().getInt("userid"));
 		intent.putExtras(bl);
 		getParent().startActivityForResult(intent,MainTabFamily.TAG_ADD);
 	}
@@ -173,8 +187,18 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 				break;
 			case MainTabFamily.TAG_DELETE:
 				bl = data.getExtras();
-				int position = bl.getInt("position");
-				fmDataArrays.remove(position);
+				deletePos = bl.getInt("position");
+				// 删除关系
+				new DeleteRelationTask().execute(SERVER.Address + "/" + "relation"
+						, String.valueOf(MainTabFamily.this.getIntent().getExtras().getInt("userid"))
+						, String.valueOf(fmDataArrays.get(deletePos).getId()));
+				break;
+			case MainTabFamily.TAG_MODIFY:
+				// 更新位置为modifyPos的entity
+				bl = data.getExtras();
+				FamilyMemberEntity afterModified  = (FamilyMemberEntity)bl.getSerializable("fme_after_modified");
+				fmDataArrays.remove(modifyPos);
+				fmDataArrays.add(modifyPos, afterModified);
 				fmAdapter = new FamilyMemberEntityAdapter(this, fmDataArrays);
 				fmListView.setAdapter(fmAdapter);
 				break;
@@ -186,11 +210,143 @@ public class MainTabFamily extends Activity implements OnTabActivityResultListen
 		}
 	}
 
-	@Override
 	public void onTabActivityResult(int requestCode, int resultCode, Intent data) 
 	{
 		onActivityResult(requestCode, resultCode, data);
 	}
 	
 
+	private class DeleteRelationTask extends AsyncTask<String, Void, String> 
+	{
+		String state = "";
+		int result;
+		T_relation tRelation;
+		protected String doInBackground(String... params) {
+			String strUrl = params[0];
+			tRelation = new T_relation(); 
+			tRelation.settRelationMasterId(Integer.valueOf(params[1]));Log.d("MasterId","" + tRelation.gettRelationMasterId());
+			tRelation.settRelationSalveId(Integer.valueOf(params[2]));Log.d("SalveId","" + tRelation.gettRelationSalveId());
+			try {
+				URL url = new URL(strUrl);
+			    HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+			    urlConn.setReadTimeout(10000 /* milliseconds */);
+			    urlConn.setConnectTimeout(15000 /* milliseconds */);
+			    urlConn.setDoInput(true);
+			    urlConn.setDoOutput(true);
+			    urlConn.setRequestMethod("POST");
+			    urlConn.setUseCaches(false);
+			    urlConn.setRequestProperty("Accept-Charset", "utf-8");  
+				urlConn.setRequestProperty("Content-Type", "application/x-java-serialized-object");
+				urlConn.connect();
+				OutputStream outStrm = urlConn.getOutputStream();  
+		        ObjectOutputStream oos = new ObjectOutputStream(outStrm);  
+		        
+		        ArrayList<Serializable> paraList = new ArrayList<Serializable>();
+		        paraList.add("delete");
+		        paraList.add(tRelation);
+		        oos.writeObject(paraList);  
+		        oos.flush();  
+		        oos.close();  
+		  
+		        ObjectInputStream ois = new ObjectInputStream(urlConn.getInputStream());  
+		        paraList = (ArrayList<Serializable>)ois.readObject();
+		        state = (String)paraList.get(0);
+		        result = (Integer)paraList.get(1); 
+		        
+			} catch (Exception e) {
+	               e.printStackTrace();
+	           }
+			return null;
+		}
+		
+		protected void onPostExecute(String result) 
+		{
+			T_user user = new T_user();
+			if(state.equals("delOk"))
+			{
+				if(fmDataArrays.get(deletePos).getType() == USER.subregister)
+				{
+					//  子用户则删除用户
+					new DeleteUserTask().execute(SERVER.Address + "/" + "login"
+							, String.valueOf(fmDataArrays.get(deletePos).getId()));
+				}
+				else
+				{
+					// 删除本地数据库用户
+					SQLiteDatabase db = ndb.getWritableDatabase();
+					ContentValues cv = new ContentValues();
+					cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.delete);
+					String whereClause = NeutronUser.COLUMN_NAME_ID +"=? AND " + NeutronUser.COLUMN_NAME_NAME + "=?";
+					String[] whereArgs = { String.valueOf(fmDataArrays.get(deletePos).getId()), fmDataArrays.get(deletePos).getName() };  
+					db.update(NeutronUser.TABLE_NAME, cv, whereClause, whereArgs);
+					// 删除页面
+					fmDataArrays.remove(deletePos);
+					fmAdapter = new FamilyMemberEntityAdapter(MainTabFamily.this, fmDataArrays);
+					fmListView.setAdapter(fmAdapter);
+				}
+			}
+		}		
+	}
+	
+	private class DeleteUserTask extends AsyncTask<String, Void, String> 
+	{
+		String state = "";
+		int result;
+		T_user tUser;
+		protected String doInBackground(String... params) {
+			String strUrl = params[0];
+			tUser = new T_user(); 
+			tUser.settUserId(Integer.valueOf(params[1]));Log.d("params[1]userid","" + params[1]);
+			try {
+				URL url = new URL(strUrl);
+			    HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+			    urlConn.setReadTimeout(10000 /* milliseconds */);
+			    urlConn.setConnectTimeout(15000 /* milliseconds */);
+			    urlConn.setDoInput(true);
+			    urlConn.setDoOutput(true);
+			    urlConn.setRequestMethod("POST");
+			    urlConn.setUseCaches(false);
+			    urlConn.setRequestProperty("Accept-Charset", "utf-8");  
+				urlConn.setRequestProperty("Content-Type", "application/x-java-serialized-object");
+				urlConn.connect();
+				OutputStream outStrm = urlConn.getOutputStream();  
+		        ObjectOutputStream oos = new ObjectOutputStream(outStrm);  
+		        
+		        ArrayList<Serializable> paraList = new ArrayList<Serializable>();
+		        paraList.add("delete");
+		        paraList.add(tUser);
+		        oos.writeObject(paraList);  
+		        oos.flush();  
+		        oos.close();  
+		  
+		        ObjectInputStream ois = new ObjectInputStream(urlConn.getInputStream());  
+		        paraList = (ArrayList<Serializable>)ois.readObject();
+		        state = (String)paraList.get(0);
+		        result = (Integer)paraList.get(1); 
+		        
+			} catch (Exception e) {
+	               e.printStackTrace();
+	           }
+			return null;
+		}
+		
+		protected void onPostExecute(String result) 
+		{
+			if(state.equals("ok"))
+			{				
+				// 删除本地数据库用户
+				SQLiteDatabase db = ndb.getWritableDatabase();
+				ContentValues cv = new ContentValues();
+				cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.delete);
+				String whereClause = NeutronUser.COLUMN_NAME_ID +"=? AND " + NeutronUser.COLUMN_NAME_NAME + "=?";
+				String[] whereArgs = { String.valueOf(fmDataArrays.get(deletePos).getId()), fmDataArrays.get(deletePos).getName() };  
+				db.update(NeutronUser.TABLE_NAME, cv, whereClause, whereArgs);
+				// 删除页面
+				fmDataArrays.remove(deletePos);
+				fmAdapter = new FamilyMemberEntityAdapter(MainTabFamily.this, fmDataArrays);
+				fmListView.setAdapter(fmAdapter);
+
+			}
+		}
+	}
 }

@@ -11,10 +11,10 @@ public class InfoXiaoheiHead extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.info_xiaohei_head);
-		// requestWindowFeature(Window.FEATURE_NO_TITLE);//È¥µô±êÌâÀ¸
+		// requestWindowFeature(Window.FEATURE_NO_TITLE);//å»æ‰æ ‡é¢˜æ 
 		// getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-		// WindowManager.LayoutParams.FLAG_FULLSCREEN); //È«ÆÁÏÔÊ¾
-		// Toast.makeText(getApplicationContext(), "º¢×Ó£¡ºÃºÃ±³ËĞ£¡",
+		// WindowManager.LayoutParams.FLAG_FULLSCREEN); //å…¨å±æ˜¾ç¤º
+		// Toast.makeText(getApplicationContext(), "å­©å­ï¼å¥½å¥½èƒŒè¯µï¼",
 		// Toast.LENGTH_LONG).show();
 		// overridePendingTransition(R.anim.hyperspace_in,
 		// R.anim.hyperspace_out);

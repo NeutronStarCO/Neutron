@@ -58,12 +58,12 @@ public class NewRecordActivity extends Activity {
 		dateValue	= (TextView)findViewById(R.id.new_record_dateValue);
 		
 		intent=this.getIntent();
-		//»ñÈ¡IntentÖĞµÄBundleÊı¾İ
+		//è·å–Intentä¸­çš„Bundleæ•°æ®
 		bl=intent.getExtras();
 		item = bl.getInt("item");
 		userid = bl.getInt("userid");
 		rowid = bl.getInt("rowid");
-		String titleList[] = {"Á¿Á¿ÌåÖØ","ÌåÖØ","Ç§¿Ë","²âÁ¿ÈÕÆÚ","Äê-ÔÂ-ÈÕ"};
+		String titleList[] = {"é‡é‡ä½“é‡","ä½“é‡","åƒå…‹","æµ‹é‡æ—¥æœŸ","å¹´-æœˆ-æ—¥"};
 		
 		dateValue.setOnFocusChangeListener(new OnFocusChangeListener() {
 		    public void onFocusChange(View v, boolean hasFocus) {
@@ -251,7 +251,7 @@ public class NewRecordActivity extends Activity {
 		}
 	}
 	
-	public void cancel_back(View v) { // ±êÌâÀ¸ ·µ»Ø°´Å¥
+	public void cancel_back(View v) { // æ ‡é¢˜æ  è¿”å›æŒ‰é’®
 		this.finish();
 	}
 

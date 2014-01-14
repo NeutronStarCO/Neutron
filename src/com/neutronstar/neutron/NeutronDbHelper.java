@@ -118,13 +118,13 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
 		db.execSQL(SQL_CREATE_TABLE_USER);
 		db.execSQL(SQL_CREATE_TABLE_GROUPTESTING);
 		
-//		// Ìí¼ÓÒ»¸ö³õÊ¼»¯µÄÓÃ»§
+//		// æ·»åŠ ä¸€ä¸ªåˆå§‹åŒ–çš„ç”¨æˆ·
 //		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 //		Bitmap bitmap = ((BitmapDrawable) Appstart.instance.getResources().getDrawable(R.drawable.avatar_male)).getBitmap();
 //		bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos); 
 //		ContentValues cv = new ContentValues(); 
 //		cv.put(NeutronUser.COLUMN_NAME_ID, 1);
-//		cv.put(NeutronUser.COLUMN_NAME_NAME, "½Ü¿Ë¡¤ÈøÀû");
+//		cv.put(NeutronUser.COLUMN_NAME_NAME, "æ°å…‹Â·è¨åˆ©");
 //		cv.put(NeutronUser.COLUMN_NAME_GENDER, GENDER.male);
 //		cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, "1980-04-20");
 //		cv.put(NeutronUser.COLUMN_NAME_RELATION, USER.me);
@@ -134,13 +134,13 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
 //		cv.put(NeutronUser.COLUMN_NAME_TAG, TAG.normal);
 //		long result = db.insert(NeutronUser.TABLE_NAME, null, cv); 
 //		
-//		// Ìí¼ÓÁíÒ»¸ö³õÊ¼»¯ÓÃ»§ÓÃÓÚ²âÊÔ¼ÒÍ¥³ÉÔ±¹¦ÄÜ
+//		// æ·»åŠ å¦ä¸€ä¸ªåˆå§‹åŒ–ç”¨æˆ·ç”¨äºæµ‹è¯•å®¶åº­æˆå‘˜åŠŸèƒ½
 //		baos = new ByteArrayOutputStream();
 //		bitmap = ((BitmapDrawable) Appstart.instance.getResources().getDrawable(R.drawable.avatar_female)).getBitmap();
 //		bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos); 
 //		cv = new ContentValues(); 
 //		cv.put(NeutronUser.COLUMN_NAME_ID, 2);
-//		cv.put(NeutronUser.COLUMN_NAME_NAME, "ÄÎµÙÀò");
+//		cv.put(NeutronUser.COLUMN_NAME_NAME, "å¥ˆè’‚è‰");
 //		cv.put(NeutronUser.COLUMN_NAME_GENDER, GENDER.female);
 //		cv.put(NeutronUser.COLUMN_NAME_BIRTHDAY, "1983-01-15");
 //		cv.put(NeutronUser.COLUMN_NAME_RELATION, USER.wife);
@@ -169,7 +169,7 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
 				" null" + " from " + NeutronRecord.TABLE_NAME + "temp");
 		db.execSQL("drop table if exists " + NeutronRecord.TABLE_NAME + "temp");
 		db.execSQL(SQL_CREATE_TABLE_GROUPTESTING);
-		db.execSQL("INSERT INTO " + NeutronGroupTesting.TABLE_NAME + " values (1001, '1980-04-20 12:13:15.123','Çå»ª´óÑ§Ò½Ôº')");
+		db.execSQL("INSERT INTO " + NeutronGroupTesting.TABLE_NAME + " values (1001, '1980-04-20 12:13:15.123','æ¸…åå¤§å­¦åŒ»é™¢')");
 */		
 //		db.execSQL("drop table if exists " + NeutronGroupTesting.TABLE_NAME);
 //		db.execSQL(SQL_CREATE_TABLE_GROUPTESTING);
@@ -182,7 +182,7 @@ public class NeutronDbHelper extends SQLiteOpenHelper {
 	    Cursor cursor = null ;
 	    try
 	    {
-	        //²éÑ¯Ò»ĞĞ
+	        //æŸ¥è¯¢ä¸€è¡Œ
 	        cursor = db.rawQuery( "SELECT * FROM " + tableName + " LIMIT 0"
 	            , null );
 	        result = cursor != null && cursor.getColumnIndex(columnName) != -1 ;

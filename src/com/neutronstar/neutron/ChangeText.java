@@ -95,7 +95,7 @@ public class ChangeText extends Activity {
 		}
 	}
 
-	public void cancel_back(View v) { // ±êÌâÀ¸ ·µ»Ø°´Å¥
+	public void cancel_back(View v) { // æ ‡é¢˜æ  è¿”å›æŒ‰é’®
 		this.finish();
 	}
 	@Override
@@ -163,7 +163,7 @@ public class ChangeText extends Activity {
 				}
 				
 			} 	
-			else // Ã»ÓĞÕı³£·µ»Ø£¬ÍË³ö»òÕßÖØĞÂÁ¬½Ó	
+			else // æ²¡æœ‰æ­£å¸¸è¿”å›ï¼Œé€€å‡ºæˆ–è€…é‡æ–°è¿æ¥	
 			{	
 				Toast.makeText(ChangeText.this,	"No ok returned.", Toast.LENGTH_LONG).show();
 			}

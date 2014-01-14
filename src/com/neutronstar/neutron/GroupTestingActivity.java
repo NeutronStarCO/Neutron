@@ -41,7 +41,7 @@ public class GroupTestingActivity extends Activity {
 	private GroupTestingEntityAdapter gtAdapter;
 	private List<GroupTestingEntity> gtDataArrays = new ArrayList<GroupTestingEntity>();
 	
-	private String[] nameArray = new String[] { "°×Ï¸°ûÊý / WBC£¨4.0-10.0£©"};
+	private String[] nameArray = new String[] { "ç™½ç»†èƒžæ•° / WBCï¼ˆ4.0-10.0ï¼‰"};
 	private double[] valueArray = new double[] {6.79};
 	private String[] dimensionArray = new String[] { "K /ul"};
 	

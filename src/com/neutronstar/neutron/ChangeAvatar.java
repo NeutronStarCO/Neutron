@@ -33,7 +33,7 @@ public class ChangeAvatar extends Activity implements OnClickListener{
 	
 	private ImageView ivAvatar;
 	private RelativeLayout rlAvatar;
-	private String[] items = new String[] {"Ñ¡Ôñ±¾µØÕÕÆ¬", "ÅÄÕÕ"};
+	private String[] items = new String[] {"é€‰æ‹©æœ¬åœ°ç…§ç‰‡", "æ‹ç…§"};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +77,7 @@ public class ChangeAvatar extends Activity implements OnClickListener{
 				cameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
 				startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
 			} else {
-				Toast.makeText(v.getContext(), "Çë²åÈësd¿¨", Toast.LENGTH_LONG).show();
+				Toast.makeText(v.getContext(), "è¯·æ’å…¥sdå¡", Toast.LENGTH_LONG).show();
 			}
 			break;
 		case R.id.user_change_avatar_1:
@@ -88,7 +88,7 @@ public class ChangeAvatar extends Activity implements OnClickListener{
 	
 	private void showDialog() {
 		// TODO Auto-generated method stub
-		new AlertDialog.Builder(this).setTitle("¸ü»»Í·Ïñ").setItems(items, new DialogInterface.OnClickListener() {
+		new AlertDialog.Builder(this).setTitle("æ›´æ¢å¤´åƒ").setItems(items, new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -102,7 +102,7 @@ public class ChangeAvatar extends Activity implements OnClickListener{
 					break;
 				}
 			}
-		}).setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+		}).setNegativeButton("å–æ¶ˆ", new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -128,7 +128,7 @@ public class ChangeAvatar extends Activity implements OnClickListener{
 					resizeImage(getImageUri());
 				}
 				else{
-					Toast.makeText(ChangeAvatar.this, "Î´ÕÒµ½´æ´¢¿¨", Toast.LENGTH_LONG).show();
+					Toast.makeText(ChangeAvatar.this, "æœªæ‰¾åˆ°å­˜å‚¨å¡", Toast.LENGTH_LONG).show();
 				}
 				break;
 			case RESIZE_REQUEST_CODE:
@@ -143,12 +143,12 @@ public class ChangeAvatar extends Activity implements OnClickListener{
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-	    if(keyCode == KeyEvent.KEYCODE_BACK) { //¼à¿Ø/À¹½Ø/ÆÁ±Î·µ»Ø¼ü
+	    if(keyCode == KeyEvent.KEYCODE_BACK) { //ç›‘æ§/æ‹¦æˆª/å±è”½è¿”å›é”®
 	    	this.finish();
 	    } else if(keyCode == KeyEvent.KEYCODE_MENU) {
-	        //¼à¿Ø/À¹½Ø²Ëµ¥¼ü
+	        //ç›‘æ§/æ‹¦æˆªèœå•é”®
 	    } else if(keyCode == KeyEvent.KEYCODE_HOME) {
-	        //ÓÉÓÚHome¼üÎªÏµÍ³¼ü£¬´Ë´¦²»ÄÜ²¶»ñ£¬ĞèÒªÖØĞ´onAttachedToWindow()
+	        //ç”±äºHomeé”®ä¸ºç³»ç»Ÿé”®ï¼Œæ­¤å¤„ä¸èƒ½æ•è·ï¼Œéœ€è¦é‡å†™onAttachedToWindow()
 	    }
 	    return super.onKeyDown(keyCode, event);
 	}

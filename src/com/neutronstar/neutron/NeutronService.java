@@ -116,7 +116,7 @@ public class NeutronService extends Service {
 			public void run() {
 				// TODO Auto-generated method stub
 				uploadAcceleration("data", alAccData);
-				// ÏÈ²âÊÔÒ»·ÖÖÓÉÏ´«Ò»´ÎµÄÇé¿ö
+				// å…ˆæµ‹è¯•ä¸€åˆ†é’Ÿä¸Šä¼ ä¸€æ¬¡çš„æƒ…å†µ
 			}
 		}, 0, 600000);
 		
@@ -152,7 +152,7 @@ public class NeutronService extends Service {
 	@SuppressLint("SimpleDateFormat")
 	private void deleteAccelerationHistory()
 	{
-		//É¾³ı±¾µØ1ÌìÇ°µÄÊı¾İ
+		//åˆ é™¤æœ¬åœ°1å¤©å‰çš„æ•°æ®
 		SimpleDateFormat sDateFormat = new SimpleDateFormat(
 				"yyyy-MM-dd HH:mm:ss.SSS");
 		
@@ -306,7 +306,7 @@ public class NeutronService extends Service {
 	private void uploadAcceleration(String strServlet,
 			ArrayList<Serializable> alAccData) {
 
-		// µÚÒ»²½ ´ÓÊı¾İ¿âÖĞÈ¡µ½ UPLOADTAG Îª0µÄÖµ£¨Î´ÉÏ´«µÄÊı¾İ£©
+		// ç¬¬ä¸€æ­¥ ä»æ•°æ®åº“ä¸­å–åˆ° UPLOADTAG ä¸º0çš„å€¼ï¼ˆæœªä¸Šä¼ çš„æ•°æ®ï¼‰
 		NeutronDbHelper ndb = NeutronDbHelper.GetInstance(this);
 		SQLiteDatabase db = ndb.getReadableDatabase();
 		String[] projection = { NeutronAcceleration.COLUMN_NAME_ACCELERATION,
@@ -360,7 +360,7 @@ public class NeutronService extends Service {
 				return;
 			}
 		}
-		// µÚ¶ş²½ ½«Êı¾İÉÏ´«ÖÁ·şÎñÆ÷
+		// ç¬¬äºŒæ­¥ å°†æ•°æ®ä¸Šä¼ è‡³æœåŠ¡å™¨
 		String strUrl = SERVER.Address + "/" + strServlet;
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -474,7 +474,7 @@ public class NeutronService extends Service {
 	}
 
 	private final SensorEventListener sensorEventListener = new SensorEventListener() {
-		// ÏµÍ³ÉèÖÃµÄÖØÁ¦¼ÓËÙ¶È±ê×¼Öµ£¬Éè±¸ÔÚË®Æ½¾²Ö¹µÄÇé¿öÏÂ¾Í³ĞÊÜÕâ¸öÑ¹Á¦£¬ËùÒÔÄ¬ÈÏYÖá·½ÏòµÄ¼ÓËÙ¶ÈÖµÎªSTANDARD_GRAVITY
+		// ç³»ç»Ÿè®¾ç½®çš„é‡åŠ›åŠ é€Ÿåº¦æ ‡å‡†å€¼ï¼Œè®¾å¤‡åœ¨æ°´å¹³é™æ­¢çš„æƒ…å†µä¸‹å°±æ‰¿å—è¿™ä¸ªå‹åŠ›ï¼Œæ‰€ä»¥é»˜è®¤Yè½´æ–¹å‘çš„åŠ é€Ÿåº¦å€¼ä¸ºSTANDARD_GRAVITY
 		double calibration = SensorManager.STANDARD_GRAVITY;
 
 		public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -485,13 +485,13 @@ public class NeutronService extends Service {
 			double y = event.values[1];
 			double z = event.values[2];
 
-			// ¼ÆËãÈı¸ö·½ÏòµÄ¼ÓËÙ¶È
+			// è®¡ç®—ä¸‰ä¸ªæ–¹å‘çš„åŠ é€Ÿåº¦
 			double a = Math.round(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)
 					+ Math.pow(z, 2)));
 			double acc = Math.abs((float) (a - calibration));
 			lowAcc = lowAcc * FILTERING_VALUE + acc * (1.0f - FILTERING_VALUE);
 
-			// ÏûÈ¥Ô­ÓĞµÄÖØÁ¦ÒıÆğµÄÑ¹Á¦
+			// æ¶ˆå»åŸæœ‰çš„é‡åŠ›å¼•èµ·çš„å‹åŠ›
 			currentAcceleration = Math.abs(acc - lowAcc);
 			Log.i("sensor", "\n Service currentAcceleration "
 					+ currentAcceleration);

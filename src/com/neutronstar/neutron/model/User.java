@@ -36,7 +36,7 @@ public class User {
 		id = userid;
 		SQLiteDatabase db = ndb.getReadableDatabase();
 		
-		//// 从数据库得到用户的基础数据
+		//// 浠庢暟鎹簱寰楀埌鐢ㄦ埛鐨勫熀纭�鏁版嵁
 		String[] projection = {
 			    NeutronUser.COLUMN_NAME_ID,
 			    NeutronUser.COLUMN_NAME_NAME,

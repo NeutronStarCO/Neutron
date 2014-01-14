@@ -62,7 +62,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 	private PopupWindow pwTitle;
 	private LinearLayout llTitle;
 	private ListView lvTitle;
-//	private String title[] = { "ÎÒ", "ÈøÀû", "ÄÎµÙÀò", "¿¨Ã·Â¡", "²¼Ê²" };
+//	private String title[] = { "æˆ‘", "è¨åˆ©", "å¥ˆè’‚è‰", "å¡æ¢…éš†", "å¸ƒä»€" };
 	private String familyTitle[];
 	private Integer familyId[];
 	private double currentTotalCost = 0;
@@ -82,7 +82,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 		intent = this.getIntent();
 		bl = intent.getExtras();
 		Log.d("-----", "" + bl.getInt("userid"));
-		// »ñÈ¡¼ÒÍ¥³ÉÔ±ÁĞ±í
+		// è·å–å®¶åº­æˆå‘˜åˆ—è¡¨
 		familyId = new Integer[1];
 		familyTitle = new String[1];
 		List<Integer> listId = new ArrayList<Integer>();  
@@ -113,7 +113,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 			familyTitle = listName.toArray(new String[1]);
 		}
 		
-		// ³õÊ¼»¯½çÃæÄÚÈİ
+		// åˆå§‹åŒ–ç•Œé¢å†…å®¹
 		initMainTabToday(bl.getInt("userid"));	
 	}
 	
@@ -125,16 +125,16 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 		
 		((ImageView) findViewById(R.id.man_tab_today_avatar)).setImageBitmap(user.getAvatar());
 		wv = (WebView) findViewById(R.id.wv);
-		wv.getSettings().setJavaScriptEnabled(true); // ÉèÖÃWebViewÖ§³Öjavascript
-		wv.getSettings().setUseWideViewPort(true); // ÉèÖÃÊÇµ±Ç°html½çÃæ×ÔÊÊÓ¦ÆÁÄ»
-		wv.getSettings().setSupportZoom(true); // ÉèÖÃÖ§³ÖËõ·Å
-		wv.getSettings().setBuiltInZoomControls(true);// ÏÔÊ¾Ëõ·Å¿Ø¼ş
+		wv.getSettings().setJavaScriptEnabled(true); // è®¾ç½®WebViewæ”¯æŒjavascript
+		wv.getSettings().setUseWideViewPort(true); // è®¾ç½®æ˜¯å½“å‰htmlç•Œé¢è‡ªé€‚åº”å±å¹•
+		wv.getSettings().setSupportZoom(true); // è®¾ç½®æ”¯æŒç¼©æ”¾
+		wv.getSettings().setBuiltInZoomControls(true);// æ˜¾ç¤ºç¼©æ”¾æ§ä»¶
 		wv.getSettings().setLoadWithOverviewMode(true);
 		wv.requestFocus();
 		wv.addJavascriptInterface(new WebAppInterface(this), "Android");
-		wv.loadUrl("file:///android_asset/html/test_chart.html"); // ¼ÓÔØassertÄ¿Â¼ÏÂµÄÎÄ¼ş
+		wv.loadUrl("file:///android_asset/html/test_chart.html"); // åŠ è½½assertç›®å½•ä¸‹çš„æ–‡ä»¶
 		// wv.loadUrl("javascript:refreshToday('" + getRemoteData() + "')");
-		// »ñÈ¡sensor·şÎñ£¬Ñ¡Ôñ¼ÓËÙ¶È¸ĞÓ¦Æ÷
+		// è·å–sensoræœåŠ¡ï¼Œé€‰æ‹©åŠ é€Ÿåº¦æ„Ÿåº”å™¨
 		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		
@@ -147,10 +147,10 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 		man_tab_today_metabolismRMRRateValue = (TextView) findViewById(R.id.man_tab_today_metabolismRMRRateValue);
 		man_tab_today_metabolismRMRRateValue.setText(new DecimalFormat("#.##")
 		.format(rmrModel.getRMRPerHour()));
-		// ĞÕÃû
+		// å§“å
 		TextView man_tab_today_name = (TextView) findViewById(R.id.man_tab_today_name);
 		man_tab_today_name.setText(user.getName());
-		// ĞÔ±ğ
+		// æ€§åˆ«
 		ImageView man_tab_today_gender = (ImageView) findViewById(R.id.man_tab_today_gender);
 		if(user.getGender() == GENDER.male)
 			man_tab_today_gender.setImageResource(R.drawable.sex_male);
@@ -158,13 +158,13 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 			man_tab_today_gender.setImageResource(R.drawable.sex_female);
 		else
 			man_tab_today_gender.setImageResource(R.drawable.sex_unknown);
-		// ÌåÖØ
+		// ä½“é‡
 		TextView man_tab_today_weight = (TextView) findViewById(R.id.man_tab_today_weight);
 		if(bmiModel.isWeightRecorded())
 			man_tab_today_weight.setText(new DecimalFormat("#.#").format(bmiModel.getWeight()));
 		else
 			man_tab_today_weight.setText(getResources().getString(R.string.unknown));
-		// Éí¸ß
+		// èº«é«˜
 		TextView man_tab_today_height = (TextView) findViewById(R.id.man_tab_today_height);
 		if(bmiModel.isHeightRecorded())
 			man_tab_today_height.setText(new DecimalFormat("#.#").format(bmiModel.getHeight()));
@@ -176,7 +176,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 			man_tab_today_bmi.setText(new DecimalFormat("#.#").format(bmiModel.getBMI()));
 		else
 			man_tab_today_bmi.setText(getResources().getString(R.string.unknown));	
-		// ÌåĞÍ
+		// ä½“å‹
 		TextView man_tab_today_bmiMeasure = (TextView) findViewById(R.id.man_tab_today_bmiMeasure);
 		if(bmiModel.isHeightRecorded()&&bmiModel.isWeightRecorded())
 			man_tab_today_bmiMeasure.setText(getResources().getStringArray(R.array.bmi_measure)[bmiModel.getMeasureLevel()]);
@@ -192,7 +192,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 		}, 0, 5000);
 	}
 
-	public void btn_weight_add(View v) { // Ìí¼ÓÊı¾İ
+	public void btn_weight_add(View v) { // æ·»åŠ æ•°æ®
 //		if(!bmiModel.isWeightRecorded())
 		{
 			Intent intent = new Intent(MainTabToday.this, NewRecordActivity.class);
@@ -201,13 +201,13 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 			bl.putInt("item", ITEM.weight);
 			bl.putInt("rowid", -1);
 			bl.putDouble("value", bmiModel.getWeight());
-			//½«Bundle·ÅÈëIntent´«ÈëÏÂÒ»¸öActivity
+			//å°†Bundleæ”¾å…¥Intentä¼ å…¥ä¸‹ä¸€ä¸ªActivity
 			intent.putExtras(bl);
 			getParent().startActivityForResult(intent,ITEM.weight);
 		}	
 	}
 	
-	public void btn_height_add(View v) { // Ìí¼ÓÊı¾İ
+	public void btn_height_add(View v) { // æ·»åŠ æ•°æ®
 //		if(!bmiModel.isHeightRecorded())
 		{
 			Intent intent = new Intent(MainTabToday.this, NewRecordActivity.class);
@@ -221,7 +221,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 		}		
 	}
 	
-	public void btn_bloodTestHistory(View v) { // Ìí¼ÓÊı¾İ
+	public void btn_bloodTestHistory(View v) { // æ·»åŠ æ•°æ®
 		Intent intent = new Intent(MainTabToday.this, PEHistoryActivity.class);
 		Bundle bl = new Bundle();
 		bl.putInt("userid", user.getID());
@@ -231,7 +231,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 	}
 	
 	
-	public void btn_urineTestHistory(View v) { // Ìí¼ÓÊı¾İ
+	public void btn_urineTestHistory(View v) { // æ·»åŠ æ•°æ®
 		Intent intent = new Intent(MainTabToday.this, PEHistoryActivity.class);
 		Bundle bl = new Bundle();
 		bl.putInt("userid", user.getID());
@@ -240,7 +240,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 		startActivity(intent);			
 	}
 	
-	public void btn_bloodPressureHistory(View v) { // Ìí¼ÓÊı¾İ
+	public void btn_bloodPressureHistory(View v) { // æ·»åŠ æ•°æ®
 		Intent intent = new Intent(MainTabToday.this, PEHistoryActivity.class);
 		Bundle bl = new Bundle();
 		bl.putInt("userid", user.getID());
@@ -250,7 +250,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 	}
 	
 	private final SensorEventListener sensorEventListener = new SensorEventListener() {
-		// ÏµÍ³ÉèÖÃµÄÖØÁ¦¼ÓËÙ¶È±ê×¼Öµ£¬Éè±¸ÔÚË®Æ½¾²Ö¹µÄÇé¿öÏÂ¾Í³ĞÊÜÕâ¸öÑ¹Á¦£¬ËùÒÔÄ¬ÈÏYÖá·½ÏòµÄ¼ÓËÙ¶ÈÖµÎªSTANDARD_GRAVITY
+		// ç³»ç»Ÿè®¾ç½®çš„é‡åŠ›åŠ é€Ÿåº¦æ ‡å‡†å€¼ï¼Œè®¾å¤‡åœ¨æ°´å¹³é™æ­¢çš„æƒ…å†µä¸‹å°±æ‰¿å—è¿™ä¸ªå‹åŠ›ï¼Œæ‰€ä»¥é»˜è®¤Yè½´æ–¹å‘çš„åŠ é€Ÿåº¦å€¼ä¸ºSTANDARD_GRAVITY
 		double calibration = SensorManager.STANDARD_GRAVITY;
 
 		public void onAccuracyChanged(Sensor sensor, int accuracy) {}
@@ -260,13 +260,13 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 			double y = event.values[1];
 			double z = event.values[2];
 			
-			// ¼ÆËãÈı¸ö·½ÏòµÄ¼ÓËÙ¶È
+			// è®¡ç®—ä¸‰ä¸ªæ–¹å‘çš„åŠ é€Ÿåº¦
 			double a = Math.round(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)
 					+ Math.pow(z, 2)));
 			double acc = Math.abs((float) (a - calibration));
 			lowAcc = lowAcc * FILTERING_VALUE + acc * ( 1.0f - FILTERING_VALUE );
 
-			// ÏûÈ¥Ô­ÓĞµÄÖØÁ¦ÒıÆğµÄÑ¹Á¦
+			// æ¶ˆå»åŸæœ‰çš„é‡åŠ›å¼•èµ·çš„å‹åŠ›
 			currentAcceleration = Math.abs(acc - lowAcc);
 			sensorManager.unregisterListener(sensorEventListener);
 			refreshAccelerometer();
@@ -402,7 +402,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 		switch (resultCode)
 		{
 		case RESULT_OK:
-			//»ñÈ¡BundleµÄÊı¾İ
+			//è·å–Bundleçš„æ•°æ®
 			Bundle bl= data.getExtras();
 			String value=bl.getString("value");Log.d("res",value);
 			switch(requestCode){

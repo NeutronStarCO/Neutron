@@ -40,7 +40,7 @@ public class Appstart extends Activity {
 		instance = this;
 		ndb = NeutronDbHelper.GetInstance(this);
 		
-		// ´Ó±¾µØÊı¾İ¿âÈ¡µÃÓÃ»§ĞÅÏ¢£¬Èç¹ûÃ»ÓĞ±¾µØÓÃ»§£¬×ªÈëÆğÊ¼Ò³ 
+		// ä»æœ¬åœ°æ•°æ®åº“å–å¾—ç”¨æˆ·ä¿¡æ¯ï¼Œå¦‚æœæ²¡æœ‰æœ¬åœ°ç”¨æˆ·ï¼Œè½¬å…¥èµ·å§‹é¡µ 
 		localUser = getLocalUser();
 		if(null==localUser)
 		{
@@ -55,7 +55,7 @@ public class Appstart extends Activity {
 		}
 		else
 		{
-			checkLocalUser("passcode", localUser);	// »ñÈ¡·şÎñÆ÷¶ÔÓ¦idÓÃ»§ĞÅÏ¢
+			checkLocalUser("passcode", localUser);	// è·å–æœåŠ¡å™¨å¯¹åº”idç”¨æˆ·ä¿¡æ¯
 		}
 	}
 		
@@ -147,7 +147,7 @@ public class Appstart extends Activity {
 		 
 		protected void onPostExecute(String result) 
 		{
-			if(state.equals("valid"))	// ÒÑ´æÔÚÓÃ»§µÇÂ¼³É¹¦£¬×ªÈëÖ÷Ò³Ãæ
+			if(state.equals("valid"))	// å·²å­˜åœ¨ç”¨æˆ·ç™»å½•æˆåŠŸï¼Œè½¬å…¥ä¸»é¡µé¢
 			{				
 				new Handler().postDelayed(new Runnable() {
 					public void run() {
@@ -160,7 +160,7 @@ public class Appstart extends Activity {
 					}
 				}, 1000);
 			} 	
-			else if(state.equals("novalid"))	// ×ªÈëµÇÂ¼×¢²áÒ³Ãæ
+			else if(state.equals("novalid"))	// è½¬å…¥ç™»å½•æ³¨å†Œé¡µé¢
 			{
 				new Handler().postDelayed(new Runnable() {
 					public void run() {
@@ -170,7 +170,7 @@ public class Appstart extends Activity {
 					}
 				}, 1000);
 			}
-			else // Ã»ÓĞÕı³£·µ»Ø£¬ÍË³ö»òÕßÖØĞÂÁ¬½Ó	
+			else // æ²¡æœ‰æ­£å¸¸è¿”å›ï¼Œé€€å‡ºæˆ–è€…é‡æ–°è¿æ¥	
 			{				
 				Intent intent = new Intent(Appstart.this, ConfirmationDialogActivity.class);
 				Bundle bl = new Bundle();

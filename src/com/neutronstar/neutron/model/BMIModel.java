@@ -37,7 +37,7 @@ public class BMIModel {
 		
 		SQLiteDatabase db = ndb.getReadableDatabase();
 			
-		// ´ÓÊı¾İ¿âµÃµ½ÌåÖØ£¬ÈôÃ»ÓĞÔòÉèÖÃÎª±ê×¼Öµ
+		// ä»æ•°æ®åº“å¾—åˆ°ä½“é‡ï¼Œè‹¥æ²¡æœ‰åˆ™è®¾ç½®ä¸ºæ ‡å‡†å€¼
 		String[] projection = {
 				NeutronRecord.COLUMN_NAME_VALUE,
 				NeutronRecord.COLUMN_NAME_DATETIME
@@ -75,7 +75,7 @@ public class BMIModel {
 				isWeightRecorded = false;
 			}
 		}
-		// ´ÓÊı¾İ¿âµÃµ½Éí¸ß£¬ÈôÃ»ÓĞÔòÉèÖÃÎª±ê×¼Öµ
+		// ä»æ•°æ®åº“å¾—åˆ°èº«é«˜ï¼Œè‹¥æ²¡æœ‰åˆ™è®¾ç½®ä¸ºæ ‡å‡†å€¼
 		String[] columns = {
 				NeutronRecord.COLUMN_NAME_VALUE,
 				NeutronRecord.COLUMN_NAME_DATETIME

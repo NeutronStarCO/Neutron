@@ -49,7 +49,7 @@ public class PEHistoryActivity extends Activity {
 //		mBtnBack.setOnClickListener(this);
 		
 		intent=this.getIntent();
-		//»ñÈ¡IntentÖĞµÄBundleÊı¾İ
+		//è·å–Intentä¸­çš„Bundleæ•°æ®
 		bl=intent.getExtras();
 		item = bl.getInt("item");
 		userid = bl.getInt("userid");
@@ -69,7 +69,7 @@ public class PEHistoryActivity extends Activity {
 		
 		SQLiteDatabase db = ndb.getReadableDatabase();
 		
-		// ´ÓÊı¾İ¿âµÃµ½Àú´Î¼ì²â¼ÇÂ¼
+		// ä»æ•°æ®åº“å¾—åˆ°å†æ¬¡æ£€æµ‹è®°å½•
 		String[] projection = {
 				"rowid",
 				NeutronGroupTesting.COLUMN_NAME_DATETIME,
@@ -149,11 +149,11 @@ public class PEHistoryActivity extends Activity {
 		
 	} 
 	
-	public void cancel_back(View v) { // ±êÌâÀ¸ ·µ»Ø°´Å¥
+	public void cancel_back(View v) { // æ ‡é¢˜æ  è¿”å›æŒ‰é’®
 		this.finish();
 	}
 	
-	public void btn_add(View v) { // ±êÌâÀ¸ ·µ»Ø°´Å¥
+	public void btn_add(View v) { // æ ‡é¢˜æ  è¿”å›æŒ‰é’®
 		Intent intent = new Intent(PEHistoryActivity.this, AddChooseActivity.class);
 		Bundle bl = new Bundle();
 		bl.putInt("userid", userid);

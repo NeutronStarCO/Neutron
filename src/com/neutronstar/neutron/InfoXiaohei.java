@@ -12,15 +12,15 @@ public class InfoXiaohei extends Activity {
 		setContentView(R.layout.info_xiaohei);
 	}
 
-	public void btn_back(View v) { // ±êÌâÀ¸ ·µ»Ø°´Å¥
+	public void btn_back(View v) { // æ ‡é¢˜æ  è¿”å›æŒ‰é’®
 		this.finish();
 	}
 
-	public void btn_back_send(View v) { // ±êÌâÀ¸ ·µ»Ø°´Å¥
+	public void btn_back_send(View v) { // æ ‡é¢˜æ  è¿”å›æŒ‰é’®
 		this.finish();
 	}
 
-	public void head_xiaohei(View v) { // Í·Ïñ°´Å¥
+	public void head_xiaohei(View v) { // å¤´åƒæŒ‰é’®
 		Intent intent = new Intent();
 		intent.setClass(InfoXiaohei.this, InfoXiaoheiHead.class);
 		startActivity(intent);

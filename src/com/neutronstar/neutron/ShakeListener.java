@@ -8,45 +8,45 @@ import android.hardware.SensorManager;
 import android.util.Log;
 
 /**
- * Ò»¸ö¼ì²âÊÖ»úÒ¡»ÎµÄ¼àÌıÆ÷
+ * ä¸€ä¸ªæ£€æµ‹æ‰‹æœºæ‘‡æ™ƒçš„ç›‘å¬å™¨
  */
 public class ShakeListener implements SensorEventListener {
-	// ËÙ¶ÈãĞÖµ£¬µ±Ò¡»ÎËÙ¶È´ïµ½ÕâÖµºó²úÉú×÷ÓÃ
+	// é€Ÿåº¦é˜ˆå€¼ï¼Œå½“æ‘‡æ™ƒé€Ÿåº¦è¾¾åˆ°è¿™å€¼åäº§ç”Ÿä½œç”¨
 	private static final int SPEED_SHRESHOLD = 3000;
-	// Á½´Î¼ì²âµÄÊ±¼ä¼ä¸ô
+	// ä¸¤æ¬¡æ£€æµ‹çš„æ—¶é—´é—´éš”
 	private static final int UPTATE_INTERVAL_TIME = 70;
-	// ´«¸ĞÆ÷¹ÜÀíÆ÷
+	// ä¼ æ„Ÿå™¨ç®¡ç†å™¨
 	private SensorManager sensorManager;
-	// ´«¸ĞÆ÷
+	// ä¼ æ„Ÿå™¨
 	private Sensor sensor;
-	// ÖØÁ¦¸ĞÓ¦¼àÌıÆ÷
+	// é‡åŠ›æ„Ÿåº”ç›‘å¬å™¨
 	private OnShakeListener onShakeListener;
-	// ÉÏÏÂÎÄ
+	// ä¸Šä¸‹æ–‡
 	private Context mContext;
-	// ÊÖ»úÉÏÒ»¸öÎ»ÖÃÊ±ÖØÁ¦¸ĞÓ¦×ø±ê
+	// æ‰‹æœºä¸Šä¸€ä¸ªä½ç½®æ—¶é‡åŠ›æ„Ÿåº”åæ ‡
 	private float lastX;
 	private float lastY;
 	private float lastZ;
-	// ÉÏ´Î¼ì²âÊ±¼ä
+	// ä¸Šæ¬¡æ£€æµ‹æ—¶é—´
 	private long lastUpdateTime;
 
-	// ¹¹ÔìÆ÷
+	// æ„é€ å™¨
 	public ShakeListener(Context c) {
-		// »ñµÃ¼àÌı¶ÔÏó
+		// è·å¾—ç›‘å¬å¯¹è±¡
 		mContext = c;
 		start();
 	}
 
-	// ¿ªÊ¼
+	// å¼€å§‹
 	public void start() {
-		// »ñµÃ´«¸ĞÆ÷¹ÜÀíÆ÷
+		// è·å¾—ä¼ æ„Ÿå™¨ç®¡ç†å™¨
 		sensorManager = (SensorManager) mContext
 				.getSystemService(Context.SENSOR_SERVICE);
 		if (sensorManager != null) {
-			// »ñµÃÖØÁ¦´«¸ĞÆ÷
+			// è·å¾—é‡åŠ›ä¼ æ„Ÿå™¨
 			sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		}
-		// ×¢²á
+		// æ³¨å†Œ
 		if (sensor != null) {
 			sensorManager.registerListener(this, sensor,
 					SensorManager.SENSOR_DELAY_GAME);
@@ -54,39 +54,39 @@ public class ShakeListener implements SensorEventListener {
 
 	}
 
-	// Í£Ö¹¼ì²â
+	// åœæ­¢æ£€æµ‹
 	public void stop() {
 		sensorManager.unregisterListener(this);
 	}
 
-	// ÉèÖÃÖØÁ¦¸ĞÓ¦¼àÌıÆ÷
+	// è®¾ç½®é‡åŠ›æ„Ÿåº”ç›‘å¬å™¨
 	public void setOnShakeListener(OnShakeListener listener) {
 		onShakeListener = listener;
 	}
 
-	// ÖØÁ¦¸ĞÓ¦Æ÷¸ĞÓ¦»ñµÃ±ä»¯Êı¾İ
+	// é‡åŠ›æ„Ÿåº”å™¨æ„Ÿåº”è·å¾—å˜åŒ–æ•°æ®
 	public void onSensorChanged(SensorEvent event) {
-		// ÏÖÔÚ¼ì²âÊ±¼ä
+		// ç°åœ¨æ£€æµ‹æ—¶é—´
 		long currentUpdateTime = System.currentTimeMillis();
-		// Á½´Î¼ì²âµÄÊ±¼ä¼ä¸ô
+		// ä¸¤æ¬¡æ£€æµ‹çš„æ—¶é—´é—´éš”
 		long timeInterval = currentUpdateTime - lastUpdateTime;
-		// ÅĞ¶ÏÊÇ·ñ´ïµ½ÁË¼ì²âÊ±¼ä¼ä¸ô
+		// åˆ¤æ–­æ˜¯å¦è¾¾åˆ°äº†æ£€æµ‹æ—¶é—´é—´éš”
 		if (timeInterval < UPTATE_INTERVAL_TIME)
 			return;
-		// ÏÖÔÚµÄÊ±¼ä±ä³ÉlastÊ±¼ä
+		// ç°åœ¨çš„æ—¶é—´å˜æˆlastæ—¶é—´
 		lastUpdateTime = currentUpdateTime;
 
-		// »ñµÃx,y,z×ø±ê
+		// è·å¾—x,y,zåæ ‡
 		float x = event.values[0];
 		float y = event.values[1];
 		float z = event.values[2];
 
-		// »ñµÃx,y,zµÄ±ä»¯Öµ
+		// è·å¾—x,y,zçš„å˜åŒ–å€¼
 		float deltaX = x - lastX;
 		float deltaY = y - lastY;
 		float deltaZ = z - lastZ;
 
-		// ½«ÏÖÔÚµÄ×ø±ê±ä³Élast×ø±ê
+		// å°†ç°åœ¨çš„åæ ‡å˜æˆlaståæ ‡
 		lastX = x;
 		lastY = y;
 		lastZ = z;
@@ -95,7 +95,7 @@ public class ShakeListener implements SensorEventListener {
 				* deltaZ)
 				/ timeInterval * 10000;
 		Log.v("thelog", "===========log===================");
-		// ´ïµ½ËÙ¶È·§Öµ£¬·¢³öÌáÊ¾
+		// è¾¾åˆ°é€Ÿåº¦é˜€å€¼ï¼Œå‘å‡ºæç¤º
 		if (speed >= SPEED_SHRESHOLD) {
 			onShakeListener.onShake();
 		}
@@ -105,7 +105,7 @@ public class ShakeListener implements SensorEventListener {
 
 	}
 
-	// Ò¡»Î¼àÌı½Ó¿Ú
+	// æ‘‡æ™ƒç›‘å¬æ¥å£
 	public interface OnShakeListener {
 		public void onShake();
 	}
