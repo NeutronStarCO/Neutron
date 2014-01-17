@@ -48,6 +48,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 	private NeutronDbHelper ndb;
 	private Intent intent;
 	private Bundle bl;
+	private int userid;
 	private User user;
 	private BMIModel bmiModel;
 	private RMRModel rmrModel;
@@ -81,7 +82,7 @@ public class MainTabToday extends Activity implements OnTabActivityResultListene
 		ndb = NeutronDbHelper.GetInstance(this);
 		intent = this.getIntent();
 		bl = intent.getExtras();
-		Log.d("-----", "" + bl.getInt("userid"));
+		userid = bl.getInt("userid");
 		// 获取家庭成员列表
 		familyId = new Integer[1];
 		familyTitle = new String[1];

@@ -199,13 +199,13 @@ public class NeutronService extends Service {
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 		if (networkInfo != null && networkInfo.isConnected()) {
-			new DownloadRMRValueTask().execute(strUrl);
-		} else {
 			Looper.prepare();
+			new DownloadRMRValueTask().execute(strUrl);
+			Looper.loop();
+		} else {
 			Toast toast = Toast.makeText(this,
 					"No network connection available.", Toast.LENGTH_LONG);
 			toast.show();
-			Looper.loop();
 		}
 	}
 	
