@@ -23,8 +23,7 @@
      		android:textSize="20sp"	
      		android:focusable="true"
      		android:clickable="true"	
-			android:textColor="#ffffff" 
-			android:onClick="onDisplayChange"/> 
+			android:textColor="#ffffff"/> 
 	</RelativeLayout>
 
 	
@@ -87,8 +86,7 @@
 	        android:background="@drawable/preference_single_item_little"
 	        android:layout_marginLeft="7dp"
 	        android:clickable="true"
-	        android:gravity="right"
-	        android:onClick="btn_weight_add" >
+	        android:gravity="right" >
 	
 	        <LinearLayout 
 	            android:layout_width="wrap_content"
@@ -134,8 +132,7 @@
 	        android:background="@drawable/preference_single_item_little"
 	        android:layout_marginLeft="7dp"
 	        android:clickable="true"
-	        android:gravity="right" 
-	        android:onClick="btn_height_add">
+	        android:gravity="right">
 	
 	        <LinearLayout 
 	            android:layout_width="wrap_content"
@@ -397,10 +394,8 @@
             	android:layout_marginTop="5dp"
               	android:gravity="center_horizontal"
               	android:orientation="vertical"
-              	android:layout_weight="1"
               	android:background="@drawable/mm_listitem"
-              	android:clickable="true"
-              	android:onClick="btn_bloodTestHistory">               	
+              	android:clickable="true">               	
                 <ImageView
             		android:id="@+id/man_tab_today_img_bloodTest"
         			android:layout_width="40dp"
@@ -426,10 +421,8 @@
             	android:layout_marginLeft="10dp"
               	android:gravity="center_horizontal"
               	android:orientation="vertical"
-              	android:layout_weight="1"
               	android:background="@drawable/mm_listitem"
-              	android:clickable="true"
-              	android:onClick="btn_urineTestHistory">              	
+              	android:clickable="true">              	
                 <ImageView
             		android:id="@+id/man_tab_today_img_urineTest"
         			android:layout_width="40dp"
@@ -455,10 +448,8 @@
             	android:layout_marginLeft="10dp"
               	android:gravity="center_horizontal"
               	android:orientation="vertical"
-              	android:layout_weight="1"
               	android:background="@drawable/mm_listitem"
-              	android:clickable="true"
-              	android:onClick="btn_bloodPressureHistory">                	
+              	android:clickable="true">                	
                 <ImageView
             		android:id="@+id/man_tab_today_img_bloodPressure"
         			android:layout_width="40dp"
@@ -483,8 +474,7 @@
             	android:layout_alignBottom="@+id/man_tab_today_layout_bloodTest"
             	android:layout_marginLeft="10dp"
               	android:gravity="center_horizontal"
-              	android:orientation="vertical"
-              	android:layout_weight="1">               	
+              	android:orientation="vertical">               	
                 <ImageView
             		android:id="@+id/man_tab_today_img_bodyEx"
         			android:layout_width="40dp"
@@ -509,8 +499,7 @@
             	android:layout_alignBottom="@+id/man_tab_today_layout_bloodTest"
             	android:layout_marginLeft="10dp"
               	android:gravity="center_horizontal"
-              	android:orientation="vertical"
-              	android:layout_weight="1">               	
+              	android:orientation="vertical">               	
                 <ImageView
             		android:id="@+id/man_tab_today_img_eyeEx"
         			android:layout_width="40dp"
@@ -536,8 +525,7 @@
             	android:layout_below="@+id/man_tab_today_layout_bloodTest"
             	android:layout_alignLeft="@+id/man_tab_today_layout_bloodTest"
               	android:gravity="center_horizontal"
-              	android:orientation="vertical"
-              	android:layout_weight="1">               	
+              	android:orientation="vertical">               	
                 <ImageView
             		android:id="@+id/man_tab_today_img_boneDen"
         			android:layout_width="40dp"
@@ -562,8 +550,7 @@
             	android:layout_alignBottom="@+id/man_tab_today_layout_boneDen"
               	android:gravity="center_horizontal"
               	android:orientation="vertical"
-              	android:layout_marginLeft="10dp"
-              	android:layout_weight="1">               	
+              	android:layout_marginLeft="10dp">               	
                 <ImageView
             		android:id="@+id/man_tab_today_img_electrocardiograms"
         			android:layout_width="40dp"
@@ -588,8 +575,7 @@
             	android:layout_alignBottom="@+id/man_tab_today_layout_boneDen"
               	android:gravity="center_horizontal"
               	android:orientation="vertical"
-              	android:layout_marginLeft="10dp"
-              	android:layout_weight="1">               	
+              	android:layout_marginLeft="10dp">               	
                 <ImageView
             		android:id="@+id/man_tab_today_img_chestXrays"
         			android:layout_width="40dp"
@@ -614,8 +600,7 @@
             	android:layout_alignBottom="@+id/man_tab_today_layout_boneDen"
               	android:gravity="center_horizontal"
               	android:orientation="vertical"
-              	android:layout_marginLeft="10dp"
-              	android:layout_weight="1">               	
+              	android:layout_marginLeft="10dp">               	
                 <ImageView
             		android:id="@+id/man_tab_today_img_abdomenColorUltrasound"
         			android:layout_width="40dp"

@@ -51,6 +51,9 @@
             android:name="com.neutronstar.neutron.MainNeutron"
             android:theme="@style/Anim_style2" />
         <activity
+            android:name="com.neutronstar.neutron.MainNeutron1"
+            android:theme="@style/Anim_style2" />
+        <activity
             android:name="com.neutronstar.neutron.MainTabToday"
             android:theme="@style/Anim_style2" />
         <activity
