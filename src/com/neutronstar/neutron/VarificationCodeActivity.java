@@ -261,30 +261,15 @@ public class VarificationCodeActivity extends Activity {
 		{
 			if(state.equals("ok"))
 			{
-				if(alRelation.size() >= 1)
+				uerEx = new T_userExample();
+				List<Integer> listInt = new ArrayList<Integer>();
+				Iterator<T_relation> iterator = alRelation.iterator();
+				while(iterator.hasNext())
 				{
-					uerEx = new T_userExample();
-					List<Integer> listInt = new ArrayList<Integer>();
-					Iterator<T_relation> iterator = alRelation.iterator();
-					while(iterator.hasNext())
-					{
-						listInt.add(iterator.next().gettRelationSalveId());
-					}
-					uerEx.createCriteria().andTUserIdIn(listInt).andTUserDeltagEqualTo(String.valueOf(TAG.normal));
-					new getUserListTask().execute(SERVER.Address + "/" + "login");
+					listInt.add(iterator.next().gettRelationSalveId());
 				}
-				else 
-				{					
-					Intent intent = new Intent();
-					Bundle bundle  = new Bundle();
-					bundle.putInt("userid", user.gettUserId());
-					intent.putExtras(bl);
-					intent.setClass(VarificationCodeActivity.this, MainNeutron.class);
-					startActivityForResult(intent, 0);
-					setResult(RESULT_FIRST_USER, new Intent());
-					finish();
-				}
-				
+				uerEx.createCriteria().andTUserIdIn(listInt).andTUserDeltagEqualTo(String.valueOf(TAG.normal));
+				new getUserListTask().execute(SERVER.Address + "/" + "login");
 			}
 		}
 	}
