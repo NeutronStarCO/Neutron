@@ -21,6 +21,9 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.baidu.android.pushservice.PushConstants;
+import com.baidu.android.pushservice.PushManager;
+import com.neutronstar.neutron.push.Utils;
 import com.neutron.server.persistence.model.T_user;
 import com.neutronstar.neutron.NeutronContract.NeutronUser;
 import com.neutronstar.neutron.NeutronContract.SERVER;
@@ -39,6 +42,11 @@ public class Appstart extends Activity {
 		setContentView(R.layout.appstart);
 		instance = this;
 		ndb = NeutronDbHelper.GetInstance(this);
+		
+		//初始化百度推送通道
+		PushManager.startWork(getApplicationContext(),
+				PushConstants.LOGIN_TYPE_API_KEY, 
+				Utils.getMetaValue(Appstart.this, "api_key"));
 		
 		// 从本地数据库取得用户信息，如果没有本地用户，转入起始页 
 		localUser = getLocalUser();
@@ -151,7 +159,7 @@ public class Appstart extends Activity {
 			{				
 				new Handler().postDelayed(new Runnable() {
 					public void run() {
-						Intent intent = new Intent(Appstart.this, MainNeutron.class);
+						Intent intent = new Intent(Appstart.this, MainNeutron1.class);
 						Bundle bl = new Bundle();
 						bl.putInt("userid", localUser.gettUserId());
 						intent.putExtras(bl);
