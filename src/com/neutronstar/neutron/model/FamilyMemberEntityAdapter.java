@@ -11,7 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.neutronstar.neutron.MainNeutron;
+import com.neutronstar.neutron.MainNeutron1;
 import com.neutronstar.neutron.R;
 
 public class FamilyMemberEntityAdapter extends BaseAdapter {
@@ -60,9 +60,9 @@ public class FamilyMemberEntityAdapter extends BaseAdapter {
 		
 		viewHolder.ivHead.setImageBitmap(entity.getAvatar());
 		viewHolder.tvName.setText(entity.getName());
-		viewHolder.tvBirthday.setText(new SimpleDateFormat(MainNeutron.instance.getResources().getString(R.string.dateformat_birthday)).format(entity.getBirthday()));
-		viewHolder.tvRelation.setText(MainNeutron.instance.getResources().getStringArray(R.array.relations)[entity.getRelation()]);
-		viewHolder.tvRelationTag.setText(entity.getRelationTag() == com.neutronstar.neutron.NeutronContract.TAG.offered ? MainNeutron.instance.getResources().getString(R.string.waiting_for_confirm):"");
+		viewHolder.tvBirthday.setText(new SimpleDateFormat(MainNeutron1.instance.getResources().getString(R.string.dateformat_birthday)).format(entity.getBirthday()));
+		viewHolder.tvRelation.setText(MainNeutron1.instance.getResources().getStringArray(R.array.relations)[entity.getRelation()]);
+		viewHolder.tvRelationTag.setText(entity.getRelationTag() == com.neutronstar.neutron.NeutronContract.TAG.offered ? MainNeutron1.instance.getResources().getString(R.string.waiting_for_confirm):"");
 		return convertView;
 	}
 

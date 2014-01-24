@@ -34,7 +34,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.neutronstar.neutron.NeutronContract.GENDER;
@@ -192,7 +191,7 @@ public class MainTabTodayFragment extends Fragment {
 			}
 		}, 0, 5000);
 		
-		((RelativeLayout)view.findViewById(R.id.man_tab_today_layout_weight))
+		view.findViewById(R.id.man_tab_today_layout_weight)
 		.setOnClickListener(new OnClickListener(){
 			public void onClick(View arg0) {
 //				if(!bmiModel.isWeightRecorded())

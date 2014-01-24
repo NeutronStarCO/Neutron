@@ -1,10 +1,5 @@
 package com.neutronstar.neutron;
 
-import com.neutronstar.neutron.NeutronContract.ITEM;
-import com.neutronstar.neutron.model.FragmentAdapter;
-
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -13,8 +8,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RadioButton;
 
+import com.neutronstar.neutron.model.FragmentAdapter;
+
 public class MainNeutron1 extends FragmentActivity implements OnClickListener{
-	
+	public static MainNeutron1 instance;
 	public static final int TAB_TODAY = 0;
 	public static final int TAB_FAMILY = 1;
 	public static final int TAB_MORE = 2;
@@ -24,6 +21,7 @@ public class MainNeutron1 extends FragmentActivity implements OnClickListener{
 	private RadioButton rb_today, rb_family, rb_more, rb_settings;
 	
 	protected void onCreate(Bundle savedInstanceState) {
+		instance = this;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_neutron1);
 		
@@ -78,13 +76,13 @@ public class MainNeutron1 extends FragmentActivity implements OnClickListener{
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.main_tab_today:
+		case R.id.main_tab_rb_today:
 			viewPager.setCurrentItem(TAB_TODAY);
 			break;
-/*		case R.id.main_tab_catagory:
+		case R.id.main_tab_rb_family:
 			viewPager.setCurrentItem(TAB_FAMILY);
 			break;
-		case R.id.main_tab_car:
+/*		case R.id.main_tab_car:
 			viewPager.setCurrentItem(TAB_MORE);
 			break;
 		case R.id.main_tab_buy:
