@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    <LinearLayout
+        android:layout_width="fill_parent"
+    	android:layout_height="wrap_content" 
+    	android:layout_alignParentTop="true"
+    	android:layout_above="@id/main_bottom"       
+        android:orientation="vertical" >
+        
+        <android.support.v4.view.ViewPager
+        	android:id="@+id/main_view_pager"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_gravity="center" > 
+        </android.support.v4.view.ViewPager>  
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/main_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bottom_bar"
+        android:orientation="horizontal" >
+
+        <RadioGroup
+            android:id="@+id/main_tab_radio_group"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bottom_bar"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+            android:paddingTop="2.0dip" >
+
+            <RadioButton
+                android:id="@+id/main_tab_rb_today"
+                style="@style/main_tab_bottom"
+                android:checked="true"
+                android:drawableTop="@drawable/tab_weixin_pressed"
+                android:text="@string/today" />
+
+            <RadioButton
+                android:id="@+id/main_tab_rb_family"
+                style="@style/main_tab_bottom"
+                android:drawableTop="@drawable/tab_address_normal"
+                android:text="@string/family" />
+
+            <RadioButton
+                android:id="@+id/main_tab_rb_more"
+                style="@style/main_tab_bottom"
+                android:drawableTop="@drawable/tab_find_frd_normal"
+                android:text="@string/more" />
+
+            <RadioButton
+                android:id="@+id/main_tab_rb_settings"
+                style="@style/main_tab_bottom"
+                android:drawableTop="@drawable/tab_settings_normal"
+                android:text="@string/settings" />
+        </RadioGroup>
+    </LinearLayout>
+    
+    
+
+</RelativeLayout>

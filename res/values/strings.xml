@@ -85,6 +85,10 @@
     <string name="birthday">生日</string>
     <string name="gender">性别</string>
     <string name="china">中国</string>
+    <string name="today">今天</string>
+    <string name="family">家人</string>
+    <string name="more">更多</string>
+    <string name="settings">设置</string>
     
     <string name="waiting_for_confirm">等待家人确认</string>
     
