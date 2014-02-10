@@ -281,12 +281,13 @@ public class NeutronService extends Service {
 						cv.put(NeutronRMRValue.COLUMN_NAME_DATESTAMP, date);
 						db.insertWithOnConflict(NeutronRMRValue.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_IGNORE);
 					}
+					int lines = alRMRValue.size();
 					alRMRValue = null;
 					db.setTransactionSuccessful();
 					db.endTransaction();
 					//
 					Toast toast = Toast.makeText(NeutronService.this,
-							"Download RMRValue Succeed.", Toast.LENGTH_LONG);
+							"Download RMRValue " + lines + " lines.", Toast.LENGTH_LONG);
 					toast.show();
 				}
 				else
